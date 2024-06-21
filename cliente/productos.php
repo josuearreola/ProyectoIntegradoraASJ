@@ -58,9 +58,34 @@
         </div>
     </nav>
 
-
-
-
+    <p class="text-center fs-1" style="color:#fff;">NUESTROS PRODUCTOS</p>
+    <main>
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4  row-cols-lg-5 g-5">
+            <?php
+            include("../conexionBD.php");
+            $query=("SELECT nom_mod,prec_tel,img_tel,col_tel,cam_tel,alm_tel,pan_tel from modelo inner join telefono on modelo.id_mod=telefono.id_mod");
+            $res=mysqli_query($conexion,$query);
+            while( $row=mysqli_fetch_array($res)){
+            ?>
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <img src="<?php echo '../'.$row['img_tel'];?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo $row['nom_mod'];?></h5>
+                            <p class="card-text"></p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group" style="width:40px;padding:10px">
+                                    <a href="" class="btn btn-success">Comprar</a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php }?>
+            </div>
+        
 
 
 

@@ -153,9 +153,8 @@
                             <p class="card-text">Cámara principal de 108MP</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href="" class="btn btn-primary">Detalles</a>
+                                    <a href="" class="btn btn-success">Comprar</a>
                                 </div>
-                                <a href="" class="btn btn-success">Comprar</a>
                             </div>
                         </div>
                     </div>
@@ -168,9 +167,8 @@
                             <p class="card-text">Todo para sorprenderte.</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href="" class="btn btn-primary">Detalles</a>
+                                    <a href="" class="btn btn-success">Comprar</a>
                                 </div>
-                                <a href="" class="btn btn-success">Comprar</a>
                             </div>
                         </div>
                     </div>
@@ -182,10 +180,9 @@
                             <h5 class="card-title">Samsung Note 24</h5>
                             <p class="card-text">El mejor precio</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href="" class="btn btn-primary">Detalles</a>
+                            <div class="btn-group" style="width:40px;padding:10px">
+                                    <a href="" class="btn btn-success">Comprar</a>
                                 </div>
-                                <a href="" class="btn btn-success">Comprar</a>
                             </div>
                         </div>
                     </div>
@@ -198,9 +195,8 @@
                             <p class="card-text">Todo para sorprenderte.</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href="" class="btn btn-primary">Detalles</a>
+                                    <a href="" class="btn btn-success">Comprar</a>
                                 </div>
-                                <a href="" class="btn btn-success">Comprar</a>
                             </div>
                         </div>
                     </div>
