@@ -36,22 +36,29 @@
                             <a class="nav-link active lh-lg" aria-current="page" href="cliente.php">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link lh-lg" href="#">Productos</a>
+                            <a class="nav-link active lh-lg" href="#">Productos</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active lh-lg" aria-current="page" href="#">Mi carrito</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Categorias </a>
+                            <a class="nav-link dropdown-toggle  active lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Categorias </a>
                             <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                 <li><a class="dropdown-item border-0" href="#">$1000-$3500</a></li>
                                 <li><a class="dropdown-item border-0" href="#">$3500-$7000</a></li>
                                 <li><a class="dropdown-item border-0" href="#">Mas de $7000</a></li>
                             </ul>
                         </li>
-                        <form form class="d-flex mt-2" role="search">
-                            <input class="form-control me-2 " type="search" placeholder="Buscar productos" aria-label="Search">
-                            <button class="btn bg-success" type="submit">Buscar</button>
+                        <form class="form-inline ml-3" action="productos.php" >
+                            <div class="input-group input-group-sm">
+                                <input class="form-control form-control-navbar bg-dark-subtle" type="search" placeholder="Buscar" aria-label="Search" name="busqueda" value="<?php echo $_REQUEST['busqueda']??'';?>">
+                                <input type="hidden" name="modulo" value="productos">
+                                <div class="input-group-append">
+                                    <button class="btn btn-navbar" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </form>
                 </div>
             </div>
@@ -64,7 +71,14 @@
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4  row-cols-lg-5 g-5">
             <?php
             include("../conexionBD.php");
-            $query=("SELECT nom_mod,prec_tel,img_tel,col_tel,cam_tel,alm_tel,pan_tel from modelo inner join telefono on modelo.id_mod=telefono.id_mod");
+            $where =" where 1=1 ";
+            $busqueda=mysqli_real_escape_string($conexion, $_REQUEST['busqueda']??'');
+            if(empty($busqueda)==false){
+                $where="and nom_mod like '%".$busqueda."%'";
+            }
+            $query=("SELECT nom_mod,prec_tel,img_tel,col_tel,cam_tel,alm_tel,pan_tel 
+                    from modelo inner join telefono on modelo.id_mod=telefono.id_mod
+                    $where");
             $res=mysqli_query($conexion,$query);
             while( $row=mysqli_fetch_array($res)){
             ?>

@@ -45,174 +45,73 @@
                             <a class="nav-link active lh-lg" aria-current="page" href="pagPrincipal.php">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active lh-lg" href="productosPrin.php">Productos</a>
+                            <a class="nav-link lh-lg" href="#">Productos</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle active lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Categorias </a>
+                            <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Categorias </a>
                             <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                 <li><a class="dropdown-item border-0" href="#">$1000-$3500</a></li>
                                 <li><a class="dropdown-item border-0" href="#">$3500-$7000</a></li>
                                 <li><a class="dropdown-item border-0" href="#">Mas de $7000</a></li>
                             </ul>
                         </li>
-                        <form form class="d-flex mt-2" role="search">
-                            <input class="form-control me-2 " type="search" placeholder="Buscar productos" aria-label="Search">
-                            <button class="btn bg-success" type="submit">Buscar</button>
+                        <form class="form-inline ml-3" action="productosPrin.php" >
+                            <div class="input-group input-group-sm">
+                                <input class="form-control form-control-navbar bg-dark-subtle" type="search" placeholder="Buscar" aria-label="Search" name="busqueda" value="<?php echo $_REQUEST['busqueda']??'';?>">
+                                <input type="hidden" name="modulo" value="productos">
+                                <div class="input-group-append">
+                                    <button class="btn btn-navbar" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </form>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div id="carouselExampleRide" class="carousel slide" data-bs-ride="true" style="padding-top:5px">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="img/carrusel2.jpg" class="d-block w-100 img-fluid" alt="...">
-                <div class="carousel-caption" style="position:absolute; top: 50%; transform: translateY(-50%); left: -40%; color:black;">
-                    <h5>¡Conócenos más!</h5>
-                    <button class="btn bg-blag">Más información</button>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="img/carrusel3.jpeg" class="d-block w-100 img-fluid" alt="...">
-                <div class="carousel-caption" style="position:absolute; top: 50%; transform: translateY(-50%); left: -40%; color:black;">
-                    <h5>¡Descubre nuestras ofertas!</h5>
-                    <button class="btn bg-blag">Más información</button>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="img/carrusel4.jpg" class="d-block w-100 img-fluid" alt="...">
-                <div class="carousel-caption" style="position:absolute; top: -40%; transform: translateY(50%); right: -40%; color:black;">
-                    <h5>¡La mejor calidad!</h5>
-                    <button class="btn ">Más información</button>
-                </div>
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleRide" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleRide" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
-    <p class="text-center fs-1" style="color:#fff;">Ofertas especiales</p>
-    
-    <main>
-    <div class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            <div class="col">
-                <div class="card shadow-sm">
-                    <img src="img/pro1.jpg" alt="Promocion-1" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">¡Oferta especial "Mi Fans"!</h5>
-                        <p class="card-text">$500 de descuento</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <a href="" class="btn btn-primary">Más información</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card shadow-sm">
-                    <img src="img/pro2.jpg" alt="Promocion-2" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">Mi zona de fans</h5>
-                        <p class="card-text">15% de descuento</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <a href="" class="btn btn-primary">Más información</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card shadow-sm">
-                    <img src="img/pro3.jpg" alt="Promocion-3" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">Tu regalo de cumpleaños</h5>
-                        <p class="card-text">$800 de descuento</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <a href="" class="btn btn-primary">Más información</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    </main>
-    </main>
-    <p class="text-center fs-1" style="color:#fff;">Productos estrella</p>
+
+
+
+
+    <p class="text-center fs-1" style="color:#fff;">NUESTROS PRODUCTOS</p>
     <main>
         <div class="container">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-5">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4  row-cols-lg-5 g-5">
+            <?php
+            include("conexionBD.php");
+            $where ="where 1=1";
+            $busqueda=mysqli_real_escape_string($conexion, $_REQUEST['busqueda']??'');
+            if(empty($nombre)==false){
+                $where="and nom_mod like '%".$busqueda."%'";
+            }
+            $query=("SELECT nom_mod,prec_tel,img_tel,col_tel,cam_tel,alm_tel,pan_tel 
+                    from modelo inner join telefono on modelo.id_mod=telefono.id_mod
+                    $where");
+            $res=mysqli_query($conexion,$query);
+            while( $row=mysqli_fetch_array($res)){
+            ?>
                 <div class="col">
                     <div class="card shadow-sm">
-                        <img src="img/tel1.jpg" alt="ProEstre-1" class="card-img-top img">
+                        <img src="<?php echo $row['img_tel'];?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
                         <div class="card-body">
-                            <h5 class="card-title">Redmi note 12S</h5>
-                            <p class="card-text">Cámara principal de 108MP</p>
-                            <div class="d-flex justify-content-between align-items-center" >
+                            <h5 class="card-title"><?php echo $row['nom_mod'];?></h5>
+                            <p class="card-text"></p>
+                            <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href=""  class="btn btn-success">Comprar</a>
+                                    <a href="" class="btn btn-success">Comprar</a>
                                 </div>
                                 
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <img src="img/img2.png" alt="ProEstre-2" class="card-img-top">
-                        <div class="card-body">
-                            <h5 class="card-title">iPhone 15</h5>
-                            <p class="card-text">Todo para sorprenderte.</p>
-                            <div class="d-flex justify-content-between align-items-center" >
-                                <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href=""  class="btn btn-success">Comprar</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <img src="img/img3.avif" alt="ProEstre-3" class="card-img-top img">
-                        <div class="card-body">
-                            <h5 class="card-title">Samsung Note 24</h5>
-                            <p class="card-text">El mejor precio</p>
-                            <div class="d-flex justify-content-between align-items-center" >
-                                <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href=""  class="btn btn-success">Comprar</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <img src="img/tel4.avif" alt="ProEstre-4" class="card-img-top">
-                        <div class="card-body">
-                            <h5 class="card-title">Galaxy S24+</h5>
-                            <p class="card-text">La mejor calidad.</p>
-                            <div class="d-flex justify-content-between align-items-center" >
-                                <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href=""  class="btn btn-success">Comprar</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <?php }?>
             </div>
-        </div>
-    </main>
-    
+
+
+
     <footer class="footerpagprinc">
         <div class="boton-modal1">
             <label class="footer-p" for="btn-modal1">Terminos y condiciones</label>
