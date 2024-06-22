@@ -67,37 +67,84 @@
 
     <p class="text-center fs-1" style="color:#fff;">NUESTROS PRODUCTOS</p>
     <main>
-        <div class="container">
+    <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4  row-cols-lg-5 g-5">
-            <?php
-            include("../conexionBD.php");
-            $where ="1=1";
-            $busqueda=mysqli_real_escape_string($conexion, $_REQUEST['busqueda']??'');
-            if(empty($busqueda)==false){
-               $where .= " AND (nom_mod LIKE '%$busqueda%' OR prec_tel LIKE '%$busqueda%' OR col_tel LIKE '%$busqueda%' OR alm_tel LIKE '%$busqueda%' OR pan_tel LIKE '%$busqueda%')";
-            }
-            $query="SELECT DISTINCT nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod WHERE $where";
-            $res=mysqli_query($conexion,$query);
-            while( $row=mysqli_fetch_array($res)){
-            ?>
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <img src="<?php echo '../'.$row['img_tel'];?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
-                        <div class="card-body">
-                            <h5 class="card-title"><?php echo $row['nom_mod'];?></h5>
-                            <p class="card-text"></p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href="" class="btn btn-success">Comprar</a>
+                <?php
+                include("../conexionBD.php");
+                $where = " where 1=1 ";
+                $busqueda = mysqli_real_escape_string($conexion, $_REQUEST['busqueda'] ?? '');
+                if (empty($busqueda) == false) {
+                    $where .= " AND (nom_mod LIKE '%$busqueda%' OR prec_tel LIKE '%$busqueda%' OR col_tel LIKE '%$busqueda%' OR cam_tel LIKE '%$busqueda%' OR alm_tel LIKE '%$busqueda%' OR pan_tel LIKE '%$busqueda%')";
+                }
+                $queryCuenta = "SELECT count(*) as cuenta FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod $where ;";
+                $rescuenta = mysqli_query($conexion, $queryCuenta);
+                $rowcuenta = mysqli_fetch_assoc($rescuenta);
+                $total_registro = $rowcuenta['cuenta'];
+
+                $elementosPorPag = 10;
+                $totalPaginas = ceil($total_registro / $elementosPorPag);
+                $paginaSel = $_REQUEST['pagina']??false;
+                if ($paginaSel==false) {
+                    $inicioLimite=0;
+                    $paginaSel=1;
+                } else {
+                    $inicioLimite=($paginaSel-1)*$elementosPorPag;
+                }
+                $limite = " limit $inicioLimite,$elementosPorPag";
+
+                $query = "SELECT nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod $where $limite";
+
+                $res = mysqli_query($conexion, $query);
+                while ($row = mysqli_fetch_array($res)) {
+                ?>
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <img src="<?php echo $row['img_tel']; ?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
+                            <div class="card-body">
+                                <h5 class="card-title"><?php echo $row['nom_mod']; ?></h5>
+                                <p class="card-text"></p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group" style="width:40px;padding:10px">
+                                        <a href="" class="btn btn-success">Comprar</a>
+                                    </div>
+
                                 </div>
-                                
                             </div>
                         </div>
                     </div>
-                </div>
-                <?php }?>
+                <?php } ?>
             </div>
-        
+           <?php if ($totalPaginas > 0) { ?>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <?php if ($paginaSel != 1) { ?>
+                            <li class="page-item">
+                                <a class="page-link" href="productos.php?modulo=productos&pagina=<?php echo ($paginaSel - 1); ?>" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                        <?php } ?>
+                        
+                        <?php for ($i = 1; $i <= $totalPaginas; $i++) { ?>
+                            <li class="page-item <?php echo ($paginaSel == $i) ? " active " : " "; ?>">
+                                <a class="page-link" href="productos.php?modulo=productos&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+                            </li>
+                        <?php } ?>
+                        
+                        <?php if ($paginaSel != $totalPaginas) { ?>
+                            <li class="page-item">
+                                <a class="page-link" href="productos.php?modulo=productos&pagina=<?php echo ($paginaSel + 1); ?>" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                </nav>
+            <?php } ?>
+        </div>
+    </main>
 
 
 
