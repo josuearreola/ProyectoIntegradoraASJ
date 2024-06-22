@@ -121,7 +121,6 @@ if (!empty($_POST)) {
                                         <li><a class="dropdown-item border-0" href="#">Sucursales eliminadas</a></li>
                                     </ul>
                                 </li>
-                               
                         </div>
                     </div>
                 </div>

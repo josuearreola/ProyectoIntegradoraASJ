@@ -32,7 +32,7 @@ include "../conexionBD.php";
                 <div class="container-fluid">
                     <a class="navbar-brand" href="../salir.php">
                         <img src="../img/logo.jpg" class="logo">
-                        <img class="imgses" src="../img/cerrarses.jpg" alt="Cerrar sesion" title="salir">
+                        <img class="imgses" src="../img/cerrarses.jpg" alt="Cerrar sesión" title="salir">
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -48,57 +48,58 @@ include "../conexionBD.php";
                                     <a class="nav-link active lh-lg" aria-current="page" href="administrador.php">Inicio</a>
                                 </li>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Usuarios </a>
-                                    <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
+                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Usuarios</a>
+                                    <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevo usuario</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de usuarios</a></li>
                                         <li><a class="dropdown-item border-0" href="#">Usuarios eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Clientes </a>
-                                    <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
+                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Clientes</a>
+                                    <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevos clientes</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de clientes</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Clients eliminados</a></li>
+                                        <li><a class="dropdown-item border-0" href="#">Clientes eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Usuarios </a>
-                                    <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
+                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Usuarios</a>
+                                    <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevo usuario</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de usuarios</a></li>
                                         <li><a class="dropdown-item border-0" href="#">Usuarios eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Marcas </a>
-                                    <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
+                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Marcas</a>
+                                    <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva marca</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de marcas</a></li>
                                         <li><a class="dropdown-item border-0" href="#">Marca eliminadas</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Productos </a>
-                                    <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
+                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Productos</a>
+                                    <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevos productos</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de productos</a></li>
                                         <li><a class="dropdown-item border-0" href="#">Productos eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales </a>
-                                    <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
+                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales</a>
+                                    <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva sucursal</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de sucursales</a></li>
                                         <li><a class="dropdown-item border-0" href="#">Sucursales eliminadas</a></li>
                                     </ul>
                                 </li>
-                                <form action="buscar_usuario.php" method="get" class="form_search">
-                                    <input class="busqueda" type="text" name="busqueda" id="busqueda" placeholder="Buscar">
-                                    <input type="submit" value="Buscar" class="btn_search">
-                                </form>
+                            </ul>
+                            <form action="buscar_usuario.php" method="get" class="form_search ms-auto">
+                                <input class="busqueda" type="text" name="busqueda" id="busqueda" placeholder="Buscar">
+                                <input type="submit" value="Buscar" class="btn_search">
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -110,12 +111,11 @@ include "../conexionBD.php";
     <section id="container">
         <h1 class="text_prin">Lista de usuarios</h1>
         <a href="registrousuario.php" class="btn_new">Crear usuario</a>
-        
+
         <div class="container">
             <div class="table-responsive">
-                <table class="table table-sm ">
+                <table class="table table-sm table-dark">
                     <thead>
-
                         <tr>
                             <th>ID</th>
                             <th>Nombre</th>

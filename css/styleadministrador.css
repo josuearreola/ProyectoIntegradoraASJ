@@ -446,6 +446,7 @@ input::placeholder{
     background: #66ed7d66;
     border-radius: 6px;
     margin: 12px auto;
+    height: 65px;
 }
 .msj_error{
     color: #e65656;

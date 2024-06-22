@@ -92,10 +92,6 @@ include("../denegacion.php");
                                         <li><a class="dropdown-item border-0" href="#">Sucursales eliminadas</a></li>
                                     </ul>
                                 </li>
-                                <form action="buscar_usuario.php" method="get" class="form_search">
-                                    <input class="busqueda" type="text" name="busqueda" id="busqueda" placeholder="Buscar">
-                                    <input type="submit" value="Buscar" class="btn_search">
-                                </form>
                         </div>
                     </div>
                 </div>

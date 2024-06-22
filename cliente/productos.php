@@ -71,14 +71,12 @@
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4  row-cols-lg-5 g-5">
             <?php
             include("../conexionBD.php");
-            $where =" where 1=1 ";
+            $where ="1=1";
             $busqueda=mysqli_real_escape_string($conexion, $_REQUEST['busqueda']??'');
             if(empty($busqueda)==false){
-                $where="and nom_mod like '%".$busqueda."%'";
+               $where .= " AND (nom_mod LIKE '%$busqueda%' OR prec_tel LIKE '%$busqueda%' OR col_tel LIKE '%$busqueda%' OR alm_tel LIKE '%$busqueda%' OR pan_tel LIKE '%$busqueda%')";
             }
-            $query=("SELECT nom_mod,prec_tel,img_tel,col_tel,cam_tel,alm_tel,pan_tel 
-                    from modelo inner join telefono on modelo.id_mod=telefono.id_mod
-                    $where");
+            $query="SELECT DISTINCT nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod WHERE $where";
             $res=mysqli_query($conexion,$query);
             while( $row=mysqli_fetch_array($res)){
             ?>
