@@ -9,16 +9,16 @@ include "../conexionBD.php";
             exit;
         }
         $idusuario=$_POST['usuario'];
-        //$query_delete1=mysqli_query($conexion,"delete from cliente where id_clie = $idusuario");//
-        $query_delete1=mysqli_query($conexion,"UPDATE cliente SET estatus = 0 where id_usua=$idusuario ");
+        
+        $query_delete1=mysqli_query($conexion,"UPDATE cliente SET estatus = 1 where id_usua=$idusuario ");
         if($query_delete1){
-            //$query_delete2=mysqli_query($conexion,"delete from usuario where id_usua = $idusuario");//
-            $query_delete2=mysqli_query($conexion,"UPDATE usuario SET estatus = 0 where id_usua=$idusuario ");
+            
+            $query_delete2=mysqli_query($conexion,"UPDATE usuario SET estatus = 1 where id_usua=$idusuario ");
             if($query_delete2){
                 header("location:listausuarios.php");
             }
         }else{
-            echo"Error al eliminar";
+            echo"Error al recuperar";
         }
     }
 
@@ -36,7 +36,7 @@ include "../conexionBD.php";
                 $rol=$data['tip_usua'];
             }
         }else{
-            header('location:listausuarios.php');
+            header('location:ListaUsuElimin.php');
         }
     }
 ?>
@@ -56,8 +56,8 @@ include "../conexionBD.php";
 </head>
 
 <body>
-<header class="header">
-        <div>            
+    <header class="header">
+        <div>
             <nav class="navbar bg-secondary navbar-expand-lg border-top border-bottom border-3 border-light">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="../salir.php">
@@ -135,7 +135,7 @@ include "../conexionBD.php";
     <section id="container">
         
         <div class="data_delete">
-            <h2 class="h2preg">¿Esta seguro de elimar el siguiente registro?</h2>
+            <h2 class="h2preg">¿Esta seguro de recuperar el siguiente registro?</h2>
             <p class="p-text">Usuario :   <span><?php echo$usuario?></span></p>
             <p class="p-text">Nombre :   <span><?php echo$nombre?></span></p>
             <p class="p-text">Tipo de usuario :   <span><?php echo$rol?></span></p>

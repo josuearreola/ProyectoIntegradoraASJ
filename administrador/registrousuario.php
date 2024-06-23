@@ -4,30 +4,30 @@ include "../conexionBD.php";
 include("../denegacion.php");
 
 if (!empty($_POST)) {
-    $alert='';
+    $alert = '';
     if (empty($_POST['nom_usua']) || empty($_POST['pass_usua']) || empty($_POST['email']) || empty($_POST['rol'])) {
-        $alert= '<p class="msj_error">Todos los campos son obligatorios</p>';
-    }else{
-        $nombre=$_POST['nombre'];
-        $nombreusua=$_POST['nom_usua'];
-        $contraseña=md5(mysqli_real_escape_string($conexion,$_POST['pass_usua']));
-        $email=$_POST['email'];
-        $rol=$_POST['rol'];
-        $query=mysqli_query($conexion,"select * from usuario inner join cliente on usuario.id_usua = cliente.id_usua where nom_usua='$nombreusua' or email_clie='$email'");
-        $resultado=mysqli_fetch_array($query);
-        if ($resultado>0) {
-            $alert='<p class="msj_error">El correo o usuario ya existen</p>';
-        }else{
-        $query_insert=mysqli_query($conexion,"insert into usuario (nom_usua,tip_usua,pass_usua) values('$nombreusua','$rol','$contraseña')");
-        if ($query_insert ===true) {
-            $id_usua=$conexion->insert_id;
-            $query_insert2=mysqli_query($conexion,"insert into cliente (nom_clie,email_clie,id_usua) values('$nombre','$email','$id_usua')");
-            if ($query_insert2) {
-                $alert='<p class="msj_save">Usuario creado correctamente</p>';
+        $alert = '<p class="msj_error">Todos los campos son obligatorios</p>';
+    } else {
+        $nombre = $_POST['nombre'];
+        $nombreusua = $_POST['nom_usua'];
+        $contraseña = md5(mysqli_real_escape_string($conexion, $_POST['pass_usua']));
+        $email = $_POST['email'];
+        $rol = $_POST['rol'];
+        $query = mysqli_query($conexion, "select * from usuario inner join cliente on usuario.id_usua = cliente.id_usua where nom_usua='$nombreusua' or email_clie='$email'");
+        $resultado = mysqli_fetch_array($query);
+        if ($resultado > 0) {
+            $alert = '<p class="msj_error">El correo o usuario ya existen</p>';
+        } else {
+            $query_insert = mysqli_query($conexion, "insert into usuario (nom_usua,tip_usua,pass_usua) values('$nombreusua','$rol','$contraseña')");
+            if ($query_insert === true) {
+                $id_usua = $conexion->insert_id;
+                $query_insert2 = mysqli_query($conexion, "insert into cliente (nom_clie,email_clie,id_usua) values('$nombre','$email','$id_usua')");
+                if ($query_insert2) {
+                    $alert = '<p class="msj_save">Usuario creado correctamente</p>';
+                }
+            } else {
+                $alert = '<p class="msj_error">Error al crear el usuario</p>';
             }
-        }else{
-            $alert='<p class="msj_error">Error al crear el usuario</p>';
-        }
         }
     }
 }
@@ -48,12 +48,8 @@ if (!empty($_POST)) {
 </head>
 
 <body>
-<header class="header">
-        <div class="nav-menu2">
-            <input type="checkbox" id="check">
-            <label for="check" class="checkbtn">
-                <i class="fas fa-bars"></i>
-            </label>
+    <header class="header">
+        <div>
             <nav class="navbar bg-secondary navbar-expand-lg border-top border-bottom border-3 border-light">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="../salir.php">
@@ -78,7 +74,7 @@ if (!empty($_POST)) {
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevo usuario</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de usuarios</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Usuarios eliminados</a></li>
+                                        <li><a class="dropdown-item border-0" href="ListaUsuElimin.php">Usuarios eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -132,7 +128,7 @@ if (!empty($_POST)) {
         <div class="form_registerUsua">
             <h1 class="text-prin">Registro usuario</h1>
             <hr>
-            <div class="alert"><?php print(isset($alert) ? $alert : '')?></div>
+            <div class="alert"><?php print(isset($alert) ? $alert : '') ?></div>
             <form class="formnewusua" action="registrousuario.php" method="post">
                 <label for="nombre">Nombre</label>
                 <input type="text" name="nombre" id="nombre" placeholder="Nombre">
@@ -151,7 +147,6 @@ if (!empty($_POST)) {
             </form>
         </div>
     </section>
-    <?php include "footer.php";?>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>

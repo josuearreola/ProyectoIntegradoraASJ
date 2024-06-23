@@ -99,7 +99,7 @@
                 ?>
                     <div class="col">
                         <div class="card shadow-sm">
-                            <img src="<?php echo $row['img_tel']; ?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
+                            <img src="<?php echo '../'.$row['img_tel']; ?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $row['nom_mod']; ?></h5>
                                 <p class="card-text"></p>
