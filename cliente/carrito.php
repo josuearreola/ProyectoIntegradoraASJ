@@ -1,7 +1,7 @@
 <?php 
 require 'config.php';
 
-
+$datos = array('ok' => true);
 if (isset($_POST['id'])) {
     $id=$_POST['id'];
     $token=$_POST['token'];
