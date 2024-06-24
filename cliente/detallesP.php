@@ -2,6 +2,42 @@
 include("../conexionBD.php");
 require "config.php";
 
+$id=isset($_GET['id']) ? $_GET['id'] : '';
+$token=isset($_GET['token']) ? $_GET['token'] : '';
+
+$sql="SELECT id_tel,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod";
+$result=mysqli_query($conexion,$sql);
+
+if($id == '' || $token == ''){
+    echo'Error al procesar la peticion';
+    exit;
+}else{
+    $token_temp=hash_hmac('sha1',$id,KEY_TOKEN);
+    if($token == $token_temp){
+        $sql= $conexion ->prepare("SELECT id_tel,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel,proc_tel,ram_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod where id_tel=? and estatus=1 LIMIT 1");
+        $sql->bind_param("i", $id);
+        $sql->execute();
+        $sql->bind_result($id_tel, $nom_mod, $prec_tel, $img_tel, $col_tel, $cam_tel, $alm_tel, $pan_tel,$proc_tel,$ram_tel); 
+
+        if($sql->fetch()){
+            $nombre=$nom_mod;
+            $precio=$prec_tel;
+            $imagen=$img_tel;
+            $color=$col_tel;
+            $camara=$cam_tel;
+            $almacenamiento=$alm_tel;
+            $pantalla=$pan_tel;
+            $procesador=$proc_tel;
+            $ram=$ram_tel;
+
+
+        }
+    }else{
+        echo'Error al procesar la peticion';
+        exit;
+    }
+}
+
 ?>
 
 
@@ -10,7 +46,6 @@ require "config.php";
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,6 +65,7 @@ require "config.php";
             </a>
             <a href="#" style="color:black; margin-top:5px; margin-left:10px">
                 <i class="fa-solid fa-cart-plus fa-2x"></i>
+               
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -49,7 +85,7 @@ require "config.php";
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active lh-lg" aria-current="page" href="carrito.php">
-                                Mi carrito<span id="num_cart" class="badge bd-danger"><?php echo $num_cart; ?></span>
+                                Mi carrito<span id="num_cart" class="badge bd-danger"><?php echo $num_cart;?></span>
                             </a>
                         </li>
                         <li class="nav-item dropdown">
@@ -76,97 +112,40 @@ require "config.php";
         </div>
     </nav>
 
-    <p class="text-center fs-1" style="color:#fff;">NUESTROS PRODUCTOS</p>
     <main>
         <div class="container">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4  row-cols-lg-4 g-5">
-                <?php
-                include("../conexionBD.php");
-                $where = " where 1=1 ";
-                $busqueda = mysqli_real_escape_string($conexion, $_REQUEST['busqueda'] ?? '');
-                if (empty($busqueda) == false) {
-                    $where .= " AND (nom_mod LIKE '%$busqueda%' OR prec_tel LIKE '%$busqueda%' OR col_tel LIKE '%$busqueda%' OR cam_tel LIKE '%$busqueda%' OR alm_tel LIKE '%$busqueda%' OR pan_tel LIKE '%$busqueda%')";
-                }
-                $queryCuenta = "SELECT count(*) as cuenta FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod $where ;";
-                $rescuenta = mysqli_query($conexion, $queryCuenta);
-                $rowcuenta = mysqli_fetch_assoc($rescuenta);
-                $total_registro = $rowcuenta['cuenta'];
-
-                $elementosPorPag = 8;
-                $totalPaginas = ceil($total_registro / $elementosPorPag);
-                $paginaSel = $_REQUEST['pagina'] ?? false;
-                if ($paginaSel == false) {
-                    $inicioLimite = 0;
-                    $paginaSel = 1;
-                } else {
-                    $inicioLimite = ($paginaSel - 1) * $elementosPorPag;
-                }
-                $limite = " limit $inicioLimite,$elementosPorPag";
-
-                $query = "SELECT id_tel,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod $where $limite";
-
-                $res = mysqli_query($conexion, $query);
-                while ($row = mysqli_fetch_array($res)) {
-                ?>
-                    <div class="col">
-                        <div class="card shadow-sm">
-                            <img src="<?php echo '../' . $row['img_tel']; ?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo $row['nom_mod']; ?></h5>
-                                <p class="card-text">Cantidad: <input style=" width:60px" type="number" name="cantidad" id="cantidad" min="1" value="1"></p>
-                                <div class="d-flex flex-wrap justify-content-between align-items-center">
-                                    <div class="btn-group me-2 mb-2">
-                                        <button class="btn btn-outline-success" type="button" onclick="addProducto(<?php echo $row['id_tel']; ?>, '<?php echo hash_hmac('sha1', $row['id_tel'], KEY_TOKEN); ?>')">Agregar</button>
-                                    </div>
-                                    <div class="btn-group mb-2">
-                                        <a href="detallesP.php?id=<?php echo $row['id_tel']; ?>&token=<?php echo hash_hmac('sha1', $row['id_tel'], KEY_TOKEN); ?>" class="btn btn-primary">Detalles</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <div class="row">
+                <div class="col-md-4 order-md-1">
+                    <img src="<?php echo '../'.$img_tel?>" alt="producto"  style="max-width: 100%; height: auto;">
+                </div>
+                <div class="col-md-7 order-md-2">
+                    <h4 style="color:#fff"><?php echo $nombre;?></h4>
+                    <h4 style="color:#fff"><?php echo MONEDA . number_format($precio,2, '.',',');?></h4>
+                    <p class="lead">
+                        <h5 style="color:#fff">Descripcion:</h5>
+                        <h6 style="color:#fff">Color: <?php echo $color ?></h6>
+                        <h6 style="color:#fff">Camara: <?php echo $camara ?></h6>
+                        <h6 style="color:#fff">Almacenamiento: <?php echo $almacenamiento ?></h6>
+                        <h6 style="color:#fff">Pantalla: <?php echo $pantalla ?></h6>
+                        <h6 style="color:#fff">Procesador: <?php echo $procesador ?></h6>
+                        <h6 style="color:#fff">RAM: <?php echo $ram ?></h6>
+                        <h6 style="color:#fff">Cantidad:<input style=" width:60px" type="number" name="cantidad" id="cantidad" min="1" value="1"></h6>
+                    </p>
+                    <div class="d-grip gap-3 col-10 mx-auto">
+                        <button class="btn btn-primary" type="button">Comprar ahora</button>
+                        <button class="btn btn-outline-primary" type="button" onclick="addProducto(<?php echo $id;?>, '<?php  echo $token_temp ?>')">Agregar al carrito</button>
+                        
                     </div>
-                <?php } ?>
+                </div>
             </div>
-            <?php if ($totalPaginas > 0) { ?>
-                <nav aria-label="Page navigation">
-                    <ul class="pagination">
-                        <?php if ($paginaSel != 1) { ?>
-                            <li class="page-item">
-                                <a class="page-link" href="productos.php?modulo=productos&pagina=<?php echo ($paginaSel - 1); ?>" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                            </li>
-                        <?php } ?>
-
-                        <?php for ($i = 1; $i <= $totalPaginas; $i++) { ?>
-                            <li class="page-item <?php echo ($paginaSel == $i) ? " active " : " "; ?>">
-                                <a class="page-link" href="productos.php?modulo=productos&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
-                            </li>
-                        <?php } ?>
-
-                        <?php if ($paginaSel != $totalPaginas) { ?>
-                            <li class="page-item">
-                                <a class="page-link" href="productos.php?modulo=productos&pagina=<?php echo ($paginaSel + 1); ?>" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </li>
-                        <?php } ?>
-                    </ul>
-                </nav>
-            <?php } ?>
         </div>
     </main>
-
-
-
 
 
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-    
+
     <script>
         function addProducto(id, token){
             let url = 'carrito.php';

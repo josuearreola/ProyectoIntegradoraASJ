@@ -1,7 +1,6 @@
 <?php
 ob_start();
 include("../denegacion.php");
-
 include "../conexionBD.php";
 
 

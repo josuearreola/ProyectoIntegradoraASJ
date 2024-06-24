@@ -1,3 +1,8 @@
+<?php
+include("conexionBD.php");
+require "configPPrin.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -45,7 +50,7 @@
                             <a class="nav-link active lh-lg" aria-current="page" href="pagPrincipal.php">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link lh-lg" href="#">Productos</a>
+                            <a class="nav-link lh-lg" href="productosPrin.php">Productos</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Categorias </a>
@@ -78,9 +83,8 @@
     <p class="text-center fs-1" style="color:#fff;">NUESTROS PRODUCTOS</p>
     <main>
         <div class="container">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4  row-cols-lg-5 g-5">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4  row-cols-lg-4 g-5">
                 <?php
-                include("conexionBD.php");
                 $where = " where 1=1 ";
                 $busqueda = mysqli_real_escape_string($conexion, $_REQUEST['busqueda'] ?? '');
                 if (empty($busqueda) == false) {
@@ -102,7 +106,7 @@
                 }
                 $limite = " limit $inicioLimite,$elementosPorPag";
 
-                $query = "SELECT nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod $where $limite";
+                $query = "SELECT id_tel,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod $where $limite";
 
                 $res = mysqli_query($conexion, $query);
                 while ($row = mysqli_fetch_array($res)) {
@@ -113,11 +117,13 @@
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $row['nom_mod']; ?></h5>
                                 <p class="card-text"></p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="btn-group" style="width:40px;padding:10px">
+                                <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                    <div class="btn-group me-2 mb-2">
                                         <a href="" class="btn btn-success">Comprar</a>
                                     </div>
-
+                                    <div class="btn-group mb-2">
+                                        <a href="detallesPPrin.php?id=<?php echo $row['id_tel'];?>&token=<?php echo hash_hmac('sha1',$row['id_tel'],KEY_TOKEN);?>" class="btn btn-primary">Detalles</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
