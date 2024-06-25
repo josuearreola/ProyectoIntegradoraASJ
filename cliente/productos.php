@@ -48,7 +48,7 @@ require "config.php";
                             <a class="nav-link active lh-lg" href="productos.php">Productos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active lh-lg" aria-current="page" href="carrito.php">
+                            <a class="nav-link active lh-lg" aria-current="page" href="checkout.php">
                                 Mi carrito<span id="num_cart" class="badge bd-danger"><?php echo $num_cart; ?></span>
                             </a>
                         </li>
@@ -113,7 +113,7 @@ require "config.php";
                             <img src="<?php echo '../' . $row['img_tel']; ?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $row['nom_mod']; ?></h5>
-                                <p class="card-text">Cantidad: <input style=" width:60px" type="number" name="cantidad" id="cantidad" min="1" value="1"></p>
+                                <p class="card-text">Cantidad: <input style=" width:60px" type="number" name="cantidad<?php echo $row['id_tel']; ?>" id="cantidad<?php echo $row['id_tel']; ?>" min="1" max="35" value="1"></p>
                                 <div class="d-flex flex-wrap justify-content-between align-items-center">
                                     <div class="btn-group me-2 mb-2">
                                         <button class="btn btn-outline-success" type="button" onclick="addProducto(<?php echo $row['id_tel']; ?>, '<?php echo hash_hmac('sha1', $row['id_tel'], KEY_TOKEN); ?>')">Agregar</button>
@@ -160,9 +160,53 @@ require "config.php";
     </main>
 
 
+    <footer class="footerpagprinc">
+        <div class="boton-modal1">
+            <label class="footer-p" for="btn-modal1">Terminos y condiciones</label>
+        </div>
+        <div>
+            <label class="footer-p" for="btn-modal2">Atencion al cliente</label>
+        </div>
+        <input type="checkbox" id="btn-modal1">
+        <div class="container-modal1">
+            <div class="content-modal1">
+                <h3>Términos y Condiciones</h3>
+                <p class="p1">1. Aceptación de los Términos
+                    Al acceder y utilizar nuestro sitio web, usted acepta estar sujeto a estos términos y condiciones y a todas las leyes y regulaciones aplicables. Si no está de acuerdo con alguno de estos términos, le pedimos que no utilice nuestro sitio.</p>
+                <p>2. Propiedad Intelectual
+                    Todos los contenidos presentes en este sitio, incluidos, entre otros, textos, gráficos, logotipos, iconos, imágenes y software, son propiedad de ASJ Technology o de sus proveedores de contenido y están protegidos por las leyes de propiedad intelectual.</p>
+                <p>3. Ley Aplicable
+                    Estos términos y condiciones se regirán e interpretarán de acuerdo con las leyes de [País], sin dar efecto a sus disposiciones sobre conflicto de leyes. Usted acepta someterse a la jurisdicción exclusiva de los tribunales de [País] para la resolución de cualquier disputa que surja de estos términos y condiciones o del uso del sitio.</p>
+                <p>4. Contacto
+                    Si tiene alguna pregunta o comentario acerca de estos términos y condiciones, no dude en contactarnos a través de ASJtechnology@gmail.com.</p>
+                <p>5. Confirmación
+                    Al hacer clic en "Aceptar", usted confirma que ha leído, entendido y aceptado estos términos y condiciones.</p>
+                <div class="btn-cerrar">
+                    <label for="btn-modal1">Aceptar</label>
+                </div>
+            </div>
+            <label for="btn-modal1" class="cerrar-modal"></label>
+        </div>
 
-
-
+        <input type="checkbox" id="btn-modal2">
+        <div class="container-modal2">
+            <div class="content-modal2">
+                <h3>¡Bienvenido a ASJ Technology!</h3>
+                <p class="p2">Nos complace atenderle y ofrecerle la mejor experiencia de servicio posible. Nuestro equipo de atención al cliente está aquí para ayudarle con cualquier consulta, problema o inquietud que pueda tener.</p>
+                <p>Teléfono:
+                    Llámenos al 4424530036 durante nuestro horario de atención, de lunes a viernes, de 9:00 a 18:00.</p>
+                <p>Correo Electrónico:
+                    Puede enviarnos un correo electrónico a ASJtechnology@gmail.com y responderemos a su consulta en un plazo de 24 horas hábiles.</p>
+                <p>Garantías y Devoluciones:
+                    Para consultas relacionadas con garantías, devoluciones o reemplazos, póngase en contacto con nosotros y le guiaremos a través del proceso de manera rápida y sencilla.</p>
+                <p>Facturación y Pagos:
+                    Para cualquier pregunta relacionada con facturas, pagos o información de cuentas, nuestro equipo de atención al cliente le proporcionará la asistencia necesaria para resolver su consulta de manera eficiente.</p>
+                <div class="btn-cerrar2">
+                    <label for="btn-modal2">Aceptar</label>
+                </div>
+            </div>
+            <label for="btn-modal2" class="cerrar-modal"></label>
+        </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
@@ -171,7 +215,7 @@ require "config.php";
         function addProducto(id, token){
             let url = 'carrito.php';
             let formData = new FormData();
-            let cantidad =document.getElementById('cantidad').value;
+            let cantidad =document.getElementById('cantidad' + id).value;
             formData.append('id',id);
             formData.append('token',token);
             formData.append('cantidad',cantidad);
