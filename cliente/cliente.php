@@ -1,7 +1,7 @@
 <?php
 include "../conexionBD.php";
 require "config.php";
-session_start();
+
 ?>
 
 
