@@ -1,7 +1,7 @@
 <?php
 include "../conexionBD.php";
+require "config.php";
 session_start();
-
 ?>
 
 
@@ -50,7 +50,9 @@ session_start();
                             <a class="nav-link lh-lg" href="productos.php">Productos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active lh-lg" aria-current="page" href="#">Mi carrito</a>
+                        <a class="nav-link active lh-lg" aria-current="page" href="checkout.php">
+                                Mi carrito<span id="num_cart" class="badge bd-danger"><?php echo $num_cart;?></span>
+                            </a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Categorias </a>
