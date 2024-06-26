@@ -27,6 +27,7 @@ if (!empty($_SESSION['active'])) {
                 $_SESSION['idUsua'] = $data['nom_usua'];
                 $_SESSION['tipUsua'] = $data['tip_usua'];
                 $_SESSION['passUsua'] = $data['pass_usua'];
+                $_SESSION['Id_usua']= $data['id_usua'];
                 header('location: ..\roles.php');
             } else {
                 $alert = 'El usuario o la clave son incorrectos';

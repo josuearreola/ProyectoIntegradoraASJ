@@ -24,7 +24,7 @@ require "configPPrin.php";
                     <img src="img/logo.jpg" alt="" class="logo">
                 </a>
                 <div class="div-sesion ">
-                    <i class="fa-solid fa-user"></i>
+                    <i class="fa-regular fa-user"></i>
                     <div class="menu-Sesion">
                         <ul class="ul-sesion">
                             <li class="li-sesion"><a class="a-sesion" href="iniciosesion/iniciosesion.php">Iniciar sesion</a></li>
@@ -97,12 +97,12 @@ require "configPPrin.php";
 
                 $elementosPorPag = 10;
                 $totalPaginas = ceil($total_registro / $elementosPorPag);
-                $paginaSel = $_REQUEST['pagina']??false;
-                if ($paginaSel==false) {
-                    $inicioLimite=0;
-                    $paginaSel=1;
+                $paginaSel = $_REQUEST['pagina'] ?? false;
+                if ($paginaSel == false) {
+                    $inicioLimite = 0;
+                    $paginaSel = 1;
                 } else {
-                    $inicioLimite=($paginaSel-1)*$elementosPorPag;
+                    $inicioLimite = ($paginaSel - 1) * $elementosPorPag;
                 }
                 $limite = " limit $inicioLimite,$elementosPorPag";
 
@@ -122,7 +122,7 @@ require "configPPrin.php";
                                         <a href="" class="btn btn-success">Comprar</a>
                                     </div>
                                     <div class="btn-group mb-2">
-                                        <a href="detallesPPrin.php?id=<?php echo $row['id_tel'];?>&token=<?php echo hash_hmac('sha1',$row['id_tel'],KEY_TOKEN);?>" class="btn btn-primary">Detalles</a>
+                                        <a href="detallesPPrin.php?id=<?php echo $row['id_tel']; ?>&token=<?php echo hash_hmac('sha1', $row['id_tel'], KEY_TOKEN); ?>" class="btn btn-primary">Detalles</a>
                                     </div>
                                 </div>
                             </div>
@@ -130,7 +130,7 @@ require "configPPrin.php";
                     </div>
                 <?php } ?>
             </div>
-           <?php if ($totalPaginas > 0) { ?>
+            <?php if ($totalPaginas > 0) { ?>
                 <nav aria-label="Page navigation">
                     <ul class="pagination">
                         <?php if ($paginaSel != 1) { ?>
@@ -141,13 +141,13 @@ require "configPPrin.php";
                                 </a>
                             </li>
                         <?php } ?>
-                        
+
                         <?php for ($i = 1; $i <= $totalPaginas; $i++) { ?>
                             <li class="page-item <?php echo ($paginaSel == $i) ? " active " : " "; ?>">
                                 <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
                             </li>
                         <?php } ?>
-                        
+
                         <?php if ($paginaSel != $totalPaginas) { ?>
                             <li class="page-item">
                                 <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo ($paginaSel + 1); ?>" aria-label="Next">

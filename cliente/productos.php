@@ -28,8 +28,11 @@ require "config.php";
                 <img src="../img/logo.jpg" class="logo">
                 <img class="imgses" src="../img/cerrarses.jpg" alt="Cerrar sesion" title="salir">
             </a>
-            <a href="#" style="color:black; margin-top:5px; margin-left:10px">
+            <a href="checkout.php" style="color:black; margin-top:5px; margin-left:10px">
                 <i class="fa-solid fa-cart-plus fa-2x"></i>
+            </a>
+            <a href="datosUser.php" style="color:black; margin-top:5px; margin-left:5px;">
+                <i class="fa-solid fa-user fa-2x"></i>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

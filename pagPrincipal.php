@@ -14,23 +14,23 @@
 <body>
     <nav class="navbar bg-secondary navbar-expand-lg border-top border-bottom border-3 border-light">
         <div class="container-fluid">
-                <a class="navbar-brand" href="../salir.php">
-                    <a href="#" class="enlace">
-                        <img src="img/logo.jpg" alt="" class="logo">
-                    </a>
-                    <div class="div-sesion ">
-                        <i class="fa-solid fa-user"></i>
-                            <div class="menu-Sesion">
-                                <ul class="ul-sesion">
-                                    <li class="li-sesion"><a class="a-sesion" href="iniciosesion/iniciosesion.php">Iniciar sesion</a></li>
-                                    <li class="li-sesion"><a class="a-sesion" href="CreacionCuenta/crearCuenta.php">Crear cuenta</a></li>
-                                </ul>
-                            </div>
+            <a class="navbar-brand" href="../salir.php">
+                <a href="#" class="enlace">
+                    <img src="img/logo.jpg" alt="" class="logo">
+                </a>
+                <div class="div-sesion ">
+                    <i class="fa-regular fa-user"></i>
+                    <div class="menu-Sesion">
+                        <ul class="ul-sesion">
+                            <li class="li-sesion"><a class="a-sesion" href="iniciosesion/iniciosesion.php">Iniciar sesion</a></li>
+                            <li class="li-sesion"><a class="a-sesion" href="CreacionCuenta/crearCuenta.php">Crear cuenta</a></li>
+                        </ul>
                     </div>
-                </a>
-                <a href="#" style="color:black; margin-top:18px; margin-left:10px" >
-                    <i class="fa-solid fa-cart-plus fa-2x"></i>
-                </a>
+                </div>
+            </a>
+            <a href="#" style="color:black; margin-top:18px; margin-left:10px">
+                <i class="fa-solid fa-cart-plus fa-2x"></i>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -98,54 +98,54 @@
         </button>
     </div>
     <p class="text-center fs-1" style="color:#fff;">Ofertas especiales</p>
-    
+
     <main>
-    <div class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            <div class="col">
-                <div class="card shadow-sm">
-                    <img src="img/pro1.jpg" alt="Promocion-1" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">¡Oferta especial "Mi Fans"!</h5>
-                        <p class="card-text">$500 de descuento</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <a href="" class="btn btn-primary">Más información</a>
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <img src="img/pro1.jpg" alt="Promocion-1" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">¡Oferta especial "Mi Fans"!</h5>
+                            <p class="card-text">$500 de descuento</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a href="" class="btn btn-primary">Más información</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col">
-                <div class="card shadow-sm">
-                    <img src="img/pro2.jpg" alt="Promocion-2" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">Mi zona de fans</h5>
-                        <p class="card-text">15% de descuento</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <a href="" class="btn btn-primary">Más información</a>
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <img src="img/pro2.jpg" alt="Promocion-2" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">Mi zona de fans</h5>
+                            <p class="card-text">15% de descuento</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a href="" class="btn btn-primary">Más información</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col">
-                <div class="card shadow-sm">
-                    <img src="img/pro3.jpg" alt="Promocion-3" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">Tu regalo de cumpleaños</h5>
-                        <p class="card-text">$800 de descuento</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <a href="" class="btn btn-primary">Más información</a>
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <img src="img/pro3.jpg" alt="Promocion-3" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">Tu regalo de cumpleaños</h5>
+                            <p class="card-text">$800 de descuento</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a href="" class="btn btn-primary">Más información</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </main>
     </main>
     <p class="text-center fs-1" style="color:#fff;">Productos estrella</p>
@@ -158,11 +158,11 @@
                         <div class="card-body">
                             <h5 class="card-title">Redmi note 12S</h5>
                             <p class="card-text">Cámara principal de 108MP</p>
-                            <div class="d-flex justify-content-between align-items-center" >
+                            <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href=""  class="btn btn-success">Comprar</a>
+                                    <a href="" class="btn btn-success">Comprar</a>
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -173,9 +173,9 @@
                         <div class="card-body">
                             <h5 class="card-title">iPhone 15</h5>
                             <p class="card-text">Todo para sorprenderte.</p>
-                            <div class="d-flex justify-content-between align-items-center" >
+                            <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href=""  class="btn btn-success">Comprar</a>
+                                    <a href="" class="btn btn-success">Comprar</a>
                                 </div>
                             </div>
                         </div>
@@ -187,9 +187,9 @@
                         <div class="card-body">
                             <h5 class="card-title">Samsung Note 24</h5>
                             <p class="card-text">El mejor precio</p>
-                            <div class="d-flex justify-content-between align-items-center" >
+                            <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href=""  class="btn btn-success">Comprar</a>
+                                    <a href="" class="btn btn-success">Comprar</a>
                                 </div>
                             </div>
                         </div>
@@ -201,9 +201,9 @@
                         <div class="card-body">
                             <h5 class="card-title">Galaxy S24+</h5>
                             <p class="card-text">La mejor calidad.</p>
-                            <div class="d-flex justify-content-between align-items-center" >
+                            <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href=""  class="btn btn-success">Comprar</a>
+                                    <a href="" class="btn btn-success">Comprar</a>
                                 </div>
                             </div>
                         </div>
@@ -212,7 +212,7 @@
             </div>
         </div>
     </main>
-    
+
     <footer class="footerpagprinc">
         <div class="boton-modal1">
             <label class="footer-p" for="btn-modal1">Terminos y condiciones</label>

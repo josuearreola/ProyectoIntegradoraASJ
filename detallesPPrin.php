@@ -2,38 +2,36 @@
 include("conexionBD.php");
 require "configPPrin.php";
 
-$id=isset($_GET['id']) ? $_GET['id'] : '';
-$token=isset($_GET['token']) ? $_GET['token'] : '';
+$id = isset($_GET['id']) ? $_GET['id'] : '';
+$token = isset($_GET['token']) ? $_GET['token'] : '';
 
-$sql="SELECT id_tel,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod";
-$result=mysqli_query($conexion,$sql);
+$sql = "SELECT id_tel,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod";
+$result = mysqli_query($conexion, $sql);
 
-if($id == '' || $token == ''){
-    echo'Error al procesar la peticion';
+if ($id == '' || $token == '') {
+    echo 'Error al procesar la peticion';
     exit;
-}else{
-    $token_temp=hash_hmac('sha1',$id,KEY_TOKEN);
-    if($token == $token_temp){
-        $sql= $conexion ->prepare("SELECT id_tel,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel,proc_tel,ram_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod where id_tel=? and estatus=1 LIMIT 1");
+} else {
+    $token_temp = hash_hmac('sha1', $id, KEY_TOKEN);
+    if ($token == $token_temp) {
+        $sql = $conexion->prepare("SELECT id_tel,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel,proc_tel,ram_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod where id_tel=? and estatus=1 LIMIT 1");
         $sql->bind_param("i", $id);
         $sql->execute();
-        $sql->bind_result($id_tel, $nom_mod, $prec_tel, $img_tel, $col_tel, $cam_tel, $alm_tel, $pan_tel,$proc_tel,$ram_tel); 
+        $sql->bind_result($id_tel, $nom_mod, $prec_tel, $img_tel, $col_tel, $cam_tel, $alm_tel, $pan_tel, $proc_tel, $ram_tel);
 
-        if($sql->fetch()){
-            $nombre=$nom_mod;
-            $precio=$prec_tel;
-            $imagen=$img_tel;
-            $color=$col_tel;
-            $camara=$cam_tel;
-            $almacenamiento=$alm_tel;
-            $pantalla=$pan_tel;
-            $procesador=$proc_tel;
-            $ram=$ram_tel;
-
-
+        if ($sql->fetch()) {
+            $nombre = $nom_mod;
+            $precio = $prec_tel;
+            $imagen = $img_tel;
+            $color = $col_tel;
+            $camara = $cam_tel;
+            $almacenamiento = $alm_tel;
+            $pantalla = $pan_tel;
+            $procesador = $proc_tel;
+            $ram = $ram_tel;
         }
-    }else{
-        echo'Error al procesar la peticion';
+    } else {
+        echo 'Error al procesar la peticion';
         exit;
     }
 }
@@ -46,6 +44,7 @@ if($id == '' || $token == ''){
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,14 +56,14 @@ if($id == '' || $token == ''){
 </head>
 
 <body>
-<nav class="navbar bg-secondary navbar-expand-lg border-top border-bottom border-3 border-light">
+    <nav class="navbar bg-secondary navbar-expand-lg border-top border-bottom border-3 border-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="../salir.php">
                 <a href="#" class="enlace">
                     <img src="img/logo.jpg" alt="" class="logo">
                 </a>
                 <div class="div-sesion ">
-                    <i class="fa-solid fa-user"></i>
+                    <i class="fa-regular fa-user"></i>
                     <div class="menu-Sesion">
                         <ul class="ul-sesion">
                             <li class="li-sesion"><a class="a-sesion" href="iniciosesion/iniciosesion.php">Iniciar sesion</a></li>
@@ -120,19 +119,19 @@ if($id == '' || $token == ''){
         <div class="container">
             <div class="row">
                 <div class="col-md-4 order-md-1">
-                    <img src="<?php echo $img_tel?>" alt="producto"  style="max-width: 100%; height: auto;">
+                    <img src="<?php echo $img_tel ?>" alt="producto" style="max-width: 100%; height: auto;">
                 </div>
                 <div class="col-md-7 order-md-2">
-                    <h4 style="color:#fff"><?php echo $nombre;?></h4>
-                    <h4 style="color:#fff"><?php echo MONEDA . number_format($precio,2, '.',',');?></h4>
+                    <h4 style="color:#fff"><?php echo $nombre; ?></h4>
+                    <h4 style="color:#fff"><?php echo MONEDA . number_format($precio, 2, '.', ','); ?></h4>
                     <p class="lead">
-                        <h5 style="color:#fff">Descripcion:</h5>
-                        <h6 style="color:#fff">Color: <?php echo $color ?></h6>
-                        <h6 style="color:#fff">Camara: <?php echo $camara ?></h6>
-                        <h6 style="color:#fff">Almacenamiento: <?php echo $almacenamiento ?></h6>
-                        <h6 style="color:#fff">Pantalla: <?php echo $pantalla ?></h6>
-                        <h6 style="color:#fff">Procesador: <?php echo $procesador ?></h6>
-                        <h6 style="color:#fff">RAM: <?php echo $ram ?></h6>
+                    <h5 style="color:#fff">Descripcion:</h5>
+                    <h6 style="color:#fff">Color: <?php echo $color ?></h6>
+                    <h6 style="color:#fff">Camara: <?php echo $camara ?></h6>
+                    <h6 style="color:#fff">Almacenamiento: <?php echo $almacenamiento ?></h6>
+                    <h6 style="color:#fff">Pantalla: <?php echo $pantalla ?></h6>
+                    <h6 style="color:#fff">Procesador: <?php echo $procesador ?></h6>
+                    <h6 style="color:#fff">RAM: <?php echo $ram ?></h6>
                     </p>
                     <div class="d-grip gap-3 col-10 mx-auto">
                         <button class="btn btn-primary" type="button" onclick="location.href='inicioSesion/iniciosesion.php';">Comprar ahora</button>

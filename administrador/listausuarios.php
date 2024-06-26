@@ -2,8 +2,6 @@
 ob_start();
 include("../denegacion.php");
 include "../conexionBD.php";
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -133,7 +131,6 @@ include "../conexionBD.php";
                     }
                     $desde = ($pagina - 1) * $por_pagina;
                     $total_paginas = ceil($total_registro / $por_pagina);
-
                     $query = mysqli_query($conexion, "SELECT usuario.id_usua,nom_clie,nom_usua,email_clie,tip_usua FROM usuario inner join cliente ON usuario.id_usua=cliente.id_usua where usuario.estatus=1 and cliente.estatus=1 ORDER by id_usua asc limit $desde,$por_pagina");
                     $result = mysqli_num_rows($query);
                     if ($result > 0) {

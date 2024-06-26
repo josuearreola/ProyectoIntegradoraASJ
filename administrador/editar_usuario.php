@@ -5,13 +5,12 @@ include("../denegacion.php");
 
 if (!empty($_POST)) {
     $alert = '';
-    if (empty($_POST['nombre']) || empty($_POST['nom_usua']) || empty($_POST['email']) || empty($_POST['rol'] || empty($_POST['nombre']))) {
+    if (empty($_POST['nombre']) || empty($_POST['nom_usua']) || empty($_POST['email']) || empty($_POST['rol'])) {
         $alert = '<p class="msj_error">Todos los campos son obligatorios</p>';
     } else {
         $idUsuario=$_POST['idUsuario'];
         $nombre = $_POST['nombre'];
         $nombreusua = $_POST['nom_usua'];
-        $contraseña = md5(mysqli_real_escape_string($conexion, $_POST['pass_usua']));
         $email = $_POST['email'];
         $rol = $_POST['rol'];
         $query = mysqli_query($conexion, "select * from usuario inner join cliente on usuario.id_usua = cliente.id_usua where (nom_usua='$nombreusua' and usuario.id_usua != $idUsuario) or (email_clie='$email' and usuario.id_usua !=$idUsuario)");
@@ -19,12 +18,13 @@ if (!empty($_POST)) {
         if ($resultado > 0) {
             $alert = '<p class="msj_error">El correo o usuario ya existen</p>';
         } else {
-            if (empty($_POST[$contraseña])) {
-                $sql=mysqli_query($conexion,"update usuario set nom_usua='$nombreusua', tip_usua='$rol' where id_usua='$idUsuario'");
-                $sql1=mysqli_query($conexion,"update cliente set nom_clie='$nombre', email_clie='$email' where id_clie='$idUsuario'");
-            }else{
-                $sql=mysqli_query($conexion,"update usuario set nom_usua='$nombreusua', tip_usua='$rol',pass_usua='$contraseña' where id_usua='$idUsuario'");
-                $sql1=mysqli_query($conexion,"update cliente set nom_clie='$nombre', email_clie='$email' where id_clie='$idUsuario'");
+            if (empty($_POST['pass_usua'])) {
+                $sql = mysqli_query($conexion, "update usuario set nom_usua='$nombreusua', tip_usua='$rol' where id_usua='$idUsuario'");
+                $sql1 = mysqli_query($conexion, "update cliente set nom_clie='$nombre', email_clie='$email' where id_clie='$idUsuario'");
+            } else {
+                $contraseña = md5(mysqli_real_escape_string($conexion, $_POST['pass_usua']));
+                $sql = mysqli_query($conexion, "update usuario set nom_usua='$nombreusua', tip_usua='$rol', pass_usua='$contraseña' where id_usua='$idUsuario'");
+                $sql1 = mysqli_query($conexion, "update cliente set nom_clie='$nombre', email_clie='$email' where id_clie='$idUsuario'");
             }
             if ($sql=== true) {
                 if ($sql1) {
@@ -158,17 +158,19 @@ if ($result == 0) {
         <div class="form_registerUsua">
             <h1 class="text-prin">Actualizar usuario</h1>
             <hr>
-            <div class="alert"><?php print(isset($alert) ? $alert : '') ?></div>
+            <?php if (!empty($alert)): ?>
+                <div class="alert"><?php echo $alert; ?></div>
+            <?php endif; ?>
             <form action="editar_usuario.php" method="post">
                 <input type="hidden" name="idUsuario" value="<?php echo $iduser; ?>">
                 <label for="nombre">Nombre</label>
                 <input type="text" name="nombre" id="nombre" placeholder="Nombre" value="<?php echo $nombre?>">
                 <label for="nom_usua">Nombre del usuario</label>
                 <input type="text" name="nom_usua" id="nom_usua" placeholder="Nombre de usuario" value="<?php echo $usuario?>">
-                <label for="pass_usua">Contraseña</label>
-                <input type="password" name="pass_usua" id="pass_usua" placeholder="Contraseña">
                 <label for="email">Correo electronico</label>
                 <input type="email" name="email" id="email" placeholder="Correo electronico" value="<?php echo $email?>">
+                <label for="pass_usua">Contraseña</label>
+                <input type="password" name="pass_usua" id="pass_usua" placeholder="Contraseña">
                 <label for="tip_usua">Tipo de usuario</label>
                 <select name="rol" id="rol" class="notItemOne ">
                     <?php 

@@ -1,3 +1,10 @@
+<?php
+include "../conexionBD.php";
+session_start();
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,9 +26,12 @@
                 <img src="../img/logo.jpg" class="logo">
                 <img class="imgses" src="../img/cerrarses.jpg" alt="Cerrar sesion" title="salir">
             </a>
-            <a href="#" style="color:black; margin-top:5px; margin-left:10px" >
-                    <i class="fa-solid fa-cart-plus fa-2x"></i>
-                </a>
+            <a href="checkout.php" style="color:black; margin-top:5px; margin-left:-2px">
+                <i class="fa-solid fa-cart-plus fa-2x"></i>
+            </a>
+            <a href="datosUser.php?idUsua=<?php echo $_SESSION['Id_usua']; ?>" style="color:black; margin-top:5px; margin-left:5px;">
+                <i class="fa-solid fa-user fa-2x"></i>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -35,6 +45,7 @@
                         <li class="nav-item">
                             <a class="nav-link active lh-lg" aria-current="page" href="checkout.php">Inicio</a>
                         </li>
+
                         <li class="nav-item">
                             <a class="nav-link lh-lg" href="productos.php">Productos</a>
                         </li>
@@ -152,9 +163,6 @@
                             <h5 class="card-title">Redmi note 12S</h5>
                             <p class="card-text">Cámara principal de 108MP</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href="" class="btn btn-success">Comprar</a>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -165,11 +173,6 @@
                         <div class="card-body">
                             <h5 class="card-title">iPhone 15</h5>
                             <p class="card-text">Todo para sorprenderte.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href="" class="btn btn-success">Comprar</a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -179,11 +182,6 @@
                         <div class="card-body">
                             <h5 class="card-title">Samsung Note 24</h5>
                             <p class="card-text">El mejor precio</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href="" class="btn btn-success">Comprar</a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -193,11 +191,6 @@
                         <div class="card-body">
                             <h5 class="card-title">Galaxy S24+</h5>
                             <p class="card-text">Todo para sorprenderte.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href="" class="btn btn-success">Comprar</a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

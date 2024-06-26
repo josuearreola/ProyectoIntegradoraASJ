@@ -128,7 +128,9 @@ if (!empty($_POST)) {
         <div class="form_registerUsua">
             <h1 class="text-prin">Registro usuario</h1>
             <hr>
-            <div class="alert"><?php print(isset($alert) ? $alert : '') ?></div>
+            <?php if (!empty($alert)): ?>
+                <div class="alert"><?php echo $alert; ?></div>
+            <?php endif; ?>
             <form class="formnewusua" action="registrousuario.php" method="post">
                 <label for="nombre">Nombre</label>
                 <input type="text" name="nombre" id="nombre" placeholder="Nombre">
