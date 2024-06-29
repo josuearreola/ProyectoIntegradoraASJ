@@ -118,7 +118,7 @@ if($id == '' || $token == ''){
         <div class="container">
             <div class="row">
                 <div class="col-md-4 order-md-1">
-                    <img src="<?php echo '../'.$img_tel?>" alt="producto"  style="max-width: 100%; height: auto;">
+                    <img src="<?php echo '../img/'.$img_tel?>" alt="producto"  style="max-width: 100%; height: auto;">
                 </div>
                 <div class="col-md-7 order-md-2">
                     <h4 style="color:#fff"><?php echo $modelo;?></h4>

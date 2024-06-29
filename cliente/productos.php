@@ -113,7 +113,7 @@ require "config.php";
                 ?>
                     <div class="col">
                         <div class="card shadow-sm">
-                            <img src="<?php echo '../' . $row['img_tel']; ?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
+                            <img src="<?php echo '../img/' . $row['img_tel']; ?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $row['nom_mod']; ?></h5>
                                 <p class="card-text">Cantidad: <input style=" width:60px" type="number" name="cantidad<?php echo $row['id_tel']; ?>" id="cantidad<?php echo $row['id_tel']; ?>" min="1" max="35" value="1"></p>

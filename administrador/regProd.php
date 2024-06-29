@@ -6,6 +6,7 @@ include "../denegacion.php";
 
 if (!empty($_POST)) {
     $alert = '';
+    
     if (empty($_POST['marca']) || empty($_POST['modelo']) || empty($_POST['precio']) || empty($_POST['costo']) || empty($_POST['color']) || empty($_POST['camara']) || empty($_POST['almacenamiento']) || empty($_POST['ram']) || empty($_POST['pantalla']) || empty($_POST['bateria']) || empty($_POST['procesador'])) {
         $alert = '<p class="msj_error">Todos los campos son obligatorios </p>';
     } else {
@@ -20,17 +21,18 @@ if (!empty($_POST)) {
         $pantalla = $_POST['pantalla'];
         $bateria = $_POST['bateria'];
         $procesador = $_POST['procesador'];
-        $foto = $_FILES['foto'];
-        $nombre_foto =$_FILES['name'];
-        $type =$_FILES['type'];
-        $url_temp =$_FILES['temp_name'];
+        $foto = $_FILES['foto']; 
+
+        $nombre_foto = $foto['name'];
+        $type = $foto['type'];
+        $url_temp = $foto['tmp_name'];
 
         $imgProd='img_producto.png';
 
 
 
         if($nombre_foto != ''){
-            $destino ='img/';
+            $destino ='../img/';
             $img_nombre='img_'.md5(date('d-m-Y H:m:s'));
             $imgProd=$img_nombre.'.jpg';
             $src=$destino.$imgProd;
@@ -167,7 +169,7 @@ if (!empty($_POST)) {
             <?php if (!empty($alert)) : ?>
                 <div class="alert"><?php echo $alert; ?></div>
             <?php endif; ?>
-            <form class="formProd" action="regProd.php" method="post" enctype="multipart/form-data"></form>
+            <form class="formProd" action="regProd.php" method="post" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-md-6">
                         <label for="marca">Marca del telefono:</label>
