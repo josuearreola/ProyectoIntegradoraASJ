@@ -49,33 +49,17 @@ include "../conexionBD.php";
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Clientes</a>
+                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Facturas</a>
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevos clientes</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de clientes</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Clientes eliminados</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Usuarios</a>
-                                    <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevo usuario</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de usuarios</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Usuarios eliminados</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Marcas</a>
-                                    <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva marca</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de marcas</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Marca eliminadas</a></li>
+                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva facturas</a></li>
+                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de facturas</a></li>
+                                        <li><a class="dropdown-item border-0" href="#">Facturas eliminadas</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Productos</a>
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevos productos</a></li>
+                                        <li><a class="dropdown-item border-0" href="regProd.php">Nuevos productos</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de productos</a></li>
                                         <li><a class="dropdown-item border-0" href="#">Productos eliminados</a></li>
                                     </ul>
@@ -162,34 +146,34 @@ include "../conexionBD.php";
         </div>
         </div>
         <?php if ($total_paginas > 0) { ?>
-                <nav aria-label="Page navigation">
-                    <ul class="pagination">
-                        <?php if ($pagina != 1) { ?>
-                            <li class="page-item">
-                                <a class="page-link" href="?pagina=<?php echo 1; ?>" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                            </li>
-                        <?php } ?>
-                        
-                        <?php for ($i = 1; $i <= $total_paginas; $i++) { ?>
-                            <li class="page-item <?php echo ($pagina == $i) ? " active " : " "; ?>">
-                                <a class="page-link" href="?pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
-                            </li>
-                        <?php } ?>
-                        
-                        <?php if ($pagina != $total_paginas) { ?>
-                            <li class="page-item">
-                                <a class="page-link" href="?pagina=<?php echo $pagina + 1; ?>" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </li>
-                        <?php } ?>
-                    </ul>
-                </nav>
-            <?php } ?>
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <?php if ($pagina != 1) { ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo 1; ?>" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                    <?php } ?>
+
+                    <?php for ($i = 1; $i <= $total_paginas; $i++) { ?>
+                        <li class="page-item <?php echo ($pagina == $i) ? " active " : " "; ?>">
+                            <a class="page-link" href="?pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+                        </li>
+                    <?php } ?>
+
+                    <?php if ($pagina != $total_paginas) { ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo $pagina + 1; ?>" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    <?php } ?>
+                </ul>
+            </nav>
+        <?php } ?>
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>

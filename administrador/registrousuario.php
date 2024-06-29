@@ -50,7 +50,7 @@ if (!empty($_POST)) {
 <body>
     <header class="header">
         <div>
-            <nav class="navbar bg-secondary navbar-expand-lg border-top border-bottom border-3 border-light">
+        <nav class="navbar bg-secondary navbar-expand-lg border-top border-bottom border-3 border-light">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="../salir.php">
                         <img src="../img/logo.jpg" class="logo">
@@ -78,42 +78,26 @@ if (!empty($_POST)) {
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Clientes </a>
-                                    <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevos clientes</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de clientes</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Clients eliminados</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Usuarios </a>
-                                    <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevo usuario</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de usuarios</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Usuarios eliminados</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Marcas </a>
-                                    <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva marca</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de marcas</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Marca eliminadas</a></li>
+                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Facturas</a>
+                                    <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
+                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva facturas</a></li>
+                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de facturas</a></li>
+                                        <li><a class="dropdown-item border-0" href="#">Facturas eliminadas</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Productos </a>
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevos productos</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de productos</a></li>
+                                        <li><a class="dropdown-item border-0" href="regProd.php">Nuevos productos</a></li>
+                                        <li><a class="dropdown-item border-0" href="#">Lista de productos</a></li>
                                         <li><a class="dropdown-item border-0" href="#">Productos eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales </a>
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva sucursal</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de sucursales</a></li>
+                                        <li><a class="dropdown-item border-0" href="#">Nueva sucursal</a></li>
+                                        <li><a class="dropdown-item border-0" href="#">Lista de sucursales</a></li>
                                         <li><a class="dropdown-item border-0" href="#">Sucursales eliminadas</a></li>
                                     </ul>
                                 </li>
@@ -125,27 +109,27 @@ if (!empty($_POST)) {
         <section></section>
     </header>
     <section class="container">
-        <div class="form_registerUsua">
+        <div class="form_register">
             <h1 class="text-prin">Registro usuario</h1>
             <hr>
             <?php if (!empty($alert)): ?>
                 <div class="alert"><?php echo $alert; ?></div>
             <?php endif; ?>
-            <form class="formnewusua" action="registrousuario.php" method="post">
+            <form class="formregUsua" action="registrousuario.php" method="post" required>
                 <label for="nombre">Nombre</label>
                 <input type="text" name="nombre" id="nombre" placeholder="Nombre">
                 <label for="nom_usua">Nombre del usuario</label>
-                <input type="text" name="nom_usua" id="nom_usua" placeholder="Nombre de usuario">
+                <input type="text" name="nom_usua" id="nom_usua" placeholder="Nombre de usuario" required>
                 <label for="pass_usua">Contraseña</label>
-                <input type="password" name="pass_usua" id="pass_usua" placeholder="Contraseña">
+                <input type="password" name="pass_usua" id="pass_usua" placeholder="Contraseña" required>
                 <label for="email">Correo electronico</label>
-                <input type="email" name="email" id="email" placeholder="Correo electronico">
+                <input type="email" name="email" id="email" placeholder="Correo electronico" required>
                 <label for="tip_usua">Tipo de usuario</label>
                 <select name="rol" id="rol">
                     <option value="administrador">Administrador</option>
                     <option value="cliente">Cliente</option>
                 </select>
-                <input type="submit" class="btn_save" value="Crear usuario">
+                <input type="submit" class="btn_save" value="Registrar usuario">
             </form>
         </div>
     </section>

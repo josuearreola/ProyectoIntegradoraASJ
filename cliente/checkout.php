@@ -174,7 +174,8 @@ if ($producto != NULL) {
         </div>
     </div>
     <footer class="footerpagprinc">
-        <div class="boton-modal1">
+    <div class="container">
+        <div>
             <label class="footer-p" for="btn-modal1">Terminos y condiciones</label>
         </div>
         <div >

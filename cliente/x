@@ -1,70 +1,9 @@
-<?php
-session_start();
-$alert = '';
-    if (!empty($_POST)) {
-        if (empty($_POST['datoVinc'])) {
-            $alert = 'Complete todos los campos';
-        }else{
-            if (empty($_POST["email"])) {
-            require_once("../conexionBD.php");
-            $email = $_POST['datoVinc'];
-            $consulta = "select email_clie from cliente where email_clie='$email' LIMIT 1";
-            $f = mysqli_query($conexion, $consulta);
-            $a = mysqli_fetch_array($f);
-            if ( ! $a ) {
-                $alert = "No existe ese correo";
-            } else {
-                $_SESSION['email'] = $email;
-                header('location:RestablecerContraseña2.php');
-                exit;
-            }
-        }
-        }
-    }
-?>
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restablecer contraseña</title>
-    <link rel="stylesheet" href="../css/restContra.css">
-    <link rel="icon" href="../img/logo.ico">
-</head>
-
-<body>
-    <header>
-        <div class="info-usua">
-            <label class="nameEmp">A S J Technology</label>
+    <footer class="footerpagprinc mt-auto">
+    <div class="container">
+            <label class="footer-p" for="btn-modal1">Terminos y condiciones</label>
         </div>
-        <div class="regresar">
-            <a class="regPag" href="../iniciosesion/iniciosesion.php">Iniciar sesión</a>
-        </div>
-    </header>
-    <section>
-        <div class="div-rest">
-            <form action="RestablecerContraseña1.php" method="post" class="form-Rest">
-                <p class="p-prinRest">Restablecer contraseña</p>
-                <p class="p-Rest">Introduce un correo vinculado a tu cuenta</p>
-                <input type="text" class="form-Dato" name="datoVinc" id="datoVinc" placeholder="Correo electrónico" required>
-                <div class="alert" id="alert">
-                    <?php echo isset($alert) ? '<div class="alert-style">' . $alert . '</div>'  : ''; ?>
-                    
-                </div>
-                <input type="submit" value="Siguiente" class="btn-rest1">
-            </form>
-        </div>
-    </section>
-    <footer class="footerRest">
-        <div class="boton-modal1">
-            <label class="footer-r" for="btn-modal1">Terminos y condiciones</label>
-        </div>
-        <div>
-            <label class="footer-r" for="btn-modal2">Atencion al cliente</label>
+        <div >
+            <label class="footer-p" for="btn-modal2">Atencion al cliente</label>
         </div>
         <input type="checkbox" id="btn-modal1">
         <div class="container-modal1">
@@ -100,14 +39,10 @@ $alert = '';
                     Para consultas relacionadas con garantías, devoluciones o reemplazos, póngase en contacto con nosotros y le guiaremos a través del proceso de manera rápida y sencilla.</p>
                 <p>Facturación y Pagos:
                     Para cualquier pregunta relacionada con facturas, pagos o información de cuentas, nuestro equipo de atención al cliente le proporcionará la asistencia necesaria para resolver su consulta de manera eficiente.</p>
-                    <div class="btn-cerrar2">
+                <div class="btn-cerrar2">
                     <label for="btn-modal2">Aceptar</label>
                 </div>
             </div>
             <label for="btn-modal2" class="cerrar-modal"></label>
         </div>
     </footer>
-    <script src="../javascript/validacion.js"></script>
-</body>
-
-</html>

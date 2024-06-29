@@ -65,12 +65,12 @@ if (!empty($_SESSION['active'])) {
                 <p class="text-Inicio">Inicia sesión para continuar</p>
                 <div class="div-usuario">
                     <label class="text-Info" for="usuario">USUARIO </label>
-                    <input class="form-Inicio" type="text" name="usuario" id="usuario" placeholder="Usuario">
+                    <input class="form-Inicio" type="text" name="usuario" id="usuario" placeholder="Usuario" required>
                     <p class="formulario__input-error" id="error-usuario">El usuario tiene que ser de 4 a 16 digitos y solo puede contener numeros,letras y guion bajo</p>
                 </div>
                 <div class="div-contr">
                     <label class="text-Info" for="contraseña">CONTRASEÑA</label>
-                    <input class="form-Inicio" type="password" name="contraseña" id="contraseña" placeholder="*******"><br>
+                    <input class="form-Inicio" type="password" name="contraseña" id="contraseña" placeholder="*******" required><br>
                     <p class="formulario__input-error" id="error-contraseña">La contraseña tiene que ser de 4 a 12 digitos</p>
                 </div>
 

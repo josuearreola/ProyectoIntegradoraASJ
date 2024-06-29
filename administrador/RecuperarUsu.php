@@ -85,33 +85,17 @@ include "../conexionBD.php";
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Clientes </a>
-                                    <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevos clientes</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de clientes</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Clients eliminados</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Usuarios </a>
-                                    <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevo usuario</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de usuarios</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Usuarios eliminados</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Marcas </a>
-                                    <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva marca</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de marcas</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Marca eliminadas</a></li>
+                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Facturas</a>
+                                    <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
+                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva facturas</a></li>
+                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de facturas</a></li>
+                                        <li><a class="dropdown-item border-0" href="#">Facturas eliminadas</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Productos </a>
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevos productos</a></li>
+                                        <li><a class="dropdown-item border-0" href="regProd.php">Nuevos productos</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de productos</a></li>
                                         <li><a class="dropdown-item border-0" href="#">Productos eliminados</a></li>
                                     </ul>

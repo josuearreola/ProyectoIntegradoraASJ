@@ -14,13 +14,13 @@ if($id == '' || $token == ''){
 }else{
     $token_temp=hash_hmac('sha1',$id,KEY_TOKEN);
     if($token == $token_temp){
-        $sql= $conexion ->prepare("SELECT id_tel,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel,proc_tel,ram_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod where id_tel=? and estatus=1 LIMIT 1");
+        $sql= $conexion ->prepare("SELECT id_tel,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel,proc_tel,ram_tel,nom_marc FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod INNER JOIN marca on marca.id_marca = modelo.id_marca where id_tel=? and estatus=1 LIMIT 1");
         $sql->bind_param("i", $id);
         $sql->execute();
-        $sql->bind_result($id_tel, $nom_mod, $prec_tel, $img_tel, $col_tel, $cam_tel, $alm_tel, $pan_tel,$proc_tel,$ram_tel); 
+        $sql->bind_result($id_tel, $nom_mod, $prec_tel, $img_tel, $col_tel, $cam_tel, $alm_tel, $pan_tel,$proc_tel,$ram_tel,$nom_marc); 
 
         if($sql->fetch()){
-            $nombre=$nom_mod;
+            $modelo=$nom_mod;
             $precio=$prec_tel;
             $imagen=$img_tel;
             $color=$col_tel;
@@ -29,7 +29,7 @@ if($id == '' || $token == ''){
             $pantalla=$pan_tel;
             $procesador=$proc_tel;
             $ram=$ram_tel;
-
+            $nomMarca=$nom_marc;
 
         }
     }else{
@@ -121,10 +121,12 @@ if($id == '' || $token == ''){
                     <img src="<?php echo '../'.$img_tel?>" alt="producto"  style="max-width: 100%; height: auto;">
                 </div>
                 <div class="col-md-7 order-md-2">
-                    <h4 style="color:#fff"><?php echo $nombre;?></h4>
+                    <h4 style="color:#fff"><?php echo $modelo;?></h4>
                     <h4 style="color:#fff"><?php echo MONEDA . number_format($precio,2, '.',',');?></h4>
                     <p class="lead">
                         <h5 style="color:#fff">Descripcion:</h5>
+                        <h6 style="color:#fff">Marca: <?php echo $nomMarca ?></h6>
+                        
                         <h6 style="color:#fff">Color: <?php echo $color ?></h6>
                         <h6 style="color:#fff">Camara: <?php echo $camara ?></h6>
                         <h6 style="color:#fff">Almacenamiento: <?php echo $almacenamiento ?></h6>

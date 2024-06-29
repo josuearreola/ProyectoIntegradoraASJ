@@ -2,15 +2,13 @@
 include "../conexionBD.php";
 
 if(!empty($_POST)){
-    $alert='';
     if(empty($_POST['nombre']) || empty($_POST['nom_usua']) || empty($_POST['email'])){
-        $alert = '<p class="msj_error">Los campos Nombre,Nombre del usuario y Correo electronico son obligatorios </p>';
+        $alert = '<p class="msj_error">Los campos Nombre, Nombre del usuario y Correo electrónico son obligatorios </p>';
     }else{
-        $idUsuario=$_POST['idUsuario'];
+        $idUsuario = $_POST['idUsuario'];
         $nombre = $_POST['nombre'];
         $nombreusua = $_POST['nom_usua'];
         $email = $_POST['email'];
-        $contraseña = md5(mysqli_real_escape_string($conexion, $_POST['pass_usua']));
         $ap = $_POST['ap_clie'];
         $am = $_POST['am_clie'];
         $rfc = $_POST['rfc'];
@@ -18,32 +16,33 @@ if(!empty($_POST)){
         $col = $_POST['col'];
         $calle = $_POST['calle'];
         $numI = $_POST['numI'];
-        $numE = $_POST['NumE'];
+        $numE = $_POST['numE'];
         
-        $query = mysqli_query($conexion, "select * from usuario inner join cliente on usuario.id_usua = cliente.id_usua where usuario.id_usua=$idUsuario");
-        $resultado = mysqli_fetch_array($query);
-        if ($resultado > 0) {
-            $alert = '<p class="msj_error">El correo o usuario ya existen</p>';
+        // Si se proporciona una nueva contraseña
+        if(!empty($_POST['pass_usua'])){
+            $contraseña = md5(mysqli_real_escape_string($conexion, $_POST['pass_usua']));
+            $sql = mysqli_query($conexion, "UPDATE usuario SET nom_usua='$nombreusua', pass_usua='$contraseña' WHERE id_usua='$idUsuario'");
         } else {
-            if (empty($_POST['pass_usua']) || empty($_POST['ap_clie']) || empty($_POST['am_clie']) || empty($_POST['rfc']) || empty($_POST['telefono']) || empty($_POST['col']) || empty($_POST['calle']) || empty($_POST['numI']) || empty($_POST['numE'])) {
-                $sql = mysqli_query($conexion, "update usuario set nom_usua='$nombreusua' where id_usua='$idUsuario'");
-                $sql1 = mysqli_query($conexion, "update cliente set nom_clie='$nombre', email_clie='$email' where id_usua=$idUsuario");
-            } else {
-               
-                $sql = mysqli_query($conexion, "update usuario set nom_usua='$nombreusua', tip_usua='$rol', pass_usua='$contraseña' where id_usua='$idUsuario'");
-                $sql1 = mysqli_query($conexion, "UPDATE cliente set 
-                                                                nom_clie='$nombre', 
-                                                                email_clie='$email',
-                                                                ap_clie='$ap',
-                                                                am_clie='$am',
-                                                                rfc_clie='$rfc',
-                                                                tel_clie='$telefono',
-                                                                col_clie='$col_clie',
-                                                                calle_clie='$calle',
-                                                                ni_clie='$numI',
-                                                                ne_clie='$numE'
-                                                                where id_usua=$idUsuario");
-            }
+            $sql = mysqli_query($conexion, "UPDATE usuario SET nom_usua='$nombreusua' WHERE id_usua='$idUsuario'");
+        }
+
+        $sql1 = mysqli_query($conexion, "UPDATE cliente SET 
+                                        nom_clie='$nombre', 
+                                        email_clie='$email',
+                                        ap_clie='$ap',
+                                        am_clie='$am',
+                                        rfc_clie='$rfc',
+                                        tel_clie='$telefono',
+                                        col_clie='$col',
+                                        calle_clie='$calle',
+                                        ni_clie='$numI',
+                                        ne_clie='$numE'
+                                        WHERE id_usua='$idUsuario'");
+        
+        if($sql && $sql1){
+            $alert = '<p class="msj_ok">Usuario actualizado correctamente.</p>';
+        }else{
+            $alert = '<p class="msj_error">Error al actualizar el usuario.</p>';
         }
     }
 }
@@ -149,15 +148,15 @@ if ($result == 0) {
                 <div class="row">
                     <div class="col-md-6">
                         <label for="nombre">Nombre:</label>
-                        <input class="form-control" type="text" name="nombre" id="nombre" placeholder="Nombre" value="<?php echo $nombre?>">
+                        <input class="form-control" type="text" name="nombre" id="nombre" placeholder="Nombre" value="<?php echo $nombre?>" required>
                     </div>
                     <div class="col-md-6">
                         <label for="nom_usua">Nombre del usuario:</label>
-                        <input class="form-control" type="text" name="nom_usua" id="nom_usua" placeholder="Nombre de usuario" value="<?php echo $usuario?>">
+                        <input class="form-control" type="text" name="nom_usua" id="nom_usua" placeholder="Nombre de usuario" value="<?php echo $usuario?>" required>
                     </div>
                     <div class="col-md-6">
                         <label for="email">Correo electronico:</label>
-                        <input class="form-control" type="email" name="email" id="email" placeholder="Correo electronico" value="<?php echo $email?>">
+                        <input class="form-control" type="email" name="email" id="email" placeholder="Correo electronico" value="<?php echo $email?>" required>
                     </div>
                     <div class="col-md-6">
                         <label for="ap_clie">Apellido Paterno:</label>
@@ -186,19 +185,19 @@ if ($result == 0) {
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="col">Colonia:</label>
-                                <input class="form-control" type="text" name="col" id="col" placeholder="Colonia" value="<?php echo $col?>">
+                                <input class="form-control datosDir" type="text" name="col" id="col" placeholder="Colonia" value="<?php echo $col?>">
                             </div>
                             <div class="col-md-6">
                                 <label for="calle">Calle:</label>
-                                <input class="form-control" type="text" name="calle" id="calle" placeholder="Calle" value="<?php echo $calle?>">
+                                <input class="form-control datosDir" type="text" name="calle" id="calle" placeholder="Calle" value="<?php echo $calle?>">
                             </div>
                             <div class="col-md-6">
                                 <label for="numE">Número exterior:</label>
-                                <input class="form-control" type="text" name="numE" id="numE" placeholder="# Exterior" value="<?php echo $NumE?>">
+                                <input class="form-control datosDir" type="text" name="numE" id="numE" placeholder="# Exterior" value="<?php echo $NumE?>">
                             </div>
                             <div class="col-md-6">
                                 <label for="numI">Número interior:</label>
-                                <input class="form-control" type="text" name="numI" id="numI" placeholder="# Interior" value="<?php echo $NumI?>">
+                                <input class="form-control datosDir" type="text" name="numI" id="numI" placeholder="# Interior" value="<?php echo $NumI?>">
                             </div>
                         </div>
                     </div>
@@ -266,8 +265,13 @@ if ($result == 0) {
         document.getElementById('mostrarDireccion').addEventListener('click', function(e) {
             e.preventDefault();
             var direccionCampos = document.querySelector('.direccion-campos');
+            var direccionInputs = document.querySelectorAll('.datosDir');
             if (direccionCampos.style.display === 'none' || direccionCampos.style.display === '') {
                 direccionCampos.style.display = 'block';
+                direccionInputs.forEach(function(input) {
+                    input.style.background = '#6d6a6a';
+                    input.style.border = 'none';
+                });
                 this.textContent = 'Ocultar Dirección';
             } else {
                 direccionCampos.style.display = 'none';

@@ -49,22 +49,22 @@
                 <p class="text-Creacion">¿Ya tienes cuenta? <a class="envInicio" href="../iniciosesion/iniciosesion.php">Inicia sesión</a></p>
                 <div class="div-usua">
                     <label class="text-Info" for="nombre">Nombre</label>
-                    <input class="form-Creacion" type="text" name="nombre" id="nombre" placeholder="Nombre">
+                    <input class="form-Creacion" type="text" name="nombre" id="nombre" placeholder="Nombre" required>
                     <p class="formulario__input-error" id="error-usuario">El nombre tiene que ser de 4 a 16 digitos y solo puede contener numer,letras y guion bajo</p>
                 </div>
                 <div class="div-usua">
                     <label class="text-Info" for="usuario">USUARIO</label>
-                    <input class="form-Creacion" type="text" name="usuario" id="usuario" placeholder="Usuario">
+                    <input class="form-Creacion" type="text" name="usuario" id="usuario" placeholder="Usuario" required>
                     <p class="formulario__input-error" id="error-usuario">El usuario tiene que ser de 4 a 16 digitos y solo puede contener numer,letras y guion bajo</p>
                 </div>
                 <div class="div-correo">
                     <label class="text-Info" for="email">CORREO ELECTRÓNICO</label>
-                    <input class="form-Creacion" type="email" name="email" id="email" placeholder="Ejemplo@gmail.com">
+                    <input class="form-Creacion" type="email" name="email" id="email" placeholder="Ejemplo@gmail.com" required>
                     <p class="formulario__input-error" id="error-email">El correo solo puede contener letras,numeros,puntos,guiones y guion bajo</p>
                 </div>
                 <div class="div-contraseña">
                     <label class="text-Info" for="contraseña">CONTRASEÑA</label>
-                    <input class="form-Creacion" type="password" name="contraseña" id="contraseña" placeholder="Contraseña">
+                    <input class="form-Creacion" type="password" name="contraseña" id="contraseña" placeholder="Contraseña" required>
                     <p class="formulario__input-error" id="error-contraseña">La contraseña tiene que ser de 4 a 12 digitos</p>
                 </div>
                 <div class="alert"> 

@@ -7,10 +7,10 @@ if (!empty($_POST)) {
     }else{
         if (empty($_POST["contraseña"])) {
             require_once("../conexionBD.php");
-            $contraseñanew = md5(mysqli_real_escape_string($conexion,$_POST['datoVinc']));
             if (isset($_SESSION['email'])) {
+                $contraseñanew = md5(mysqli_real_escape_string($conexion,$_POST['datoVinc']));
                 $email = $_SESSION['email'];
-                $consult="UPDATE usuario INNER JOIN cliente ON usuario.id_usua = cliente.id_clie SET usuario.pass_usua = '$contraseñanew' WHERE cliente.email_clie = '$email'";
+                $consult="UPDATE usuario INNER JOIN cliente ON usuario.id_usua = cliente.id_usua SET usuario.pass_usua = '$contraseñanew' WHERE cliente.email_clie = '$email'";
                 $actCont=mysqli_query($conexion,$consult); 
                 header("location:../inicioSesion/iniciosesion.php");
                 session_abort();
@@ -41,7 +41,7 @@ if (!empty($_POST)) {
             <form action="RestablecerContraseña2.php" method="post" class="form-Rest">
                 <p class="p-prinRest">Restablecer contraseña</p>
                 <p class="p-Rest">Introduce la nueva contraseña</p>
-                <input type="password" class="form-Dato" name="datoVinc" id="datoVinc" placeholder="Nueva contraseña">
+                <input type="password" class="form-Dato" name="datoVinc" id="datoVinc" placeholder="Nueva contraseña" required>
                 <div class="alert" id="alert">
                     <?php echo isset($alert) ? '<div class="alert-style">' . $alert . '</div>'  : ''; ?>
                 </div>
