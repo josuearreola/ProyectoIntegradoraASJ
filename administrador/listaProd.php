@@ -2,8 +2,6 @@
 ob_start();
 include("../denegacion.php");
 include "../conexionBD.php";
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,11 +11,11 @@ include "../conexionBD.php";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASJ Technology</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="icon" href="../img/logo.ico">
     <link rel="stylesheet" href="../css/styleadministrador.css">
+
 </head>
 
 <body>
@@ -75,27 +73,21 @@ include "../conexionBD.php";
                                     </ul>
                                 </li>
                             </ul>
-                            <form action="buscar_usuario.php" method="get" class="form_search ms-auto">
-                                <input class="busqueda" type="text" name="busqueda" id="busqueda" placeholder="Buscar">
+                            <form action="buscar_producto.php" method="get" class="form_search ms-auto">
+                                <input class="busqueda" type="text" name="buscarProd" id="buscarProd" placeholder="Buscar">
                                 <input type="submit" value="Buscar" class="btn_search">
                             </form>
                         </div>
                     </div>
                 </div>
             </nav>
-
         </div>
         <section></section>
     </header>
+
     <section id="container">
-        <?php
-        $busqueda = strtolower($_REQUEST['busqueda']);
-        if (empty($busqueda)) {
-            header('Location:listausuarios.php');
-        }
-        ?>
-        <h1 class="text_prin">Lista de usuarios</h1>
-        <a href="registrousuario.php" class="btn_new">Crear usuario</a>
+        <h1 class="text_prin">Lista de productos</h1>
+        <a href="regProd.php"  class="btn_new">Registrar producto</a>
 
         <div class="container">
             <div class="table-responsive">
@@ -103,22 +95,23 @@ include "../conexionBD.php";
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Correo electronico</th>
-                            <th>Usuario</th>
-                            <th>Rol</th>
-                            <th>Acciones</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>Color</th>
+                            <th>Camara</th>
+                            <th>Almacenamiento</th>
+                            <th>RAM</th>
+                            <th>Pantalla</th>
+                            <th>Bateria</th>
+                            <th>Procesador</th>
+                            <th>Precio</th>
+                            <th>Costo</th>
+                            <th>Imagen</th>
+                            <th class="acciones">Acciones</th>
                         </tr>
                     </thead>
                     <?php
-                    //paginador//
-                    $sql_register = mysqli_query($conexion, "SELECT count(*) as total_registro from usuario inner join cliente on usuario.id_usua=cliente.id_usua 
-                                                    where ( usuario.id_usua LIKE '%$busqueda%' OR  
-                                                            cliente.id_clie LIKE '%$busqueda%' OR 
-                                                            cliente.email_clie LIKE '%$busqueda%' OR 
-                                                            usuario.nom_usua LIKE '%$busqueda%' OR 
-                                                            usuario.tip_usua LIKE '%$busqueda%' ) 
-                                                    AND usuario.estatus=1 AND cliente.estatus=1");
+                    $sql_register = mysqli_query($conexion, "select count(*) as total_registro from marca inner join modelo on marca.id_marca = modelo.id_marca inner join telefono on modelo.id_mod=telefono.id_mod where estatus=1");
                     $result_register = mysqli_fetch_array($sql_register);
                     $total_registro = $result_register['total_registro'];
                     $por_pagina = 5;
@@ -129,33 +122,35 @@ include "../conexionBD.php";
                     }
                     $desde = ($pagina - 1) * $por_pagina;
                     $total_paginas = ceil($total_registro / $por_pagina);
-
-                    $query = mysqli_query($conexion, "SELECT usuario.id_usua,nom_clie,nom_usua,email_clie,tip_usua FROM usuario inner join cliente ON usuario.id_usua=cliente.id_usua 
-                                                where 
-                                                    ( usuario.id_usua LIKE '%$busqueda%' OR  
-                                                    cliente.id_clie LIKE '%$busqueda%' OR 
-                                                    cliente.email_clie LIKE '%$busqueda%' OR 
-                                                    usuario.nom_usua LIKE '%$busqueda%' OR 
-                                                    usuario.tip_usua LIKE '%$busqueda%') 
-                                                AND usuario.estatus=1 AND cliente.estatus=1 ORDER by id_usua asc limit $desde,$por_pagina");
+                    $query = mysqli_query($conexion, "SELECT nom_marc,nom_mod,id_tel,col_tel,cam_tel,alm_tel,ram_tel,pan_tel,bat_tel,proc_tel,prec_tel,costo_tel,img_tel from marca inner join modelo on marca.id_marca = modelo.id_marca inner join telefono on modelo.id_mod=telefono.id_mod where estatus=1 ORDER BY id_tel asc limit $desde,$por_pagina");
                     $result = mysqli_num_rows($query);
                     if ($result > 0) {
                         while ($data = mysqli_fetch_array($query)) {
+                            if($data['img_tel']!='img_producto.png'){
+                                $foto='../img/'.$data['img_tel'];
+                            }else{
+                                $foto='img'.$data['img_tel'];
+                            }
                     ?>
                             <tbody>
                                 <tr>
-                                    <td><?php echo $data["id_usua"] ?></td>
-                                    <td><?php echo $data["nom_clie"] ?></td>
-                                    <td><?php echo $data["email_clie"] ?></td>
-                                    <td><?php echo $data["nom_usua"] ?></td>
-                                    <td><?php echo $data["tip_usua"] ?></td>
+                                    <td><?php echo $data['id_tel'] ?></td>
+                                    <td><?php echo $data['nom_marc'] ?></td>
+                                    <td><?php echo $data['nom_mod'] ?></td>
+                                    <td><?php echo $data['col_tel'] ?></td>
+                                    <td><?php echo $data['cam_tel'] ?></td>
+                                    <td><?php echo $data['alm_tel'] ?></td>
+                                    <td><?php echo $data['ram_tel'] ?></td>
+                                    <td><?php echo $data['pan_tel'] ?></td>
+                                    <td><?php echo $data['bat_tel'] ?></td>
+                                    <td><?php echo $data['proc_tel'] ?></td>
+                                    <td><?php echo $data['prec_tel'] ?></td>
+                                    <td><?php echo $data['costo_tel'] ?></td>
+                                    <td class="img_producto"><img src="<?php echo $foto ?>" alt="producto"></td>
                                     <td>
-                                        <a class="link_edit" href="editar_usuario.php?id=<?php print($data["id_usua"]) ?>">Editar</a>
-                                        <?php
-                                        if ($data["id_usua"] != 1) { ?>
-                                            |
-                                            <a class="link_delete" href="eliminarconfirm_usuario.php?id=<?php print($data["id_usua"]) ?>">Eliminar</a>
-                                        <?php } ?>
+                                        <a class="link_edit" href="editar_producto.php?id=<?php print($data["id_tel"]) ?>">Editar</a>
+                                        |
+                                        <a class="link_delete" href="eliminarconfirm_producto.php?id=<?php print($data["id_tel"]) ?>">Eliminar</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -163,37 +158,49 @@ include "../conexionBD.php";
                         }
                     }
                     ?>
+
                 </table>
-                <?php if ($total_paginas > 0) { ?>
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination">
-                            <?php if ($pagina != 1) { ?>
-                                <li class="page-item">
-                                    <a class="page-link" href="?pagina=<?php echo 1; ?>&busqueda=<?php echo $busqueda; ?>" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                </li>
-                            <?php } ?>
+            </div>
+        </div>
+        <?php if ($total_paginas > 0) { ?>
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <?php if ($pagina != 1) { ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo 1; ?>" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                    <?php } ?>
 
-                            <?php for ($i = 1; $i <= $total_paginas; $i++) { ?>
-                                <li class="page-item <?php echo ($pagina == $i) ? " active " : " "; ?>">
-                                    <a class="page-link" href="?pagina=<?php echo $i . '&busqueda=' . $busqueda ?>"><?php echo $i; ?></a>
-                                </li>
-                            <?php } ?>
+                    <?php for ($i = 1; $i <= $total_paginas; $i++) { ?>
+                        <li class="page-item <?php echo ($pagina == $i) ? " active " : " "; ?>">
+                            <a class="page-link" href="?pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+                        </li>
+                    <?php } ?>
 
-                            <?php if ($pagina != $total_paginas) { ?>
-                                <li class="page-item">
-                                    <a class="page-link" href="?pagina=<?php echo $pagina + 1; ?>&busqueda=<?php echo $busqueda; ?>" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                        <span class="sr-only">Next</span>
-                                    </a>
-                                </li>
-                            <?php } ?>
-                        </ul>
-                    </nav>
-                <?php } ?>
+                    <?php if ($pagina != $total_paginas) { ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo $pagina + 1; ?>" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    <?php } ?>
+                </ul>
+            </nav>
+        <?php } ?>
     </section>
+
+
+
+
+
+
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>

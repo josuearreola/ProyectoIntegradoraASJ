@@ -85,7 +85,7 @@ require "configPPrin.php";
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4  row-cols-lg-4 g-5">
                 <?php
-                $where = " where 1=1 ";
+                $where = " where 1=1 and estatus=1";
                 $busqueda = mysqli_real_escape_string($conexion, $_REQUEST['busqueda'] ?? '');
                 if (empty($busqueda) == false) {
                     $where .= " AND (nom_mod LIKE '%$busqueda%' OR prec_tel LIKE '%$busqueda%' OR col_tel LIKE '%$busqueda%' OR cam_tel LIKE '%$busqueda%' OR alm_tel LIKE '%$busqueda%' OR pan_tel LIKE '%$busqueda%')";

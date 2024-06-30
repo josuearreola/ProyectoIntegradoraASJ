@@ -60,7 +60,7 @@ include "../conexionBD.php";
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Productos</a>
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regProd.php">Nuevos productos</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de productos</a></li>
+                                        <li><a class="dropdown-item border-0" href="listaProd.php">Lista de productos</a></li>
                                         <li><a class="dropdown-item border-0" href="#">Productos eliminados</a></li>
                                     </ul>
                                 </li>
@@ -87,11 +87,11 @@ include "../conexionBD.php";
 
     <section id="container">
         <h1 class="text_prin">Lista de usuarios</h1>
-        <a href="registrousuario.php" class="btn_new">Crear usuario</a>
+        <a href="registrousuario.php" class="btn_new">Registrar usuario</a>
 
         <div class="container">
             <div class="table-responsive">
-                <table class="table table-sm table-dark">
+                <table class="table table-sm table-dark table-hover table-striped">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -143,7 +143,6 @@ include "../conexionBD.php";
                     ?>
                 </table>
             </div>
-        </div>
         </div>
         <?php if ($total_paginas > 0) { ?>
             <nav aria-label="Page navigation">

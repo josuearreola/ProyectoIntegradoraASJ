@@ -480,6 +480,7 @@ input::placeholder{
     padding: 5px 25px;
     border-radius: 4px;
     margin: 20px;
+    text-decoration: none;
 }
 table{
     border-collapse: collapse;
@@ -512,6 +513,10 @@ table th, table td {
 
 
 /*Eliminar usuario*/
+.acciones {
+    white-space: nowrap;
+    width: 150px;
+}
 .data_delete{
     text-align: center;
     padding: 15px;
@@ -613,7 +618,12 @@ table th, table td {
 
 
 
-
+/*img producto*/
+.img_producto img{
+    width: 60px;
+    height: auto;
+    margin: auto;
+}
 
 
 @media (max-width:952px){

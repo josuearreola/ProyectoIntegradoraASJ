@@ -61,7 +61,7 @@ include("../denegacion.php");
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Productos </a>
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regProd.php">Nuevos productos</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Lista de productos</a></li>
+                                        <li><a class="dropdown-item border-0" href="listaProd.php">Lista de productos</a></li>
                                         <li><a class="dropdown-item border-0" href="#">Productos eliminados</a></li>
                                     </ul>
                                 </li>

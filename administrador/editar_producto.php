@@ -7,11 +7,10 @@ include "../denegacion.php";
 if (!empty($_POST)) {
     $alert = '';
     
-    if (empty($_POST['marca']) || empty($_POST['modelo']) || empty($_POST['precio']) || empty($_POST['costo']) || empty($_POST['color']) || empty($_POST['camara']) || empty($_POST['almacenamiento']) || empty($_POST['ram']) || empty($_POST['pantalla']) || empty($_POST['bateria']) || empty($_POST['procesador'])) {
+    if (empty($_POST['id'])|| empty($_POST['precio']) || empty($_POST['costo']) || empty($_POST['color']) || empty($_POST['camara']) || empty($_POST['almacenamiento']) || empty($_POST['ram']) || empty($_POST['pantalla']) || empty($_POST['bateria']) || empty($_POST['procesador']) || empty($_POST['foto_actual']) || empty($_POST['foto_remove'])) {
         $alert = '<p class="msj_error">Todos los campos son obligatorios </p>';
     } else {
-        $marca = $_POST['marca'];
-        $modelo = $_POST['modelo'];
+        $id_tel=$_POST['id'];
         $precio = $_POST['precio'];
         $costo = $_POST['costo'];
         $color = $_POST['color'];
@@ -21,13 +20,15 @@ if (!empty($_POST)) {
         $pantalla = $_POST['pantalla'];
         $bateria = $_POST['bateria'];
         $procesador = $_POST['procesador'];
-        $foto = $_FILES['foto']; 
+        $imgProducto=$_POST['foto_actual'];
+        $imgRemove=$_POST['foto_remove'];
 
+        $foto = $_FILES['foto']; 
         $nombre_foto = $foto['name'];
         $type = $foto['type'];
         $url_temp = $foto['tmp_name'];
 
-        $imgProd='../img/img_producto.png';
+        $upd='';
 
 
 
@@ -36,53 +37,54 @@ if (!empty($_POST)) {
             $img_nombre='img_'.md5(date('d-m-Y H:m:s'));
             $imgProd=$img_nombre.'.jpg';
             $src=$destino.$imgProd;
-        }
-
-        $queryMarca = "SELECT id_marca FROM marca WHERE nom_marc='$marca'";
-        $resultadoMarca = mysqli_query($conexion, $queryMarca);
-
-        if ($resultadoMarca && mysqli_num_rows($resultadoMarca) > 0) {
-            $rowMarca = mysqli_fetch_assoc($resultadoMarca);
-            $id_marca = $rowMarca['id_marca'];
-        } else {
-            $queryInsertMarca = "INSERT INTO marca (nom_marc) VALUES ('$marca')";
-            $resultadoInsertMarca = mysqli_query($conexion, $queryInsertMarca);
-
-            if ($resultadoInsertMarca) {
-                $id_marca = mysqli_insert_id($conexion);
-            } else {
-                $alert = 'Error al insertar la marca: ' . mysqli_error($conexion);
+        }else{
+            if ($_POST['foto_actual'] != $_POST['foto_remove']) {
+                $imgProducto='../img/img_producto.png';
             }
         }
 
-        $queryModelo = "SELECT id_mod FROM modelo WHERE nom_mod='$modelo'";
-        $resultadoModelo = mysqli_query($conexion, $queryModelo);
+     
 
-        if ($resultadoModelo && mysqli_num_rows($resultadoModelo) > 0) {
-            $rowModelo = mysqli_fetch_assoc($resultadoModelo);
-            $id_mod = $rowModelo['id_mod'];
-        } else {
-            $queryInsertModelo = "INSERT INTO modelo (nom_mod, id_marca) VALUES ('$modelo', '$id_marca')";
-            $resultadoInsertModelo = mysqli_query($conexion, $queryInsertModelo);
-
-            if ($resultadoInsertModelo) {
-                $id_mod = mysqli_insert_id($conexion);
-                $queryInsertTelefono = "INSERT INTO telefono (col_tel, cam_tel, alm_tel, ram_tel, pan_tel, bat_tel, proc_tel, prec_tel, costo_tel,img_tel, id_mod) 
-                                        VALUES ('$color', '$camara', '$almacenamiento', '$ram', '$pantalla', '$bateria', '$procesador', '$precio', '$costo','$imgProd', '$id_mod')";
-                $resultadoInsertTelefono = mysqli_query($conexion, $queryInsertTelefono);
-
-                if ($resultadoInsertTelefono) {
-                    if($nombre_foto != ''){
-                        move_uploaded_file($url_temp,$src);
-                    }
-                    $alert = 'Producto registrado correctamente';
-                } else {
-                    $alert = 'Error al guardar el producto';
+       
+            $queryUpdateTelefono = "UPDATE telefono SET col_tel='$color', cam_tel='$camara', alm_tel='$almacenamiento', ram_tel='$ram', pan_tel='$pantalla', bat_tel='$bateria', proc_tel='$procesador', prec_tel='$precio', costo_tel='$costo', img_tel='$imgProducto' WHERE id_tel='$id_tel'";
+            $resultadoUpdateTelefono = mysqli_query($conexion, $queryUpdateTelefono);
+        
+            if ($resultadoUpdateTelefono) {
+                if (($nombre_foto != '' && ($_POST['foto_actual'] != '../img/img_producto.png')) || ($_POST['foto_actual'] != $_POST['foto_remove'])) {
+                    unlink('../img/'.$_POST['foto_actual']);
                 }
-            } else {
-                $alert = 'Error al insertar el modelo';
-            }
+                if ($nombre_foto != '') {
+                    move_uploaded_file($url_temp,$src);
+                }
+                $alert='<p class="msg_save">Producto actualizado correctamente</p>';
+            
         }
+    }
+}
+
+//validar prod//
+
+if(empty($_REQUEST['id'])){
+    header("location:listaProd.php");
+}else{
+    $id_producto=$_REQUEST['id'];
+    if (!is_numeric($id_producto)) {
+        header("location:listaProd.php");
+    }
+    $query_producto=mysqli_query($conexion,"SELECT nom_marc,nom_mod,id_tel,col_tel,cam_tel,alm_tel,ram_tel,pan_tel,bat_tel,proc_tel,prec_tel,costo_tel,img_tel from marca inner join modelo on marca.id_marca = modelo.id_marca inner join telefono on modelo.id_mod=telefono.id_mod where id_tel='$id_producto' and estatus=1");
+    $result_producto=mysqli_num_rows($query_producto);
+
+    $foto= '';
+    $classRemove='notBlock';
+
+    if ($result_producto>0) {
+        $data_producto=mysqli_fetch_assoc($query_producto);
+        if ($data_producto['img_tel'] != '../img/img_producto.png') {
+           $classRemove='';
+           $foto='<img id="img" src="../img/'.$data_producto['img_tel'].'" alt="producto">';
+        }
+    }else{
+        header("location:listaProd.php");
     }
 }
 ?>
@@ -164,28 +166,31 @@ if (!empty($_POST)) {
     </header>
     <div class="container">
         <div class="form_register mt-4">
-            <h1 class="text-prin">Registro de productos</h1>
+            <h1 class="text-prin">Actualizar producto</h1>
             <hr>
             <?php if (!empty($alert)) : ?>
                 <div class="alert"><?php echo $alert; ?></div>
             <?php endif; ?>
-            <form class="formProd" action="regProd.php" method="post" enctype="multipart/form-data">
+            <form class="formProd" action="editar_producto.php" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="<?php echo $data_producto['id_tel']; ?>">
+                <input type="hidden" id="foto_actual" name="foto_actual" value="<?php echo $data_producto['img_tel'];?>">
+                <input type="hidden" id="foto_remove" name="foto_remove" value="<?php echo $data_producto['img_tel'];?>">
                 <div class="row">
                     <div class="col-md-6">
                         <label for="marca">Marca del telefono:</label>
-                        <input type="text" name="marca" id="marca" placeholder="Marca del telefono" required>
+                        <input type="text" name="marca" id="marca" placeholder="Marca del telefono" value="<?php echo $data_producto['nom_marc']?>" readonly required>
                     </div>
                     <div class="col-md-6">
                         <label for="modelo">Modelo del telefono:</label>
-                        <input type="text" name="modelo" id="modelo" placeholder="Modelo del telefono" required>
+                        <input type="text" name="modelo" id="modelo" placeholder="Modelo del telefono"value="<?php echo $data_producto['nom_mod']?>" readonly required>
                     </div>
                     <div class="col-md-6">
                         <label for="precio">Precio del telefono:</label>
-                        <input type="text" name="precio" id="precio" placeholder="Precio del telefono" required>
+                        <input type="text" name="precio" id="precio" placeholder="Precio del telefono" value="<?php echo $data_producto['prec_tel']?>" required>
                     </div>
                     <div class="col-md-6">
                         <label for="costo">Costo del telefono:</label>
-                        <input type="text" name="costo" id="costo" placeholder="Costo del telefono" required>
+                        <input type="text" name="costo" id="costo" placeholder="Costo del telefono" value="<?php echo $data_producto['costo_tel']?>" required>
                     </div>
                     <div class="col-md-12">
                         <a href="#" id="mostrarDatosTel" class="toggle-direccion">Datos generales</a>
@@ -194,39 +199,40 @@ if (!empty($_POST)) {
                         <div class=" row">
                             <div class="col-md-6">
                                 <label for="color">Color:</label>
-                                <input type="text" name="color" id="color" class="form-control datosTel" placeholder="Color" required>
+                                <input type="text" name="color" id="color" class="form-control datosTel" placeholder="Color" value="<?php echo $data_producto['col_tel']?>" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="camara">Camara:</label>
-                                <input type="text" name="camara" id="camara" class="form-control datosTel" placeholder="Camara" required>
+                                <input type="text" name="camara" id="camara" class="form-control datosTel" placeholder="Camara" value="<?php echo $data_producto['cam_tel']?>" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="almacenamiento">Almacenamiento:</label>
-                                <input type="text" name="almacenamiento" id="almacenamiento" class="form-control datosTel" placeholder="Almacenamiento" required>
+                                <input type="text" name="almacenamiento" id="almacenamiento" class="form-control datosTel" placeholder="Almacenamiento" value="<?php echo $data_producto['alm_tel']?>" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="ram">RAM:</label>
-                                <input type="text" name="ram" id="ram" class="form-control datosTel" placeholder="RAM" required>
+                                <input type="text" name="ram" id="ram" class="form-control datosTel" placeholder="RAM" value="<?php echo $data_producto['ram_tel']?>" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="pantalla">Pantalla:</label>
-                                <input type="text" name="pantalla" id="pantalla" class="form-control datosTel" placeholder="Pantalla" required>
+                                <input type="text" name="pantalla" id="pantalla" class="form-control datosTel" placeholder="Pantalla" value="<?php echo $data_producto['pan_tel']?>" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="bateria">Bateria:</label>
-                                <input type="text" name="bateria" id="bateria" class="form-control datosTel" placeholder="Bateria" required>
+                                <input type="text" name="bateria" id="bateria" class="form-control datosTel" placeholder="Bateria" value="<?php echo $data_producto['bat_tel']?>" required>
                             </div>
                             <div class="col-md-12">
                                 <label for="procesador">Procesador:</label>
-                                <input type="text" name="procesador" id="procesador" class="form-control datosTel" placeholder="Procesador" required>
+                                <input type="text" name="procesador" id="procesador" class="form-control datosTel" placeholder="Procesador" value="<?php echo $data_producto['proc_tel']?>" required>
                             </div>
                         </div>
                     </div>
                     <div class="photo">
                         <label for="foto">Foto</label>
                         <div class="prevPhoto">
-                            <span class="delPhoto notBlock">X</span>
+                            <span class="delPhoto <?php echo $classRemove;?>">X</span>
                             <label for="foto"></label>
+                            <?php echo $foto;?>
                         </div>
                         <div class="upimg">
                             <input type="file" name="foto" id="foto">
@@ -234,7 +240,7 @@ if (!empty($_POST)) {
                         <div id="form_alert"></div>
                     </div>
                 </div>
-                <input type="submit" class="btn_save" value="Registrar producto">
+                <input type="submit" class="btn_save" value="Actualizar producto">
             </form>
         </div>
     </div>
