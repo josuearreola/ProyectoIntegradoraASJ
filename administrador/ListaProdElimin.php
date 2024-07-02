@@ -73,8 +73,8 @@ include "../conexionBD.php";
                                     </ul>
                                 </li>
                             </ul>
-                            <form action="buscar_usuario.php" method="get" class="form_search ms-auto">
-                                <input class="busqueda" type="text" name="busqueda" id="busqueda" placeholder="Buscar">
+                            <form action="buscar_producto.php" method="get" class="form_search ms-auto">
+                                <input class="busqueda" type="text" name="buscarProd" id="buscarProd" placeholder="Buscar">
                                 <input type="submit" value="Buscar" class="btn_search">
                             </form>
                         </div>
@@ -86,8 +86,8 @@ include "../conexionBD.php";
     </header>
 
     <section id="container">
-        <h1 class="text_prin">Lista de usuarios</h1>
-        <a href="registrousuario.php" class="btn_new">Registrar usuario</a>
+        <h1 class="text_prin">Lista de productos</h1>
+        <a href="regProd.php"  class="btn_new">Registrar producto</a>
 
         <div class="container">
             <div class="table-responsive">
@@ -95,16 +95,23 @@ include "../conexionBD.php";
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Correo electronico</th>
-                            <th>Usuario</th>
-                            <th>Rol</th>
-                            <th>Acciones</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>Color</th>
+                            <th>Camara</th>
+                            <th>Almacenamiento</th>
+                            <th>RAM</th>
+                            <th>Pantalla</th>
+                            <th>Bateria</th>
+                            <th>Procesador</th>
+                            <th>Precio</th>
+                            <th>Costo</th>
+                            <th>Imagen</th>
+                            <th class="acciones">Acciones</th>
                         </tr>
                     </thead>
                     <?php
-                    //paginador//
-                    $sql_register = mysqli_query($conexion, "select count(*) as total_registro from usuario inner join cliente on usuario.id_usua=cliente.id_usua where usuario.estatus=1 and cliente.estatus=1");
+                    $sql_register = mysqli_query($conexion, "select count(*) as total_registro from marca inner join modelo on marca.id_marca = modelo.id_marca inner join telefono on modelo.id_mod=telefono.id_mod where estatus=0");
                     $result_register = mysqli_fetch_array($sql_register);
                     $total_registro = $result_register['total_registro'];
                     $por_pagina = 5;
@@ -115,25 +122,34 @@ include "../conexionBD.php";
                     }
                     $desde = ($pagina - 1) * $por_pagina;
                     $total_paginas = ceil($total_registro / $por_pagina);
-                    $query = mysqli_query($conexion, "SELECT usuario.id_usua,nom_clie,nom_usua,email_clie,tip_usua FROM usuario inner join cliente ON usuario.id_usua=cliente.id_usua where usuario.estatus=1 and cliente.estatus=1 ORDER by id_usua asc limit $desde,$por_pagina");
+                    $query = mysqli_query($conexion, "SELECT nom_marc,nom_mod,id_tel,col_tel,cam_tel,alm_tel,ram_tel,pan_tel,bat_tel,proc_tel,prec_tel,costo_tel,img_tel from marca inner join modelo on marca.id_marca = modelo.id_marca inner join telefono on modelo.id_mod=telefono.id_mod where estatus=0 ORDER BY id_tel asc limit $desde,$por_pagina");
                     $result = mysqli_num_rows($query);
                     if ($result > 0) {
                         while ($data = mysqli_fetch_array($query)) {
+                            if($data['img_tel']!='img_producto.png'){
+                                $foto='../img/'.$data['img_tel'];
+                            }else{
+                                $foto='img'.$data['img_tel'];
+                            }
                     ?>
                             <tbody>
                                 <tr>
-                                    <td><?php echo $data["id_usua"] ?></td>
-                                    <td><?php echo $data["nom_clie"] ?></td>
-                                    <td><?php echo $data["email_clie"] ?></td>
-                                    <td><?php echo $data["nom_usua"] ?></td>
-                                    <td><?php echo $data["tip_usua"] ?></td>
+                                    <td><?php echo $data['id_tel'] ?></td>
+                                    <td><?php echo $data['nom_marc'] ?></td>
+                                    <td><?php echo $data['nom_mod'] ?></td>
+                                    <td><?php echo $data['col_tel'] ?></td>
+                                    <td><?php echo $data['cam_tel'] ?></td>
+                                    <td><?php echo $data['alm_tel'] ?></td>
+                                    <td><?php echo $data['ram_tel'] ?></td>
+                                    <td><?php echo $data['pan_tel'] ?></td>
+                                    <td><?php echo $data['bat_tel'] ?></td>
+                                    <td><?php echo $data['proc_tel'] ?></td>
+                                    <td><?php echo $data['prec_tel'] ?></td>
+                                    <td><?php echo $data['costo_tel'] ?></td>
+                                    <td class="img_producto"><img src="<?php echo $foto ?>" alt="producto"></td>
                                     <td>
-                                        <a class="link_edit" href="editar_usuario.php?id=<?php print($data["id_usua"]) ?>">Editar</a>
-                                        <?php
-                                        if ($data["id_usua"] != 1300) { ?>
-                                            |
-                                            <a class="link_delete" href="eliminarconfirm_usuario.php?id=<?php print($data["id_usua"]) ?>">Eliminar</a>
-                                        <?php } ?>
+                                        <a class="link_edit" href="RecuperarProd.php?id=<?php print($data["id_tel"]) ?>">Recuperar</a>
+                                        
                                     </td>
                                 </tr>
                             </tbody>
@@ -141,6 +157,7 @@ include "../conexionBD.php";
                         }
                     }
                     ?>
+
                 </table>
             </div>
         </div>
@@ -174,6 +191,14 @@ include "../conexionBD.php";
             </nav>
         <?php } ?>
     </section>
+
+
+
+
+
+
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>

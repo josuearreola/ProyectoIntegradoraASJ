@@ -3,7 +3,7 @@ ob_start();
 include("../denegacion.php");
 include "../conexionBD.php";
 if (!empty($_POST)) {
-    if ($_POST['usuario'] == 1) {
+    if ($_POST['usuario'] == 1300) {
         header('location:listausuarios.php');
         exit;
     }
@@ -19,7 +19,7 @@ if (!empty($_POST)) {
     }
 }
 
-if (empty($_REQUEST['id']) || $_REQUEST['id'] == 1) {
+if (empty($_REQUEST['id']) || $_REQUEST['id'] == 1300) {
     header('location:listausuarios.php');
 } else {
 
@@ -95,7 +95,7 @@ if (empty($_REQUEST['id']) || $_REQUEST['id'] == 1) {
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regProd.php">Nuevos productos</a></li>
                                         <li><a class="dropdown-item border-0" href="listaProd.php">Lista de productos</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Productos eliminados</a></li>
+                                        <li><a class="dropdown-item border-0" href="ListaProdElimin.php">Productos eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -116,7 +116,7 @@ if (empty($_REQUEST['id']) || $_REQUEST['id'] == 1) {
     <section id="container">
 
         <div class="data_delete">
-            <h2 class="h2preg">¿Esta seguro de elimar el siguiente registro?</h2>
+            <h2 class="h2preg">¿Esta seguro de eliminar el siguiente registro?</h2>
             <p class="p-text">Usuario : <span><?php echo $usuario ?></span></p>
             <p class="p-text">Nombre : <span><?php echo $nombre ?></span></p>
             <p class="p-text">Tipo de usuario : <span><?php echo $rol ?></span></p>

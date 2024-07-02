@@ -2,42 +2,35 @@
 ob_start();
 include("../denegacion.php");
 include "../conexionBD.php";
-    if(!empty($_POST)){
-        if($_POST['usuario']==1){
-            header('location:listausuarios.php');
-            exit;
-        }
-        $idusuario=$_POST['usuario'];
-        
-        $query_delete1=mysqli_query($conexion,"UPDATE cliente SET estatus = 1 where id_usua=$idusuario ");
-        if($query_delete1){
-            
-            $query_delete2=mysqli_query($conexion,"UPDATE usuario SET estatus = 1 where id_usua=$idusuario ");
-            if($query_delete2){
-                header("location:listausuarios.php");
-            }
-        }else{
-            echo"Error al recuperar";
-        }
-    }
+if (!empty($_POST)) {
+    $idTel = $_POST['id_tel'];
 
-    if (empty($_REQUEST['id']) || $_REQUEST['id'] ==1 ) {
-        header('location:listausuarios.php');
-    }else{
-        
-        $idUsuario = $_REQUEST['id'];
-        $query=mysqli_query($conexion,"select nom_clie,nom_usua,tip_usua from usuario inner join cliente on usuario.id_usua=cliente.id_usua where usuario.id_usua='$idUsuario'");
-        $result=mysqli_num_rows( $query );
-        if($result> 0){
-            while($data=mysqli_fetch_array($query)){
-                $nombre=$data['nom_clie'];
-                $usuario=$data['nom_usua'];
-                $rol=$data['tip_usua'];
-            }
-        }else{
-            header('location:ListaUsuElimin.php');
-        }
+    $query_delete1 = mysqli_query($conexion, "UPDATE telefono SET estatus = 0 where id_tel=$idTel ");
+    if ($query_delete1) {
+            header("location:listaProd.php");
+    } else {
+        echo "Error al eliminar";
     }
+}
+
+if (empty($_REQUEST['id'])) {
+    header('location:listaProd.php');
+} else {
+
+    $idTel = $_REQUEST['id'];
+    $query = mysqli_query($conexion, "select id_tel,nom_mod,prec_tel from modelo inner join telefono on modelo.id_mod=telefono.id_mod where telefono.id_tel='$idTel'");
+    $result = mysqli_num_rows($query);
+    if ($result > 0) {
+        while ($data = mysqli_fetch_array($query)) {
+            $idTel = $data['id_tel'];
+            $nomMod = $data['nom_mod'];
+            $precio = $data['prec_tel'];
+           
+        }
+    } else {
+        header('location:listaProd.php');
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -116,14 +109,13 @@ include "../conexionBD.php";
         <section></section>
     </header>
     <section id="container">
-        
+
         <div class="data_delete">
-            <h2 class="h2preg">¿Esta seguro de recuperar el siguiente registro?</h2>
-            <p class="p-text">Usuario :   <span><?php echo$usuario?></span></p>
-            <p class="p-text">Nombre :   <span><?php echo$nombre?></span></p>
-            <p class="p-text">Tipo de usuario :   <span><?php echo$rol?></span></p>
+            <h2 class="h2preg">¿Esta seguro de eliminar el siguiente registro?</h2>
+            <p class="p-text">Modelo: <span><?php echo $nomMod ?></span></p>
+            <p class="p-text">Precio: <span><?php echo $precio ?></span></p>
             <form class="formdelete" action="" method="post">
-                <input type="hidden" name="usuario" value="<?php echo $idUsuario; ?>">
+                <input type="hidden" name="id_tel" value="<?php echo $idTel; ?>">
                 <a href="listausuarios.php" class="btn_cancel">Cancelar</a>
                 <input type="submit" value="Aceptar" class="btn_ok">
             </form>

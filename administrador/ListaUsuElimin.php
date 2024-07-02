@@ -63,7 +63,7 @@ include "../conexionBD.php";
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regProd.php">Nuevos productos</a></li>
                                         <li><a class="dropdown-item border-0" href="listaProd.php">Lista de productos</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Productos eliminados</a></li>
+                                        <li><a class="dropdown-item border-0" href="ListaProdElimin.php">Productos eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -133,8 +133,7 @@ include "../conexionBD.php";
                                     <td>
                                         
                                         <?php
-                                        if ($data["id_usua"] != 1300) { ?>
-                                            
+                                        if ($data["id_usua"] != 1300) { ?>    
                                             <a class="link_edit" href="RecuperarUsu.php?id=<?php print($data["id_usua"]) ?>">Recuperar</a>
                                         <?php } ?>
                                     </td>

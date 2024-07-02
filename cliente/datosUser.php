@@ -126,9 +126,9 @@ if ($result == 0) {
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Categorias </a>
                             <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
-                                <li><a class="dropdown-item border-0" href="#">$1000-$3500</a></li>
-                                <li><a class="dropdown-item border-0" href="#">$3500-$7000</a></li>
-                                <li><a class="dropdown-item border-0" href="#">Mas de $7000</a></li>
+                                <li><a class="dropdown-item border-0" href="categoria1.php">$6000-$12000</a></li>
+                                <li><a class="dropdown-item border-0" href="categoria2.php">$12000-$18000</a></li>
+                                <li><a class="dropdown-item border-0" href="categoria3.php">Mas de $18000</a></li>
                             </ul>
                         </li>
                 </div>
