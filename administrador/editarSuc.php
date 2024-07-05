@@ -1,39 +1,62 @@
 <?php
 ob_start();
-include("../denegacion.php");
 include "../conexionBD.php";
+include("../denegacion.php");
+
 if (!empty($_POST)) {
-    if ($_POST['usuario'] == 1300) {
-        header('location:listausuarios.php');
-        exit;
-    }
-    $idusuario = $_POST['usuario'];
-    $query_delete1 = mysqli_query($conexion, "UPDATE cliente SET estatus = 0 where id_usua=$idusuario ");
-    if ($query_delete1) {
-        $query_delete2 = mysqli_query($conexion, "UPDATE usuario SET estatus = 0 where id_usua=$idusuario ");
-        if ($query_delete2) {
-            header("location:listausuarios.php");
-        }
+    $alert = '';
+    if (empty($_POST['nombre']) || empty($_POST['nom_usua']) || empty($_POST['email']) || empty($_POST['rol'])) {
+        $alert = '<p class="msj_error">Todos los campos son obligatorios</p>';
     } else {
-        echo "Error al eliminar";
+        $idUsuario=$_POST['idUsuario'];
+        $nombre = $_POST['nombre'];
+        $nombreusua = $_POST['nom_usua'];
+        $email = $_POST['email'];
+        $rol = $_POST['rol'];
+        $query = mysqli_query($conexion, "select * from usuario inner join cliente on usuario.id_usua = cliente.id_usua where (nom_usua='$nombreusua' and usuario.id_usua != $idUsuario) or (email_clie='$email' and usuario.id_usua !=$idUsuario)");
+        $resultado = mysqli_fetch_array($query);
+        if ($resultado > 0) {
+            $alert = '<p class="msj_error">El correo o usuario ya existen</p>';
+        } else {
+            if (empty($_POST['pass_usua'])) {
+                $sql = mysqli_query($conexion, "update usuario set nom_usua='$nombreusua', tip_usua='$rol' where id_usua='$idUsuario'");
+                $sql1 = mysqli_query($conexion, "update cliente set nom_clie='$nombre', email_clie='$email' where id_clie='$idUsuario'");
+            } else {
+                $contraseña = md5(mysqli_real_escape_string($conexion, $_POST['pass_usua']));
+                $sql = mysqli_query($conexion, "update usuario set nom_usua='$nombreusua', tip_usua='$rol', pass_usua='$contraseña' where id_usua='$idUsuario'");
+                $sql1 = mysqli_query($conexion, "update cliente set nom_clie='$nombre', email_clie='$email' where id_clie='$idUsuario'");
+            }
+            if ($sql=== true) {
+                if ($sql1) {
+                    $alert = '<p class="msj_save">Usuario autorizado correctamente</p>';
+                }
+            } else {
+                $alert = '<p class="msj_error">Error al actualizar el usuario</p>';
+            }
+        }
     }
 }
 
-if (empty($_REQUEST['id']) || $_REQUEST['id'] == 1300) {
-    header('location:listausuarios.php');
-} else {
-
-    $idUsuario = $_REQUEST['id'];
-    $query = mysqli_query($conexion, "select nom_clie,nom_usua,tip_usua from usuario inner join cliente on usuario.id_usua=cliente.id_usua where usuario.id_usua='$idUsuario'");
-    $result = mysqli_num_rows($query);
-    if ($result > 0) {
-        while ($data = mysqli_fetch_array($query)) {
-            $nombre = $data['nom_clie'];
-            $usuario = $data['nom_usua'];
-            $rol = $data['tip_usua'];
-        }
-    } else {
-        header('location:listausuarios.php');
+//Mostrar datos//
+if (empty($_GET['id'])) {
+    header('Location:listaSuc.php');
+}
+$idSuc = $_GET['id'];
+$sql = mysqli_query($conexion, "SELECT sucursal.id_suc,nom_suc,col_suc,cp_suc,ni_suc,ne_suc,call_suc,nom_ciu FROM sucursal inner join ciudad ON ciudad.id_ciu=sucursal.id_ciu where sucursal.id_suc=$idSuc");
+$result = mysqli_num_rows($sql);
+if ($result == 0) {
+    header('Location:listaSuc.php');
+}else{
+    $option='';
+    while($data=mysqli_fetch_array($sql)){
+        $idSuc=$data['id_suc'];
+        $nombre=$data['nom_suc'];
+        $colonia=$data['col_suc'];
+        $cp=$data['cp_suc'];
+        $ni=$data['ni_suc'];
+        $ne=$data['ne_suc'];
+        $calle=$data['call_suc'];
+        $ciudad=$data['nom_ciu'];
     }
 }
 ?>
@@ -54,7 +77,7 @@ if (empty($_REQUEST['id']) || $_REQUEST['id'] == 1300) {
 </head>
 
 <body>
-    <header class="header">
+<header class="header">
         <div>
             <nav class="navbar bg-secondary navbar-expand-lg border-top border-bottom border-3 border-light">
                 <div class="container-fluid">
@@ -114,23 +137,33 @@ if (empty($_REQUEST['id']) || $_REQUEST['id'] == 1300) {
         </div>
         <section></section>
     </header>
-    <section id="container">
+    <section class="container">
+        <div class="form_register">
+            <h1 class="text-prin">Actualizar usuario</h1>
+            <hr>
+            <?php if (!empty($alert)): ?>
+                <div class="alert"><?php echo $alert; ?></div>
+            <?php endif; ?>
+            <form action="editarSuc.php" method="post">
+                <input type="hidden" name="idSuc" value="<?php echo $iduser; ?>">
+                <label for="nombre">Nombre</label>
+                <input type="text" name="nombre" id="nombre" placeholder="Nombre de la sucursal" value="<?php echo $nombre?>" required>
+                <label for="colonia">Colonia</label>
+                <input type="text" name="colonia" id="colonia" placeholder="Colonia" value="<?php echo $colonia?>" required>
+                <label for="calle">Calle</label>
+                <input type="text" name="calle" id="calle" placeholder="Calle" value="<?php echo $calle?>" required>
+                <label for="cp">CP</label>
+                <input type="text" name="cp" id="cp" placeholder="CP" value="<?php echo $cp?>" required>
+                <label for="numi"># Interior</label>
+                <input type="text" name="numi" id="numi" placeholder="# Interior" value="<?php echo $ni?>">
+                <label for="nume"># Exterior</label>
+                <input type="text" name="nume" id="nume" placeholder="nume" value="<?php echo $ne?>" required>
 
-        <div class="data_delete">
-            <h2 class="h2preg">¿Esta seguro de eliminar el siguiente registro?</h2>
-            <p class="p-text">Usuario : <span><?php echo $usuario ?></span></p>
-            <p class="p-text">Nombre : <span><?php echo $nombre ?></span></p>
-            <p class="p-text">Tipo de usuario : <span><?php echo $rol ?></span></p>
-            <form class="formdelete" action="" method="post">
-                <input type="hidden" name="usuario" value="<?php echo $idUsuario; ?>">
-                <a href="listausuarios.php" class="btn_cancel">Cancelar</a>
-                <input type="submit" value="Aceptar" class="btn_ok">
+                <input type="submit" class="btn_save" value="Actualizar sucursal">
             </form>
         </div>
     </section>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>
-
-</html>
 <?php ob_end_flush(); ?>

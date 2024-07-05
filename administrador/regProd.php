@@ -10,17 +10,17 @@ if (!empty($_POST)) {
     if (empty($_POST['marca']) || empty($_POST['modelo']) || empty($_POST['precio']) || empty($_POST['costo']) || empty($_POST['color']) || empty($_POST['camara']) || empty($_POST['almacenamiento']) || empty($_POST['ram']) || empty($_POST['pantalla']) || empty($_POST['bateria']) || empty($_POST['procesador'])) {
         $alert = '<p class="msj_error">Todos los campos son obligatorios </p>';
     } else {
-        $marca = $_POST['marca'];
-        $modelo = $_POST['modelo'];
-        $precio = $_POST['precio'];
-        $costo = $_POST['costo'];
-        $color = $_POST['color'];
-        $camara = $_POST['camara'];
-        $almacenamiento = $_POST['almacenamiento'];
-        $ram = $_POST['ram'];
-        $pantalla = $_POST['pantalla'];
-        $bateria = $_POST['bateria'];
-        $procesador = $_POST['procesador'];
+        $marca = mysqli_real_escape_string($conexion,$_POST['marca']);
+        $modelo = mysqli_real_escape_string($conexion, $_POST['modelo']);
+        $precio = mysqli_real_escape_string($conexion, $_POST['precio']);
+        $costo = mysqli_real_escape_string($conexion, $_POST['costo']);
+        $color = mysqli_real_escape_string($conexion, $_POST['color']);
+        $camara = mysqli_real_escape_string($conexion, $_POST['camara']);
+        $almacenamiento = mysqli_real_escape_string($conexion, $_POST['almacenamiento']);
+        $ram = mysqli_real_escape_string($conexion, $_POST['ram']);
+        $pantalla = mysqli_real_escape_string($conexion, $_POST['pantalla']);
+        $bateria = mysqli_real_escape_string($conexion, $_POST['bateria']);
+        $procesador = mysqli_real_escape_string($conexion, $_POST['procesador']);
         $foto = $_FILES['foto']; 
 
         $nombre_foto = $foto['name'];
@@ -97,6 +97,7 @@ if (!empty($_POST)) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
     <link rel="icon" href="../img/logo.ico">
     <link rel="stylesheet" href="../css/styleDatosTel.css">
 </head>
@@ -119,7 +120,7 @@ if (!empty($_POST)) {
                             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                         </div>
                         <div class="offcanvas-body">
-                            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                            <ul class="navbar-nav justify-content flex-grow-1 pe-3">
                                 <li class="nav-item">
                                     <a class="nav-link active lh-lg" aria-current="page" href="administrador.php">Inicio</a>
                                 </li>
@@ -150,9 +151,9 @@ if (!empty($_POST)) {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales </a>
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="#">Nueva sucursal</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Lista de sucursales</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Sucursales eliminadas</a></li>
+                                        <li><a class="dropdown-item border-0" href="regSuc.php">Nueva sucursal</a></li>
+                                        <li><a class="dropdown-item border-0" href="listaSuc.php">Lista de sucursales</a></li>
+                                        <li><a class="dropdown-item border-0" href="listaSucElimin.php">Sucursales eliminadas</a></li>
                                     </ul>
                                 </li>
                         </div>
@@ -251,7 +252,7 @@ if (!empty($_POST)) {
                 telefonoinputs.forEach(function(input) {
                     input.style.background = '#6d6a6a';
                     input.style.border = 'none';
-                    input.style.color = '#09b0f2';
+                    input.style.color = '#bce4f4';
                 });
                 this.textContent = 'Ocultar datos generales';
             } else {

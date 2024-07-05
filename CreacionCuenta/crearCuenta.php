@@ -5,9 +5,9 @@
             $alert="Ingrese todos los campos";
         }else{
         require_once("../conexionBD.php");
-        $nombre=$_POST["nombre"];
-        $usuario=$_POST["usuario"];
-        $email=$_POST["email"];
+        $nombre=mysqli_real_escape_string($conexion,$_POST["nombre"]);
+        $usuario=mysqli_real_escape_string($conexion,$_POST["usuario"]);
+        $email= mysqli_real_escape_string($conexion,$_POST["email"]);
         $contraseña=$_POST["contraseña"];
         $nombre=mysqli_real_escape_string($conexion,$_POST["nombre"]);
         $user=mysqli_real_escape_string($conexion,$_POST["usuario"]);
@@ -33,6 +33,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear una cuenta</title>
+    
     <link rel="stylesheet" href="../css/styleCrearCuenta.css">
     <link rel="icon" href="../img/logo.ico">
 </head>

@@ -74,7 +74,7 @@ include "../conexionBD.php";
                                     </ul>
                                 </li>
                             </ul>
-                            <form action="buscar_usuario.php" method="get" class="form_search ms-auto">
+                            <form action="buscarSuc.php" method="get" class="form_search ms-auto">
                                 <input class="busqueda" type="text" name="busqueda" id="busqueda" placeholder="Buscar">
                                 <input type="submit" value="Buscar" class="btn_search">
                             </form>
@@ -87,25 +87,28 @@ include "../conexionBD.php";
     </header>
 
     <section id="container">
-        <h1 class="text_prin">Lista de usuarios</h1>
-        <a href="registrousuario.php" class="btn_new">Registrar usuario</a>
+        <h1 class="text_prin">Lista de sucursales</h1>
+        <a href="regSuc.php" class="btn_new">Registrar sucursal</a>
 
         <div class="container">
             <div class="table-responsive">
-                <table class="table table-sm table-dark table-hover table-striped">
+                <table class="table table-sm table-dark">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Nombre</th>
-                            <th>Correo electronico</th>
-                            <th>Usuario</th>
-                            <th>Rol</th>
+                            <th>Colonia</th>
+                            <th>Calle</th>
+                            <th>CP</th>
+                            <th># Interior</th>
+                            <th># Exterior</th>
+                            <th>Ciudad</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <?php
                     //paginador//
-                    $sql_register = mysqli_query($conexion, "select count(*) as total_registro from usuario inner join cliente on usuario.id_usua=cliente.id_usua where usuario.estatus=1 and cliente.estatus=1");
+                    $sql_register = mysqli_query($conexion, "SELECT count(*) as total_registro from sucursal inner join ciudad on ciudad.id_ciu=sucursal.id_ciu where sucursal.estatus=1");
                     $result_register = mysqli_fetch_array($sql_register);
                     $total_registro = $result_register['total_registro'];
                     $por_pagina = 5;
@@ -116,25 +119,28 @@ include "../conexionBD.php";
                     }
                     $desde = ($pagina - 1) * $por_pagina;
                     $total_paginas = ceil($total_registro / $por_pagina);
-                    $query = mysqli_query($conexion, "SELECT usuario.id_usua,nom_clie,nom_usua,email_clie,tip_usua FROM usuario inner join cliente ON usuario.id_usua=cliente.id_usua where usuario.estatus=1 and cliente.estatus=1 ORDER by id_usua asc limit $desde,$por_pagina");
+
+                    $query = mysqli_query($conexion, "SELECT sucursal.id_suc,nom_suc,col_suc,cp_suc,ni_suc,ne_suc,call_suc,nom_ciu FROM sucursal inner join ciudad ON ciudad.id_ciu=sucursal.id_ciu where sucursal.estatus=1 ORDER by id_suc asc limit $desde,$por_pagina");
                     $result = mysqli_num_rows($query);
                     if ($result > 0) {
                         while ($data = mysqli_fetch_array($query)) {
                     ?>
                             <tbody>
                                 <tr>
-                                    <td><?php echo $data["id_usua"] ?></td>
-                                    <td><?php echo $data["nom_clie"] ?></td>
-                                    <td><?php echo $data["email_clie"] ?></td>
-                                    <td><?php echo $data["nom_usua"] ?></td>
-                                    <td><?php echo $data["tip_usua"] ?></td>
+                                    <td><?php echo $data["id_suc"] ?></td>
+                                    <td><?php echo $data["nom_suc"] ?></td>
+                                    <td><?php echo $data["col_suc"] ?></td>
+                                    <td><?php echo $data["call_suc"] ?></td>
+                                    <td><?php echo $data["cp_suc"] ?></td>
+                                    <td><?php echo $data["ni_suc"] ?></td>
+                                    <td><?php echo $data["ne_suc"] ?></td>
+                                    <td><?php echo $data["nom_ciu"] ?></td>
                                     <td>
-                                        <a class="link_edit" href="editar_usuario.php?id=<?php print($data["id_usua"]) ?>">Editar</a>
-                                        <?php
-                                        if ($data["id_usua"] != 1300) { ?>
-                                            |
-                                            <a class="link_delete" href="eliminarconfirm_usuario.php?id=<?php print($data["id_usua"]) ?>">Eliminar</a>
-                                        <?php } ?>
+                                        <a class="link_edit" href="InventarioSuc.php?id=<?php print($data["id_suc"]) ?>">Inventario</a>
+                                        |
+                                        <a class="link_edit" href="editarSuc.php?id=<?php print($data["id_suc"]) ?>">Editar</a>
+                                        |
+                                        <a class="link_delete" href="Eliminar.php?id=<?php print($data["id_suc"]) ?>">Eliminar</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -144,6 +150,7 @@ include "../conexionBD.php";
                     ?>
                 </table>
             </div>
+        </div>
         </div>
         <?php if ($total_paginas > 0) { ?>
             <nav aria-label="Page navigation">

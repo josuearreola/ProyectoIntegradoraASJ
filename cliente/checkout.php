@@ -1,9 +1,8 @@
 <?php
 include("../conexionBD.php");
 require "config.php";
-
 $producto = isset($_SESSION['carrito']['productos']) ? $_SESSION['carrito']['productos'] : NULL;
-
+$idUsua = $_SESSION['idUsua'];
 $lista_carrito = array();
 if ($producto != NULL) {
     foreach ($producto as $clave => $cantidad) {
@@ -25,10 +24,6 @@ if ($producto != NULL) {
 
 ?>
 
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,6 +33,7 @@ if ($producto != NULL) {
     <title>ASJ Technology</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../css/stylecliente.css">
     <link rel="icon" href="../img/logo.ico">
 </head>
@@ -126,17 +122,6 @@ if ($producto != NULL) {
                                 $subtotal = $cantidad * $precio;
                                 $total += $subtotal;
                         ?>
-                                <tr>
-                                    <td><?php echo $nombre; ?></td>
-                                    <td><?php echo MONEDA . number_format($precio, 2, '.', ','); ?></td>
-                                    <td>
-                                        <input type="number" min="1" max="35" step="1" value="<?php echo $cantidad; ?>" size="5" id="cantidad_<?php echo $_id; ?>" onchange="actualizaCantidad(this.value,<?php echo $_id; ?>)">
-                                    </td>
-                                    <td>
-                                        <div id="subtotal_<?php echo $_id; ?>" name="subtotal[]"><?php echo MONEDA . number_format($subtotal, 2, '.', ','); ?></div>
-                                    </td>
-                                    <td><a href="#" id="eliminar" class="btn btn-warning btn-sm" data-bs-id="<?php echo $_id; ?>" data-bs-toggle="modal" data-bs-target="#eliminaModal">Eliminar</a></td>
-                                </tr>
                             <?php } ?>
                     </tbody>
 
@@ -174,53 +159,53 @@ if ($producto != NULL) {
         </div>
     </div>
     <footer class="footerpagprinc">
-    <div class="container">
-        <div>
-            <label class="footer-p" for="btn-modal1">Terminos y condiciones</label>
-        </div>
-        <div >
-            <label class="footer-p" for="btn-modal2">Atencion al cliente</label>
-        </div>
-        <input type="checkbox" id="btn-modal1">
-        <div class="container-modal1">
-            <div class="content-modal1">
-                <h3>Términos y Condiciones</h3>
-                <p class="p1">1. Aceptación de los Términos
-                    Al acceder y utilizar nuestro sitio web, usted acepta estar sujeto a estos términos y condiciones y a todas las leyes y regulaciones aplicables. Si no está de acuerdo con alguno de estos términos, le pedimos que no utilice nuestro sitio.</p>
-                <p>2. Propiedad Intelectual
-                    Todos los contenidos presentes en este sitio, incluidos, entre otros, textos, gráficos, logotipos, iconos, imágenes y software, son propiedad de ASJ Technology o de sus proveedores de contenido y están protegidos por las leyes de propiedad intelectual.</p>
-                <p>3. Ley Aplicable
-                    Estos términos y condiciones se regirán e interpretarán de acuerdo con las leyes de [País], sin dar efecto a sus disposiciones sobre conflicto de leyes. Usted acepta someterse a la jurisdicción exclusiva de los tribunales de [País] para la resolución de cualquier disputa que surja de estos términos y condiciones o del uso del sitio.</p>
-                <p>4. Contacto
-                    Si tiene alguna pregunta o comentario acerca de estos términos y condiciones, no dude en contactarnos a través de ASJtechnology@gmail.com.</p>
-                <p>5. Confirmación
-                    Al hacer clic en "Aceptar", usted confirma que ha leído, entendido y aceptado estos términos y condiciones.</p>
-                <div class="btn-cerrar">
-                    <label for="btn-modal1">Aceptar</label>
-                </div>
+        <div class="container">
+            <div>
+                <label class="footer-p" for="btn-modal1">Terminos y condiciones</label>
             </div>
-            <label for="btn-modal1" class="cerrar-modal"></label>
-        </div>
+            <div>
+                <label class="footer-p" for="btn-modal2">Atencion al cliente</label>
+            </div>
+            <input type="checkbox" id="btn-modal1">
+            <div class="container-modal1">
+                <div class="content-modal1">
+                    <h3>Términos y Condiciones</h3>
+                    <p class="p1">1. Aceptación de los Términos
+                        Al acceder y utilizar nuestro sitio web, usted acepta estar sujeto a estos términos y condiciones y a todas las leyes y regulaciones aplicables. Si no está de acuerdo con alguno de estos términos, le pedimos que no utilice nuestro sitio.</p>
+                    <p>2. Propiedad Intelectual
+                        Todos los contenidos presentes en este sitio, incluidos, entre otros, textos, gráficos, logotipos, iconos, imágenes y software, son propiedad de ASJ Technology o de sus proveedores de contenido y están protegidos por las leyes de propiedad intelectual.</p>
+                    <p>3. Ley Aplicable
+                        Estos términos y condiciones se regirán e interpretarán de acuerdo con las leyes de [País], sin dar efecto a sus disposiciones sobre conflicto de leyes. Usted acepta someterse a la jurisdicción exclusiva de los tribunales de [País] para la resolución de cualquier disputa que surja de estos términos y condiciones o del uso del sitio.</p>
+                    <p>4. Contacto
+                        Si tiene alguna pregunta o comentario acerca de estos términos y condiciones, no dude en contactarnos a través de ASJtechnology@gmail.com.</p>
+                    <p>5. Confirmación
+                        Al hacer clic en "Aceptar", usted confirma que ha leído, entendido y aceptado estos términos y condiciones.</p>
+                    <div class="btn-cerrar">
+                        <label for="btn-modal1">Aceptar</label>
+                    </div>
+                </div>
+                <label for="btn-modal1" class="cerrar-modal"></label>
+            </div>
 
-        <input type="checkbox" id="btn-modal2">
-        <div class="container-modal2">
-            <div class="content-modal2">
-                <h3>¡Bienvenido a ASJ Technology!</h3>
-                <p class="p2">Nos complace atenderle y ofrecerle la mejor experiencia de servicio posible. Nuestro equipo de atención al cliente está aquí para ayudarle con cualquier consulta, problema o inquietud que pueda tener.</p>
-                <p>Teléfono:
-                    Llámenos al 4424530036 durante nuestro horario de atención, de lunes a viernes, de 9:00 a 18:00.</p>
-                <p>Correo Electrónico:
-                    Puede enviarnos un correo electrónico a ASJtechnology@gmail.com y responderemos a su consulta en un plazo de 24 horas hábiles.</p>
-                <p>Garantías y Devoluciones:
-                    Para consultas relacionadas con garantías, devoluciones o reemplazos, póngase en contacto con nosotros y le guiaremos a través del proceso de manera rápida y sencilla.</p>
-                <p>Facturación y Pagos:
-                    Para cualquier pregunta relacionada con facturas, pagos o información de cuentas, nuestro equipo de atención al cliente le proporcionará la asistencia necesaria para resolver su consulta de manera eficiente.</p>
-                <div class="btn-cerrar2">
-                    <label for="btn-modal2">Aceptar</label>
+            <input type="checkbox" id="btn-modal2">
+            <div class="container-modal2">
+                <div class="content-modal2">
+                    <h3>¡Bienvenido a ASJ Technology!</h3>
+                    <p class="p2">Nos complace atenderle y ofrecerle la mejor experiencia de servicio posible. Nuestro equipo de atención al cliente está aquí para ayudarle con cualquier consulta, problema o inquietud que pueda tener.</p>
+                    <p>Teléfono:
+                        Llámenos al 4424530036 durante nuestro horario de atención, de lunes a viernes, de 9:00 a 18:00.</p>
+                    <p>Correo Electrónico:
+                        Puede enviarnos un correo electrónico a ASJtechnology@gmail.com y responderemos a su consulta en un plazo de 24 horas hábiles.</p>
+                    <p>Garantías y Devoluciones:
+                        Para consultas relacionadas con garantías, devoluciones o reemplazos, póngase en contacto con nosotros y le guiaremos a través del proceso de manera rápida y sencilla.</p>
+                    <p>Facturación y Pagos:
+                        Para cualquier pregunta relacionada con facturas, pagos o información de cuentas, nuestro equipo de atención al cliente le proporcionará la asistencia necesaria para resolver su consulta de manera eficiente.</p>
+                    <div class="btn-cerrar2">
+                        <label for="btn-modal2">Aceptar</label>
+                    </div>
                 </div>
+                <label for="btn-modal2" class="cerrar-modal"></label>
             </div>
-            <label for="btn-modal2" class="cerrar-modal"></label>
-        </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
@@ -241,7 +226,6 @@ if ($producto != NULL) {
             formData.append('id', id);
             formData.append('cantidad', cantidad);
 
-
             fetch(url, {
                     method: 'POST',
                     body: formData,
@@ -249,33 +233,41 @@ if ($producto != NULL) {
                 }).then(response => response.json())
                 .then(data => {
                     if (data.ok) {
-                        let divsubtotal = document.getElementById('subtotal_' + id)
-                        divsubtotal.innerHTML = data.sub
+                        let divsubtotal = document.getElementById('subtotal_' + id);
+                        divsubtotal.innerHTML = data.sub;
 
-                        let total = 0.00
-                        let list = document.getElementsByName('subtotal[]')
+                        let total = 0.00;
+                        let list = document.getElementsByName('subtotal[]');
 
                         for (let i = 0; i < list.length; i++) {
-                            total += parseFloat(list[i].innerHTML.replace(/[$,]/g, ''))
+                            total += parseFloat(list[i].innerHTML.replace(/[$,]/g, ''));
                         }
                         total = new Intl.NumberFormat('en-US', {
                             minimumFractionDigits: 2
-                        }).format(total)
-                        document.getElementById('total').innerHTML = '<?php echo MONEDA; ?>' + total
+                        }).format(total);
+                        document.getElementById('total').innerHTML = '<?php echo MONEDA; ?>' + total;
+                        
+                        let listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
+                        for (let i = 0; i < listaCarrito.length; i++) {
+                            if (listaCarrito[i].id_tel == id) {
+                                listaCarrito[i].cantidad = cantidad;
+                                break;
+                            }
+                        }
+                        localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
                     }
-                })
+                });
         }
 
         function eliminar() {
-            let botonElimina = document.getElementById('btn-elimina')
-            let id = botonElimina.value
+            let botonElimina = document.getElementById('btn-elimina');
+            let id = botonElimina.value;
 
             let url = 'actualizarCarrito.php';
             let formData = new FormData();
             formData.append('action', 'eliminar');
             formData.append('id', id);
 
-
             fetch(url, {
                     method: 'POST',
                     body: formData,
@@ -283,10 +275,85 @@ if ($producto != NULL) {
                 }).then(response => response.json())
                 .then(data => {
                     if (data.ok) {
-                        location.reload()
+
+                        let listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
+                        listaCarrito = listaCarrito.filter(producto => producto.id_tel != id);
+                        localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
+
+                        location.reload();
                     }
-                })
+                });
         }
+    </script>
+    <?php $lista_carrito_json = json_encode($lista_carrito); ?>
+
+    <script>
+        const idUsua = "<?php echo $idUsua; ?>";
+        const listaCarrito = <?php echo $lista_carrito_json; ?>;
+        localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
+
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+    const idUsua = "<?php echo $idUsua; ?>";
+    const listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
+    const tbody = document.querySelector("table tbody");
+
+    if (listaCarrito && tbody) {
+        let total = 0;
+
+        listaCarrito.forEach(producto => {
+            const tr = document.createElement("tr");
+
+            const nombreTd = document.createElement("td");
+            nombreTd.textContent = producto.nom_tel;
+            tr.appendChild(nombreTd);
+
+            const precioTd = document.createElement("td");
+            precioTd.textContent = producto.prec_tel;
+            tr.appendChild(precioTd);
+
+            const cantidadTd = document.createElement("td");
+            const cantidadInput = document.createElement("input");
+            cantidadInput.type = "number";
+            cantidadInput.min = "1";
+            cantidadInput.max = "35";
+            cantidadInput.step = "1";
+            cantidadInput.value = producto.cantidad;
+            cantidadInput.size = "5";
+            cantidadInput.id = `cantidad_${producto.id_tel}`;
+            cantidadInput.onchange = function() {
+                actualizaCantidad(this.value, producto.id_tel);
+            };
+            cantidadTd.appendChild(cantidadInput);
+            tr.appendChild(cantidadTd);
+
+            const subtotalTd = document.createElement("td");
+            const subtotal = producto.cantidad * producto.prec_tel;
+            total += subtotal;
+            subtotalTd.id = `subtotal_${producto.id_tel}`;
+            subtotalTd.name = "subtotal[]";
+            subtotalTd.textContent = `${subtotal.toFixed(2)}`;
+            tr.appendChild(subtotalTd);
+
+            const eliminarTd = document.createElement("td");
+            const eliminarBtn = document.createElement("a");
+            eliminarBtn.href = "#";
+            eliminarBtn.id = "eliminar";
+            eliminarBtn.className = "btn btn-warning btn-sm";
+            eliminarBtn.dataset.bsId = producto.id_tel;
+            eliminarBtn.dataset.bsToggle = "modal";
+            eliminarBtn.dataset.bsTarget = "#eliminaModal";
+            eliminarBtn.textContent = "Eliminar";
+            eliminarTd.appendChild(eliminarBtn);
+            tr.appendChild(eliminarTd);
+
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+    }
+});
     </script>
 </body>
 

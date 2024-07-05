@@ -43,6 +43,7 @@ if (!empty($_POST)) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
     <link rel="icon" href="../img/logo.ico">
     <link rel="stylesheet" href="../css/styleadministrador.css">
 </head>
@@ -65,7 +66,7 @@ if (!empty($_POST)) {
                             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                         </div>
                         <div class="offcanvas-body">
-                            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                            <ul class="navbar-nav justify-content flex-grow-1 pe-3">
                                 <li class="nav-item">
                                     <a class="nav-link active lh-lg" aria-current="page" href="administrador.php">Inicio</a>
                                 </li>
@@ -96,9 +97,9 @@ if (!empty($_POST)) {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales </a>
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="#">Nueva sucursal</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Lista de sucursales</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Sucursales eliminadas</a></li>
+                                        <li><a class="dropdown-item border-0" href="regSuc.php">Nueva sucursal</a></li>
+                                        <li><a class="dropdown-item border-0" href="listaSuc.php">Lista de sucursales</a></li>
+                                        <li><a class="dropdown-item border-0" href="listaSucElimin.php">Sucursales eliminadas</a></li>
                                     </ul>
                                 </li>
                         </div>
