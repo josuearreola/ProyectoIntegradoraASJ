@@ -2,6 +2,25 @@
 ob_start();
 include("../denegacion.php");
 include "../conexionBD.php";
+
+if (empty($_REQUEST['id'])) {
+    header('location:listaSuc.php');
+} else {
+
+    $idSuc = $_REQUEST['id'];
+    $query = mysqli_query($conexion, "select id_inv,exist_inv,id_suc,id_tel from inventario where inventario.id_suc='$idSuc'");
+    $result = mysqli_num_rows($query);
+    if ($result > 0) {
+        while ($data = mysqli_fetch_array($query)) {
+            $idInv = $data['id_inv'];
+            $existencia = $data['exist_inv'];
+            $idSucursal = $data['id_suc'];
+            $idTel = $data['id_tel'];
+        }
+    } else {
+        header('location:listaSuc.php');
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -74,7 +93,7 @@ include "../conexionBD.php";
                                     </ul>
                                 </li>
                             </ul>
-                            <form action="buscarSuc.php" method="get" class="form_search ms-auto">
+                            <form action="buscarInventario.php" method="get" class="form_search ms-auto">
                                 <input class="busqueda" type="text" name="busqueda" id="busqueda" placeholder="Buscar">
                                 <input type="submit" value="Buscar" class="btn_search">
                             </form>
@@ -87,28 +106,22 @@ include "../conexionBD.php";
     </header>
 
     <section id="container">
-        <h1 class="text_prin">Lista de sucursales</h1>
-        <a href="regSuc.php" class="btn_new">Registrar sucursal</a>
-
+        <h1 class="text_prin">Lista de inventario</h1>
+        <a href="listaSuc.php" class="btn_new">Sucursales</a>
         <div class="container">
             <div class="table-responsive">
                 <table class="table table-sm table-dark">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Colonia</th>
-                            <th>Calle</th>
-                            <th>CP</th>
-                            <th># Interior</th>
-                            <th># Exterior</th>
-                            <th>Ciudad</th>
+                            <th>Nombre de la sucursal</th>
+                            <th>Modelo de telefono</th>
+                            <th>Existencia</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <?php
-                    //paginador//
-                    $sql_register = mysqli_query($conexion, "SELECT count(*) as total_registro from sucursal inner join ciudad on ciudad.id_ciu=sucursal.id_ciu where sucursal.estatus=1");
+                    $sql_register = mysqli_query($conexion, "SELECT count(*) as total_registro from inventario inner join telefono on inventario.id_tel=telefono.id_tel inner join modelo on modelo.id_mod = telefono.id_mod inner join sucursal on sucursal.id_suc = inventario.id_suc where inventario.estatus=1 and inventario.id_suc=$idSuc");
                     $result_register = mysqli_fetch_array($sql_register);
                     $total_registro = $result_register['total_registro'];
                     $por_pagina = 5;
@@ -120,27 +133,21 @@ include "../conexionBD.php";
                     $desde = ($pagina - 1) * $por_pagina;
                     $total_paginas = ceil($total_registro / $por_pagina);
 
-                    $query = mysqli_query($conexion, "SELECT sucursal.id_suc,nom_suc,col_suc,cp_suc,ni_suc,ne_suc,call_suc,nom_ciu FROM sucursal inner join ciudad ON ciudad.id_ciu=sucursal.id_ciu where sucursal.estatus=1 ORDER by id_suc asc limit $desde,$por_pagina");
+                    $query = mysqli_query($conexion, "SELECT inventario.id_inv,nom_suc,nom_mod,exist_inv FROM inventario inner join telefono on inventario.id_tel=telefono.id_tel inner join modelo on modelo.id_mod = telefono.id_mod inner join sucursal on sucursal.id_suc = inventario.id_suc where inventario.estatus=1  and inventario.id_suc=$idSuc ORDER by id_inv asc limit $desde,$por_pagina");
                     $result = mysqli_num_rows($query);
                     if ($result > 0) {
                         while ($data = mysqli_fetch_array($query)) {
                     ?>
                             <tbody>
-                                <tr >
-                                    <td><?php echo $data["id_suc"] ?></td>
+                                <tr>
+                                    <td><?php echo $data["id_inv"] ?></td>
                                     <td><?php echo $data["nom_suc"] ?></td>
-                                    <td><?php echo $data["col_suc"] ?></td>
-                                    <td><?php echo $data["call_suc"] ?></td>
-                                    <td><?php echo $data["cp_suc"] ?></td>
-                                    <td><?php echo $data["ni_suc"] ?></td>
-                                    <td><?php echo $data["ne_suc"] ?></td>
-                                    <td><?php echo $data["nom_ciu"] ?></td>
+                                    <td><?php echo $data["nom_mod"] ?></td>
+                                    <td><?php echo $data["exist_inv"] ?></td>
                                     <td>
-                                        <a class="link_edit" href="InventarioSuc.php?id=<?php print($data["id_suc"]) ?>">Inventario</a>
+                                        <a class="link_edit" href="editarInv.php?id=<?php print($data["id_inv"]) ?>">Editar</a>
                                         |
-                                        <a class="link_edit" href="editarSuc.php?id=<?php print($data["id_suc"]) ?>">Editar</a>
-                                        |
-                                        <a class="link_delete" href="eliminarconfirmSuc.php?id=<?php print($data["id_suc"]) ?>">Eliminar</a>
+                                        <a class="link_delete" href="eliminarconfirmInv.php?id=<?php print($data["id_inv"]) ?>">Eliminar</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -157,7 +164,7 @@ include "../conexionBD.php";
                 <ul class="pagination">
                     <?php if ($pagina != 1) { ?>
                         <li class="page-item">
-                            <a class="page-link" href="?pagina=<?php echo 1; ?>" aria-label="Previous">
+                            <a class="page-link" href="?id=<?php echo $idSuc; ?>&pagina=<?php echo 1; ?>" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Previous</span>
                             </a>
@@ -166,13 +173,13 @@ include "../conexionBD.php";
 
                     <?php for ($i = 1; $i <= $total_paginas; $i++) { ?>
                         <li class="page-item <?php echo ($pagina == $i) ? " active " : " "; ?>">
-                            <a class="page-link" href="?pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+                            <a class="page-link" href="?id=<?php echo $idSuc; ?>&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
                         </li>
                     <?php } ?>
 
                     <?php if ($pagina != $total_paginas) { ?>
                         <li class="page-item">
-                            <a class="page-link" href="?pagina=<?php echo $pagina + 1; ?>" aria-label="Next">
+                            <a class="page-link" href="?id=<?php echo $idSuc; ?>&pagina=<?php echo $pagina + 1; ?>" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                                 <span class="sr-only">Next</span>
                             </a>

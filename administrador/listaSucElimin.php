@@ -107,8 +107,7 @@ include "../conexionBD.php";
                         </tr>
                     </thead>
                     <?php
-                    //paginador//
-                    $sql_register = mysqli_query($conexion, "SELECT count(*) as total_registro from sucursal inner join ciudad on ciudad.id_ciu=sucursal.id_ciu where sucursal.estatus=1");
+                    $sql_register = mysqli_query($conexion, "SELECT count(*) as total_registro from sucursal inner join ciudad on ciudad.id_ciu=sucursal.id_ciu where sucursal.estatus=0");
                     $result_register = mysqli_fetch_array($sql_register);
                     $total_registro = $result_register['total_registro'];
                     $por_pagina = 5;
@@ -120,13 +119,13 @@ include "../conexionBD.php";
                     $desde = ($pagina - 1) * $por_pagina;
                     $total_paginas = ceil($total_registro / $por_pagina);
 
-                    $query = mysqli_query($conexion, "SELECT sucursal.id_suc,nom_suc,col_suc,cp_suc,ni_suc,ne_suc,call_suc,nom_ciu FROM sucursal inner join ciudad ON ciudad.id_ciu=sucursal.id_ciu where sucursal.estatus=1 ORDER by id_suc asc limit $desde,$por_pagina");
+                    $query = mysqli_query($conexion, "SELECT sucursal.id_suc,nom_suc,col_suc,cp_suc,ni_suc,ne_suc,call_suc,nom_ciu FROM sucursal inner join ciudad ON ciudad.id_ciu=sucursal.id_ciu where sucursal.estatus=0 ORDER by id_suc asc limit $desde,$por_pagina");
                     $result = mysqli_num_rows($query);
                     if ($result > 0) {
                         while ($data = mysqli_fetch_array($query)) {
                     ?>
                             <tbody>
-                                <tr >
+                                <tr>
                                     <td><?php echo $data["id_suc"] ?></td>
                                     <td><?php echo $data["nom_suc"] ?></td>
                                     <td><?php echo $data["col_suc"] ?></td>
@@ -136,11 +135,7 @@ include "../conexionBD.php";
                                     <td><?php echo $data["ne_suc"] ?></td>
                                     <td><?php echo $data["nom_ciu"] ?></td>
                                     <td>
-                                        <a class="link_edit" href="InventarioSuc.php?id=<?php print($data["id_suc"]) ?>">Inventario</a>
-                                        |
-                                        <a class="link_edit" href="editarSuc.php?id=<?php print($data["id_suc"]) ?>">Editar</a>
-                                        |
-                                        <a class="link_delete" href="eliminarconfirmSuc.php?id=<?php print($data["id_suc"]) ?>">Eliminar</a>
+                                        <a class="link_edit" href="RecuperarSuc.php?id=<?php print($data["id_suc"]) ?>">Recuperar</a>
                                     </td>
                                 </tr>
                             </tbody>

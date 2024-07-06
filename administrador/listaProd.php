@@ -89,10 +89,10 @@ include "../conexionBD.php";
     <section id="container">
         <h1 class="text_prin">Lista de productos</h1>
         <a href="regProd.php"  class="btn_new">Registrar producto</a>
-
+        <a href="reporteProd.php"  class="btn_new">Generar reporte</a>
         <div class="container">
             <div class="table-responsive">
-                <table class="table table-sm table-dark table-hover table-striped">
+                <table class="table table-sm table-dark table-hover table-striped tamañoLetra">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -108,7 +108,7 @@ include "../conexionBD.php";
                             <th>Precio</th>
                             <th>Costo</th>
                             <th>Imagen</th>
-                            <th class="acciones">Acciones</th>
+                            <th >Acciones</th>
                         </tr>
                     </thead>
                     <?php
@@ -148,7 +148,7 @@ include "../conexionBD.php";
                                     <td><?php echo $data['prec_tel'] ?></td>
                                     <td><?php echo $data['costo_tel'] ?></td>
                                     <td class="img_producto"><img src="<?php echo $foto ?>" alt="producto"></td>
-                                    <td>
+                                    <td class="nowrap">
                                         <a class="link_edit" href="editar_producto.php?id=<?php print($data["id_tel"]) ?>">Editar</a>
                                         |
                                         <a class="link_delete" href="eliminarconfirm_producto.php?id=<?php print($data["id_tel"]) ?>">Eliminar</a>

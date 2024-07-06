@@ -511,7 +511,9 @@ table th, table td {
     color: #f80202;
 }
 
-
+.nowrap {
+    white-space: nowrap;
+}
 /*Eliminar usuario*/
 .acciones {
     white-space: nowrap;
@@ -625,7 +627,9 @@ table th, table td {
     margin: auto;
 }
 
-
+.tamañoLetra{
+    font-size: 13px;
+}
 
 
 .dirSuc-campos {

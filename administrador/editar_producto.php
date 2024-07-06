@@ -42,10 +42,7 @@ if (!empty($_POST)) {
                 $imgProducto='../img/img_producto.png';
             }
         }
-
-     
-
-       
+        
             $queryUpdateTelefono = "UPDATE telefono SET col_tel='$color', cam_tel='$camara', alm_tel='$almacenamiento', ram_tel='$ram', pan_tel='$pantalla', bat_tel='$bateria', proc_tel='$procesador', prec_tel='$precio', costo_tel='$costo', img_tel='$imgProducto' WHERE id_tel='$id_tel'";
             $resultadoUpdateTelefono = mysqli_query($conexion, $queryUpdateTelefono);
         
