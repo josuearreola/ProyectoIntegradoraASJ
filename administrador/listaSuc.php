@@ -89,6 +89,7 @@ include "../conexionBD.php";
     <section id="container">
         <h1 class="text_prin">Lista de sucursales</h1>
         <a href="regSuc.php" class="btn_new">Registrar sucursal</a>
+        
 
         <div class="container">
             <div class="table-responsive">

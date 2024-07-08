@@ -3,24 +3,7 @@ ob_start();
 include("../denegacion.php");
 include "../conexionBD.php";
 
-if (empty($_REQUEST['id'])) {
-    header('location:listaSuc.php');
-} else {
 
-    $idSuc = $_REQUEST['id'];
-    $query = mysqli_query($conexion, "select id_inv,exist_inv,id_suc,id_tel from inventario where inventario.id_suc='$idSuc'");
-    $result = mysqli_num_rows($query);
-    if ($result > 0) {
-        while ($data = mysqli_fetch_array($query)) {
-            $idInv = $data['id_inv'];
-            $existencia = $data['exist_inv'];
-            $idSucursal = $data['id_suc'];
-            $idTel = $data['id_tel'];
-        }
-    } else {
-        header('location:listaSuc.php');
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,12 +13,12 @@ if (empty($_REQUEST['id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASJ Technology</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
     <link rel="icon" href="../img/logo.ico">
     <link rel="stylesheet" href="../css/styleadministrador.css">
-
 </head>
 
 <body>
@@ -93,33 +76,55 @@ if (empty($_REQUEST['id'])) {
                                     </ul>
                                 </li>
                             </ul>
-                            
+                            <form action="buscarSuc.php" method="get" class="form_search ms-auto">
+                                <input class="busqueda" type="text" name="busqueda" id="busqueda" placeholder="Buscar">
+                                <input type="submit" value="Buscar" class="btn_search">
+                            </form>
                         </div>
                     </div>
                 </div>
             </nav>
+
         </div>
         <section></section>
     </header>
-
     <section id="container">
-        <h1 class="text_prin">Lista de inventario</h1>
-        <a href="listaSuc.php" class="btn_new">Sucursales</a>
-        <a href="reporteInv.php?id=<?php echo $idSuc;?>"  class="btn_new">Generar reporte</a>
+        <h1 class="text_prin">Lista de sucursales</h1>
+        <a href="regSuc.php" class="btn_new">Registrar sucursal</a>
+        <?php
+        $busqueda = strtolower($_REQUEST['busqueda']);
+        if (empty($busqueda)) {
+            header('Location:listaSuc.php');
+        }
+        ?>
+
         <div class="container">
             <div class="table-responsive">
                 <table class="table table-sm table-dark">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre de la sucursal</th>
-                            <th>Modelo de telefono</th>
-                            <th>Existencia</th>
+                            <th>Nombre</th>
+                            <th>Colonia</th>
+                            <th>Calle</th>
+                            <th>CP</th>
+                            <th># Interior</th>
+                            <th># Exterior</th>
+                            <th>Ciudad</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <?php
-                    $sql_register = mysqli_query($conexion, "SELECT count(*) as total_registro from inventario inner join telefono on inventario.id_tel=telefono.id_tel inner join modelo on modelo.id_mod = telefono.id_mod inner join sucursal on sucursal.id_suc = inventario.id_suc where inventario.estatus=1 and inventario.id_suc=$idSuc");
+                    //paginador//
+                    $sql_register = mysqli_query($conexion, "SELECT count(*) as total_registro from sucursal inner join ciudad on ciudad.id_ciu=sucursal.id_ciu 
+                                                WHERE (sucursal.id_suc LIKE '%$busqueda%' OR
+                                                        sucursal.nom_suc LIKE '%$busqueda%' OR
+                                                        sucursal.col_suc LIKE '%$busqueda%' OR
+                                                        sucursal.call_suc LIKE '%$busqueda%' OR
+                                                        sucursal.ni_suc LIKE '%$busqueda%' OR
+                                                        sucursal.ne_suc LIKE '%$busqueda%' OR
+                                                        ciudad.nom_ciu LIKE '%$busqueda%')                                  
+                                                AND sucursal.estatus=1");
                     $result_register = mysqli_fetch_array($sql_register);
                     $total_registro = $result_register['total_registro'];
                     $por_pagina = 5;
@@ -131,21 +136,35 @@ if (empty($_REQUEST['id'])) {
                     $desde = ($pagina - 1) * $por_pagina;
                     $total_paginas = ceil($total_registro / $por_pagina);
 
-                    $query = mysqli_query($conexion, "SELECT inventario.id_inv,nom_suc,nom_mod,exist_inv FROM inventario inner join telefono on inventario.id_tel=telefono.id_tel inner join modelo on modelo.id_mod = telefono.id_mod inner join sucursal on sucursal.id_suc = inventario.id_suc where inventario.estatus=1  and inventario.id_suc=$idSuc ORDER by id_inv asc limit $desde,$por_pagina");
+                    $query = mysqli_query($conexion, "SELECT sucursal.id_suc,nom_suc,col_suc,cp_suc,ni_suc,ne_suc,call_suc,nom_ciu FROM sucursal inner join ciudad ON ciudad.id_ciu=sucursal.id_ciu 
+                                        WHERE (sucursal.id_suc LIKE '%$busqueda%' OR
+                                                sucursal.nom_suc LIKE '%$busqueda%' OR
+                                                sucursal.col_suc LIKE '%$busqueda%' OR
+                                                sucursal.call_suc LIKE '%$busqueda%' OR
+                                                sucursal.ni_suc LIKE '%$busqueda%' OR
+                                                sucursal.ne_suc LIKE '%$busqueda%' OR
+                                                ciudad.nom_ciu LIKE '%$busqueda%')
+                                        AND sucursal.estatus=1 ORDER by id_suc asc limit $desde,$por_pagina");
                     $result = mysqli_num_rows($query);
                     if ($result > 0) {
                         while ($data = mysqli_fetch_array($query)) {
                     ?>
                             <tbody>
                                 <tr>
-                                    <td><?php echo $data["id_inv"] ?></td>
+                                    <td><?php echo $data["id_suc"] ?></td>
                                     <td><?php echo $data["nom_suc"] ?></td>
-                                    <td><?php echo $data["nom_mod"] ?></td>
-                                    <td><?php echo $data["exist_inv"] ?></td>
+                                    <td><?php echo $data["col_suc"] ?></td>
+                                    <td><?php echo $data["call_suc"] ?></td>
+                                    <td><?php echo $data["cp_suc"] ?></td>
+                                    <td><?php echo $data["ni_suc"] ?></td>
+                                    <td><?php echo $data["ne_suc"] ?></td>
+                                    <td><?php echo $data["nom_ciu"] ?></td>
                                     <td>
-                                        <a class="link_edit" href="editarInv.php?id=<?php echo($data["id_inv"]); ?>">Editar</a>
+                                        <a class="link_edit" href="InventarioSuc.php?id=<?php print($data["id_suc"]) ?>">Inventario</a>
                                         |
-                                        <a class="link_delete" href="eliminarconfirmInv.php?id=<?php echo($data["id_inv"]); ?>">Eliminar</a>
+                                        <a class="link_edit" href="editarSuc.php?id=<?php print($data["id_suc"]) ?>">Editar</a>
+                                        |
+                                        <a class="link_delete" href="eliminarconfirmSuc.php?id=<?php print($data["id_suc"]) ?>">Eliminar</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -162,7 +181,7 @@ if (empty($_REQUEST['id'])) {
                 <ul class="pagination">
                     <?php if ($pagina != 1) { ?>
                         <li class="page-item">
-                            <a class="page-link" href="?id=<?php echo $idSuc; ?>&pagina=<?php echo 1; ?>" aria-label="Previous">
+                            <a class="page-link" href="?pagina=<?php echo 1; ?>" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Previous</span>
                             </a>
@@ -171,13 +190,13 @@ if (empty($_REQUEST['id'])) {
 
                     <?php for ($i = 1; $i <= $total_paginas; $i++) { ?>
                         <li class="page-item <?php echo ($pagina == $i) ? " active " : " "; ?>">
-                            <a class="page-link" href="?id=<?php echo $idSuc; ?>&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+                            <a class="page-link" href="?pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
                         </li>
                     <?php } ?>
 
                     <?php if ($pagina != $total_paginas) { ?>
                         <li class="page-item">
-                            <a class="page-link" href="?id=<?php echo $idSuc; ?>&pagina=<?php echo $pagina + 1; ?>" aria-label="Next">
+                            <a class="page-link" href="?pagina=<?php echo $pagina + 1; ?>" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                                 <span class="sr-only">Next</span>
                             </a>
@@ -187,7 +206,6 @@ if (empty($_REQUEST['id'])) {
             </nav>
         <?php } ?>
     </section>
-
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>
