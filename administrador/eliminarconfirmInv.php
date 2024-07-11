@@ -2,6 +2,9 @@
 ob_start();
 include("../denegacion.php");
 include "../conexionBD.php";
+if(empty($_SESSION['idUsua'])){
+    header('location:../inicioSesion/iniciosesion.php');
+}
 if (!empty($_POST)) {
     $idInv = $_POST['idinv'];
 

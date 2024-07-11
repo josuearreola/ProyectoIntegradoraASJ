@@ -2,6 +2,7 @@
 <?php
 require "../conexionBD.php";
 include "FPDF/html_table.php";
+
 if (empty($_GET['id'])) {
     header('Location:listaSuc.php');
 }

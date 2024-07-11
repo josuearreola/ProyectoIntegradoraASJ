@@ -104,7 +104,7 @@ include "../conexionBD.php";
                         </tr>
                     </thead>
                     <?php
-                    //paginador//
+                    
                     $sql_register = mysqli_query($conexion, "select count(*) as total_registro from usuario inner join cliente on usuario.id_usua=cliente.id_usua where usuario.estatus=1 and cliente.estatus=1");
                     $result_register = mysqli_fetch_array($sql_register);
                     $total_registro = $result_register['total_registro'];

@@ -1,6 +1,5 @@
 <?php 
 include "../conexionBD.php";
-
 if(!empty($_POST)){
     if(empty($_POST['nombre']) || empty($_POST['nom_usua']) || empty($_POST['email'])){
         $alert = '<p class="msj_error">Los campos Nombre, Nombre del usuario y Correo electrónico son obligatorios </p>';
@@ -18,7 +17,6 @@ if(!empty($_POST)){
         $numI = $_POST['numI'];
         $numE = $_POST['numE'];
         
-        // Si se proporciona una nueva contraseña
         if(!empty($_POST['pass_usua'])){
             $contraseña = md5(mysqli_real_escape_string($conexion, $_POST['pass_usua']));
             $sql = mysqli_query($conexion, "UPDATE usuario SET nom_usua='$nombreusua', pass_usua='$contraseña' WHERE id_usua='$idUsuario'");
@@ -50,7 +48,7 @@ if(!empty($_POST)){
 
 
 if (empty($_GET['idUsua'])) {
-    header('Location:cliente.php');
+    header('Location:../inicioSesion/iniciosesion.php');
 }
 $iduser = $_GET['idUsua'];
 $sql = mysqli_query($conexion, "select usuario.id_usua,nom_clie,email_clie,nom_usua,ap_clie,am_clie,tel_clie,rfc_clie,col_clie,calle_clie,cp_clie,ni_clie,ne_clie from usuario inner join cliente on usuario.id_usua=cliente.id_usua where usuario.id_usua='$iduser'");

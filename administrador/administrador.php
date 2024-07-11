@@ -1,7 +1,9 @@
 <?php
 ob_start();
 include("../denegacion.php");
-
+if(empty($_SESSION['idUsua'])){
+    header('location:../inicioSesion/iniciosesion.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

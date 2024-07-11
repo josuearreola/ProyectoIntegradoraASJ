@@ -2,6 +2,9 @@
 ob_start();
 include("../denegacion.php");
 include "../conexionBD.php";
+if(empty($_SESSION['idUsua'])){
+    header('location:../inicioSesion/iniciosesion.php');
+}
 if (!empty($_POST)) {
     $idSucursal = $_POST['sucursal'];
     $query_delete1 = mysqli_query($conexion, "UPDATE sucursal SET estatus = 1 where id_suc=$idSucursal ");

@@ -3,6 +3,7 @@
 require "../conexionBD.php";
 include "FPDF/html_table.php";
 
+
 $pdf = new FPDF('L', 'mm', 'A4');
 $pdf->AddPage();
 

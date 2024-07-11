@@ -2,6 +2,9 @@
 ob_start();
 include("../denegacion.php");
 include "../conexionBD.php";
+if(empty($_SESSION['idUsua'])){
+    header('location:../inicioSesion/iniciosesion.php');
+}
 if (!empty($_POST)) {
     if ($_POST['usuario'] == 1300) {
         header('location:listausuarios.php');

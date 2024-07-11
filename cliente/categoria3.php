@@ -1,7 +1,9 @@
 <?php
 include("../conexionBD.php");
 require "config.php";
-
+if(empty($_SESSION['idUsua'])){
+    header('location:../inicioSesion/iniciosesion.php');
+}
 ?>
 
 

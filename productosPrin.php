@@ -120,7 +120,7 @@ require "configPPrin.php";
                                 <p class="card-text"></p>
                                 <div class="d-flex flex-wrap justify-content-between align-items-center">
                                     <div class="btn-group me-2 mb-2">
-                                        <a href="" class="btn btn-success">Comprar</a>
+                                        <a href="inicioSesion/iniciosesion.php" class="btn btn-success">Comprar</a>
                                     </div>
                                     <div class="btn-group mb-2">
                                         <a href="detallesPPrin.php?id=<?php echo $row['id_tel']; ?>&token=<?php echo hash_hmac('sha1', $row['id_tel'], KEY_TOKEN); ?>" class="btn btn-primary">Detalles</a>

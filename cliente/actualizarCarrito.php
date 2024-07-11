@@ -1,6 +1,9 @@
 <?php
 require 'config.php';
 require '../conexionBD.php';
+if(empty($_SESSION['idUsua'])){
+    header('location:../inicioSesion/iniciosesion.php');
+}
 if (isset($_POST['action'])) {
     $action = $_POST['action'];
     $id = isset($_POST['id']) ? $_POST['id'] : 0;

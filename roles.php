@@ -8,7 +8,6 @@ $datos= mysqli_query($conexion,"select * from usuario where nom_usua='$sesion'")
 
 while($consulta=mysqli_fetch_array($datos)){
     $rol=$consulta['tip_usua'];
-
 }
 mysqli_close($conexion);
 if($rol== 'administrador'){

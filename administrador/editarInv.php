@@ -2,7 +2,9 @@
 ob_start();
 include "../conexionBD.php";
 include("../denegacion.php");
-
+if(empty($_SESSION['idUsua'])){
+    header('location:../inicioSesion/iniciosesion.php');
+}
 if (!empty($_POST)) {
     $alert = '';
     if (empty($_POST['idinv']) || empty($_POST['sucursal']) || empty($_POST['modelo']) || empty($_POST['existencia'])) {

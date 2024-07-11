@@ -1,6 +1,9 @@
 <?php
 include("../conexionBD.php");
 require "config.php";
+if(empty($_SESSION['idUsua'])){
+    header('location:../inicioSesion/iniciosesion.php');
+}
 $producto = isset($_SESSION['carrito']['productos']) ? $_SESSION['carrito']['productos'] : NULL;
 $idUsua = $_SESSION['idUsua'];
 $lista_carrito = array();
@@ -236,17 +239,17 @@ if ($producto != NULL) {
                         let divsubtotal = document.getElementById('subtotal_' + id);
                         divsubtotal.innerHTML = data.sub;
 
+                        // Recalcula el total
                         let total = 0.00;
                         let list = document.getElementsByName('subtotal[]');
-
                         for (let i = 0; i < list.length; i++) {
                             total += parseFloat(list[i].innerHTML.replace(/[$,]/g, ''));
                         }
-                        total = new Intl.NumberFormat('en-US', {
+                        total = new Intl.NumberFormat('es-ES', {
                             minimumFractionDigits: 2
                         }).format(total);
                         document.getElementById('total').innerHTML = '<?php echo MONEDA; ?>' + total;
-                        
+
                         let listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
                         for (let i = 0; i < listaCarrito.length; i++) {
                             if (listaCarrito[i].id_tel == id) {
@@ -289,71 +292,88 @@ if ($producto != NULL) {
 
     <script>
         const idUsua = "<?php echo $idUsua; ?>";
-        const listaCarrito = <?php echo $lista_carrito_json; ?>;
+        const listaCarrito = <?php echo json_encode($lista_carrito); ?>;
         localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
 
+        document.addEventListener("DOMContentLoaded", function () {
+            const idUsua = "<?php echo $idUsua; ?>";
+            const listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
+            const tbody = document.querySelector("table tbody");
 
+            if (listaCarrito && tbody) {
+                let total = 0;
 
-    document.addEventListener("DOMContentLoaded", function() {
-    const idUsua = "<?php echo $idUsua; ?>";
-    const listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
-    const tbody = document.querySelector("table tbody");
+                listaCarrito.forEach(producto => {
+                    const tr = document.createElement("tr");
 
-    if (listaCarrito && tbody) {
-        let total = 0;
+                    const nombreTd = document.createElement("td");
+                    nombreTd.textContent = producto.nom_tel;
+                    tr.appendChild(nombreTd);
 
-        listaCarrito.forEach(producto => {
-            const tr = document.createElement("tr");
+                    const precioTd = document.createElement("td");
+                    precioTd.textContent = producto.prec_tel;
+                    tr.appendChild(precioTd);
 
-            const nombreTd = document.createElement("td");
-            nombreTd.textContent = producto.nom_tel;
-            tr.appendChild(nombreTd);
+                    const cantidadTd = document.createElement("td");
+                    const cantidadInput = document.createElement("input");
+                    cantidadInput.type = "number";
+                    cantidadInput.min = "1";
+                    cantidadInput.max = "35";
+                    cantidadInput.step = "1";
+                    cantidadInput.value = producto.cantidad;
+                    cantidadInput.size = "5";
+                    cantidadInput.id = `cantidad_${producto.id_tel}`;
+                    cantidadInput.onchange = function () {
+                        actualizaCantidad(this.value, producto.id_tel);
+                    };
+                    cantidadTd.appendChild(cantidadInput);
+                    tr.appendChild(cantidadTd);
 
-            const precioTd = document.createElement("td");
-            precioTd.textContent = producto.prec_tel;
-            tr.appendChild(precioTd);
+                    const subtotalTd = document.createElement("td");
+                    const subtotal = producto.cantidad * producto.prec_tel;
+                    total += subtotal;
+                    subtotalTd.id = `subtotal_${producto.id_tel}`;
+                    subtotalTd.name = "subtotal[]";
+                    subtotalTd.textContent = `${subtotal.toFixed(2)}`;
+                    tr.appendChild(subtotalTd);
 
-            const cantidadTd = document.createElement("td");
-            const cantidadInput = document.createElement("input");
-            cantidadInput.type = "number";
-            cantidadInput.min = "1";
-            cantidadInput.max = "35";
-            cantidadInput.step = "1";
-            cantidadInput.value = producto.cantidad;
-            cantidadInput.size = "5";
-            cantidadInput.id = `cantidad_${producto.id_tel}`;
-            cantidadInput.onchange = function() {
-                actualizaCantidad(this.value, producto.id_tel);
-            };
-            cantidadTd.appendChild(cantidadInput);
-            tr.appendChild(cantidadTd);
+                    const eliminarTd = document.createElement("td");
+                    const eliminarBtn = document.createElement("a");
+                    eliminarBtn.href = "#";
+                    eliminarBtn.id = "eliminar";
+                    eliminarBtn.className = "btn btn-warning btn-sm";
+                    eliminarBtn.dataset.bsId = producto.id_tel;
+                    eliminarBtn.dataset.bsToggle = "modal";
+                    eliminarBtn.dataset.bsTarget = "#eliminaModal";
+                    eliminarBtn.textContent = "Eliminar";
+                    eliminarTd.appendChild(eliminarBtn);
+                    tr.appendChild(eliminarTd);
 
-            const subtotalTd = document.createElement("td");
-            const subtotal = producto.cantidad * producto.prec_tel;
-            total += subtotal;
-            subtotalTd.id = `subtotal_${producto.id_tel}`;
-            subtotalTd.name = "subtotal[]";
-            subtotalTd.textContent = `${subtotal.toFixed(2)}`;
-            tr.appendChild(subtotalTd);
+                    tbody.appendChild(tr);
+                });
 
-            const eliminarTd = document.createElement("td");
-            const eliminarBtn = document.createElement("a");
-            eliminarBtn.href = "#";
-            eliminarBtn.id = "eliminar";
-            eliminarBtn.className = "btn btn-warning btn-sm";
-            eliminarBtn.dataset.bsId = producto.id_tel;
-            eliminarBtn.dataset.bsToggle = "modal";
-            eliminarBtn.dataset.bsTarget = "#eliminaModal";
-            eliminarBtn.textContent = "Eliminar";
-            eliminarTd.appendChild(eliminarBtn);
-            tr.appendChild(eliminarTd);
-
-            tbody.appendChild(tr);
+                document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+            }
         });
 
-        document.getElementById("total").textContent = `$${total.toFixed(2)}`;
-    }
-});
+        function actualizaCantidad(cantidad, id) {
+            const idUsua = "<?php echo $idUsua; ?>";
+            let listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
+
+            listaCarrito = listaCarrito.map(producto => {
+                if (producto.id_tel == id) {
+                    producto.cantidad = parseInt(cantidad, 10);
+                    const nuevoSubtotal = producto.cantidad * producto.prec_tel;
+                    document.getElementById(`subtotal_${id}`).textContent = nuevoSubtotal.toFixed(2);
+                }
+                return producto;
+            });
+
+            localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
+
+            let total = listaCarrito.reduce((acc, producto) => acc + (producto.cantidad * producto.prec_tel), 0);
+            document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+        }
     </script>
 </body>
 

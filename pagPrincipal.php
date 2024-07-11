@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -57,9 +56,16 @@
                                 <li><a class="dropdown-item border-0" href="categoriaPrin3.php">Mas de $18000</a></li>
                             </ul>
                         </li>
-                        <form form class="d-flex mt-2" role="search">
-                            <input class="form-control me-2 " type="search" placeholder="Buscar productos" aria-label="Search">
-                            <button class="btn bg-success" type="submit">Buscar</button>
+                        <form class="form-inline ml-3" action="productosPrin.php">
+                            <div class="input-group input-group-sm">
+                                <input class="form-control form-control-navbar bg-dark-subtle" type="search" placeholder="Buscar" aria-label="Search" name="busqueda" value="<?php echo $_REQUEST['busqueda'] ?? ''; ?>">
+                                <input type="hidden" name="modulo" value="productos">
+                                <div class="input-group-append">
+                                    <button class="btn btn-navbar" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </form>
                 </div>
             </div>
@@ -150,7 +156,7 @@
         </div>
     </main>
     </main>
-    <p class="text-center fs-1" style="color:#fff;">Productos estrella</p>
+    <p class="text-center fs-1" style="color:#fff;">Nuestros productos</p>
     <main>
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-5">
@@ -161,10 +167,6 @@
                             <h5 class="card-title">Redmi note 12S</h5>
                             <p class="card-text">Cámara principal de 108MP</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href="" class="btn btn-success">Comprar</a>
-                                </div>
-
                             </div>
                         </div>
                     </div>
@@ -176,9 +178,6 @@
                             <h5 class="card-title">iPhone 15</h5>
                             <p class="card-text">Todo para sorprenderte.</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href="" class="btn btn-success">Comprar</a>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -190,9 +189,6 @@
                             <h5 class="card-title">Samsung Note 24</h5>
                             <p class="card-text">El mejor precio</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href="" class="btn btn-success">Comprar</a>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -204,9 +200,6 @@
                             <h5 class="card-title">Galaxy S24+</h5>
                             <p class="card-text">La mejor calidad.</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group" style="width:40px;padding:10px">
-                                    <a href="" class="btn btn-success">Comprar</a>
-                                </div>
                             </div>
                         </div>
                     </div>
