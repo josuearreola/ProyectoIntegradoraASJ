@@ -1,9 +1,11 @@
-<?php 
+<?php
 include "../conexionBD.php";
-if(!empty($_POST)){
-    if(empty($_POST['nombre']) || empty($_POST['nom_usua']) || empty($_POST['email'])){
+require "config.php";
+if (!empty($_POST)) {
+    $alert='';
+    if (empty($_POST['nombre']) || empty($_POST['nom_usua']) || empty($_POST['email'])) {
         $alert = '<p class="msj_error">Los campos Nombre, Nombre del usuario y Correo electrónico son obligatorios </p>';
-    }else{
+    } else {
         $idUsuario = $_POST['idUsuario'];
         $nombre = $_POST['nombre'];
         $nombreusua = $_POST['nom_usua'];
@@ -16,8 +18,8 @@ if(!empty($_POST)){
         $calle = $_POST['calle'];
         $numI = $_POST['numI'];
         $numE = $_POST['numE'];
-        
-        if(!empty($_POST['pass_usua'])){
+
+        if (!empty($_POST['pass_usua'])) {
             $contraseña = md5(mysqli_real_escape_string($conexion, $_POST['pass_usua']));
             $sql = mysqli_query($conexion, "UPDATE usuario SET nom_usua='$nombreusua', pass_usua='$contraseña' WHERE id_usua='$idUsuario'");
         } else {
@@ -36,10 +38,10 @@ if(!empty($_POST)){
                                         ni_clie='$numI',
                                         ne_clie='$numE'
                                         WHERE id_usua='$idUsuario'");
-        
-        if($sql && $sql1){
+
+        if ($sql && $sql1) {
             $alert = '<p class="msj_ok">Usuario actualizado correctamente.</p>';
-        }else{
+        } else {
             $alert = '<p class="msj_error">Error al actualizar el usuario.</p>';
         }
     }
@@ -55,20 +57,20 @@ $sql = mysqli_query($conexion, "select usuario.id_usua,nom_clie,email_clie,nom_u
 $result = mysqli_num_rows($sql);
 if ($result == 0) {
     header('Location:cliente.php');
-}else{
-    while($data=mysqli_fetch_array($sql)){
-        $nombre=$data['nom_clie'];
-        $email=$data['email_clie'];
-        $usuario=$data['nom_usua'];
-        $apClie=$data['ap_clie'];
-        $amClie=$data['am_clie'];
-        $rfc=$data['rfc_clie'];
-        $col=$data['col_clie'];
-        $calle=$data['calle_clie'];
-        $cp=$data['cp_clie'];
-        $NumI=$data['ni_clie'];
-        $NumE=$data['ne_clie'];
-        $telefono=$data['tel_clie'];
+} else {
+    while ($data = mysqli_fetch_array($sql)) {
+        $nombre = $data['nom_clie'];
+        $email = $data['email_clie'];
+        $usuario = $data['nom_usua'];
+        $apClie = $data['ap_clie'];
+        $amClie = $data['am_clie'];
+        $rfc = $data['rfc_clie'];
+        $col = $data['col_clie'];
+        $calle = $data['calle_clie'];
+        $cp = $data['cp_clie'];
+        $NumI = $data['ni_clie'];
+        $NumE = $data['ne_clie'];
+        $telefono = $data['tel_clie'];
     }
 }
 ?>
@@ -120,7 +122,9 @@ if ($result == 0) {
                             <a class="nav-link lh-lg" href="productos.php">Productos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active lh-lg" aria-current="page" href="#">Mi carrito</a>
+                            <a class="nav-link active lh-lg" aria-current="page" href="checkout.php">
+                                Mi carrito<span id="num_cart" class="badge bd-danger"><?php echo $num_cart; ?></span>
+                            </a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Categorias </a>
@@ -139,7 +143,7 @@ if ($result == 0) {
         <div class="form_registerUsua">
             <h1 class="text-prin">Mis datos</h1>
             <hr>
-            <?php if (!empty($alert)): ?>
+            <?php if (!empty($alert)) : ?>
                 <div class="alert"><?php echo $alert; ?></div>
             <?php endif; ?>
             <form action="datosUser.php" method="post">
@@ -147,56 +151,56 @@ if ($result == 0) {
                 <div class="row">
                     <div class="col-md-6">
                         <label for="nombre">Nombre:</label>
-                        <input class="form-control" type="text" name="nombre" id="nombre" placeholder="Nombre" value="<?php echo $nombre?>" required>
+                        <input class="form-control" type="text" name="nombre" id="nombre" placeholder="Nombre" value="<?php echo $nombre ?>" required>
                     </div>
                     <div class="col-md-6">
                         <label for="nom_usua">Nombre del usuario:</label>
-                        <input class="form-control" type="text" name="nom_usua" id="nom_usua" placeholder="Nombre de usuario" value="<?php echo $usuario?>" required>
+                        <input class="form-control" type="text" name="nom_usua" id="nom_usua" placeholder="Nombre de usuario" value="<?php echo $usuario ?>" required>
                     </div>
                     <div class="col-md-6">
                         <label for="email">Correo electronico:</label>
-                        <input class="form-control" type="email" name="email" id="email" placeholder="Correo electronico" value="<?php echo $email?>" required>
+                        <input class="form-control" type="email" name="email" id="email" placeholder="Correo electronico" value="<?php echo $email ?>" required>
                     </div>
                     <div class="col-md-6">
                         <label for="ap_clie">Apellido Paterno:</label>
-                        <input class="form-control" type="text" name="ap_clie" id="ap_clie" placeholder="Apellido Paterno" value="<?php echo $apClie?>">
+                        <input class="form-control" type="text" name="ap_clie" id="ap_clie" placeholder="Apellido Paterno" value="<?php echo $apClie ?>">
                     </div>
                     <div class="col-md-6">
                         <label for="am_clie">Apellido Materno:</label>
-                        <input class="form-control" type="text" name="am_clie" id="am_clie" placeholder="Apellido Materno" value="<?php echo $amClie?>">
+                        <input class="form-control" type="text" name="am_clie" id="am_clie" placeholder="Apellido Materno" value="<?php echo $amClie ?>">
                     </div>
                     <div class="col-md-6">
                         <label for="rfc">RFC:</label>
-                        <input class="form-control" type="text" name="rfc" id="rfc" placeholder="RFC" value="<?php echo $rfc?>">
+                        <input class="form-control" type="text" name="rfc" id="rfc" placeholder="RFC" value="<?php echo $rfc ?>">
                     </div>
                     <div class="col-md-6">
                         <label for="Telefono">Telefono:</label>
-                        <input class="form-control" type="text" name="telefono" id="Telefono" placeholder="Telefono" value="<?php echo $telefono?>">
+                        <input class="form-control" type="text" name="telefono" id="Telefono" placeholder="Telefono" value="<?php echo $telefono ?>">
                     </div>
                     <div class="col-md-6">
                         <label for="pass_usua">Contraseña:</label>
                         <input class="form-control" type="password" name="pass_usua" id="pass_usua" placeholder="Contraseña">
                     </div>
                     <div class="col-md-12">
-                        <a href="#" id="mostrarDireccion"  class="toggle-direccion">Editar Dirección</a>
+                        <a href="#" id="mostrarDireccion" class="toggle-direccion">Editar Dirección</a>
                     </div>
                     <div class="col-md-12 direccion-campos">
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="col">Colonia:</label>
-                                <input class="form-control datosDir" type="text" name="col" id="col" placeholder="Colonia" value="<?php echo $col?>">
+                                <input class="form-control datosDir" type="text" name="col" id="col" placeholder="Colonia" value="<?php echo $col ?>">
                             </div>
                             <div class="col-md-6">
                                 <label for="calle">Calle:</label>
-                                <input class="form-control datosDir" type="text" name="calle" id="calle" placeholder="Calle" value="<?php echo $calle?>">
+                                <input class="form-control datosDir" type="text" name="calle" id="calle" placeholder="Calle" value="<?php echo $calle ?>">
                             </div>
                             <div class="col-md-6">
                                 <label for="numE">Número exterior:</label>
-                                <input class="form-control datosDir" type="text" name="numE" id="numE" placeholder="# Exterior" value="<?php echo $NumE?>">
+                                <input class="form-control datosDir" type="text" name="numE" id="numE" placeholder="# Exterior" value="<?php echo $NumE ?>">
                             </div>
                             <div class="col-md-6">
                                 <label for="numI">Número interior:</label>
-                                <input class="form-control datosDir" type="text" name="numI" id="numI" placeholder="# Interior" value="<?php echo $NumI?>">
+                                <input class="form-control datosDir" type="text" name="numI" id="numI" placeholder="# Interior" value="<?php echo $NumI ?>">
                             </div>
                         </div>
                     </div>
@@ -209,7 +213,7 @@ if ($result == 0) {
 
 
 
-    
+
     <footer class="footerpagprinc">
         <div class="boton-modal1">
             <label class="footer-p" for="btn-modal1">Terminos y condiciones</label>

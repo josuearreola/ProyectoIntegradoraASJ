@@ -1,10 +1,10 @@
 <?php
 include "../conexionBD.php";
 require "config.php";
-if(empty($_SESSION['idUsua'])){
+if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
-$idUsua=$_SESSION['idUsua'];
+$idUsua = $_SESSION['idUsua'];
 
 ?>
 
@@ -51,15 +51,15 @@ $idUsua=$_SESSION['idUsua'];
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link lh-lg" href="productos.php">Productos</a>
+                            <a class="nav-link active lh-lg" href="productos.php">Productos</a>
                         </li>
                         <li class="nav-item">
-                        <a class="nav-link active lh-lg" aria-current="page" href="checkout.php">
-                                Mi carrito<span id="num_cart" class="badge bd-danger"><?php echo $num_cart;?></span>
+                            <a class="nav-link active lh-lg" aria-current="page" href="checkout.php">
+                                Mi carrito<span id="num_cart" class="badge bd-danger"><?php echo $num_cart; ?></span>
                             </a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Categorias </a>
+                            <a class="nav-link dropdown-toggle  active lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Categorias </a>
                             <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                 <li><a class="dropdown-item border-0" href="categoria1.php">$6000-$12000</a></li>
                                 <li><a class="dropdown-item border-0" href="categoria2.php">$12000-$18000</a></li>
@@ -88,21 +88,21 @@ $idUsua=$_SESSION['idUsua'];
                 <img src="../img/carrusel2.jpg" class="d-block w-100 img-fluid" alt="...">
                 <div class="carousel-caption" style="position:absolute; top: 50%; transform: translateY(-50%); left: -40%; color:black;">
                     <h5>¡Conócenos más!</h5>
-                    <button class="btn bg-blag">Más información</button>
+                    <a href="#nuestrosprod"><button class="btn bg-blag">Más información</button></a>
                 </div>
             </div>
             <div class="carousel-item">
                 <img src="../img/carrusel3.jpeg" class="d-block w-100 img-fluid" alt="...">
                 <div class="carousel-caption" style="position:absolute; top: 50%; transform: translateY(-50%); left: -40%; color:black;">
                     <h5>¡Descubre nuestras ofertas!</h5>
-                    <button class="btn bg-blag">Más información</button>
+                    <a href="#ofertas"><button class="btn bg-blag">Más información</button></a>
                 </div>
             </div>
             <div class="carousel-item">
                 <img src="../img/carrusel4.jpg" class="d-block w-100 img-fluid" alt="...">
                 <div class="carousel-caption" style="position:absolute; top: -40%; transform: translateY(50%); right: -40%; color:black;">
                     <h5>¡La mejor calidad!</h5>
-                    <button class="btn bg-blag">Más información</button>
+                    <a href="productos.php"><button class="btn bg-blag">Más información</button></a>
                 </div>
             </div>
         </div>
@@ -115,7 +115,7 @@ $idUsua=$_SESSION['idUsua'];
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-    <p class="text-center fs-1" style="color:#fff;">Ofertas especiales</p>
+    <p class="text-center fs-1" style="color:#fff;" id="ofertas">Ofertas especiales</p>
 
     <main>
         <div class="container">
@@ -128,12 +128,28 @@ $idUsua=$_SESSION['idUsua'];
                             <p class="card-text">$500 de descuento</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <a href="" class="btn btn-primary">Más información</a>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#promocion1">Más información</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="modal fade" id="promocion1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">¡Oferta especial "Mi Fans"!</h5>
+                            </div>
+                            <div class="modal-body text-justify">
+                                ¡No te pierdas nuestra oferta especial 'Mi Fans'! Ahorra $500 en tu próxima compra con nosotros. Esta es una oportunidad única para obtener tus productos favoritos a un precio reducido. Visítanos en nuestra tienda o consulta más detalles a continuación. ¡Aprovecha esta oferta antes de que termine!
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col">
                     <div class="card shadow-sm">
                         <img src="../img/pro2.jpg" alt="Promocion-2" class="card-img-top">
@@ -142,12 +158,28 @@ $idUsua=$_SESSION['idUsua'];
                             <p class="card-text">15% de descuento</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <a href="" class="btn btn-primary">Más información</a>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#promocion2">Más información</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="modal fade" id="promocion2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Mi zona de fans</h5>
+                            </div>
+                            <div class="modal-body text-justify">
+                                ¡Bienvenido a Mi Zona de Fans! Aprovecha nuestro exclusivo descuento del 15% en todos nuestros productos. Esta oferta es válida por tiempo limitado, así que no pierdas la oportunidad de obtener tus productos favoritos a un precio reducido. Visítanos en nuestra tienda o consulta más detalles a continuación. ¡No te lo pierdas!
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col">
                     <div class="card shadow-sm">
                         <img src="../img/pro3.jpg" alt="Promocion-3" class="card-img-top">
@@ -156,8 +188,23 @@ $idUsua=$_SESSION['idUsua'];
                             <p class="card-text">$800 de descuento</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <a href="" class="btn btn-primary">Más información</a>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#promocion3">Más información</button>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="promocion3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Tu regalo de cumpleaños</h5>
+                            </div>
+                            <div class="modal-body text-justify">
+                                ¡Celebra tu cumpleaños con nosotros y recibe un descuento especial de $800 en tu compra! Esta oferta exclusiva es nuestro regalo para ti en tu día especial. No dejes pasar esta oportunidad y obtén tus productos favoritos con un descuento increíble. Visítanos en nuestra tienda o consulta más detalles a continuación. ¡Feliz cumpleaños!
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             </div>
                         </div>
                     </div>
@@ -165,7 +212,7 @@ $idUsua=$_SESSION['idUsua'];
             </div>
         </div>
     </main>
-    <p class="text-center fs-1" style="color:#fff;">Nuestros productos</p>
+    <p class="text-center fs-1" style="color:#fff;" id="nuestrosprod">Nuestros productos</p>
     <main>
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-5">

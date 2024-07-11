@@ -1,7 +1,7 @@
 <?php
 include("../conexionBD.php");
 require "config.php";
-if(empty($_SESSION['idUsua'])){
+if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
 ?>
@@ -34,7 +34,7 @@ if(empty($_SESSION['idUsua'])){
             <a href="checkout.php" style="color:black; margin-top:5px; margin-left:10px">
                 <i class="fa-solid fa-cart-plus fa-2x"></i>
             </a>
-            <a href="datosUser.php" style="color:black; margin-top:5px; margin-left:5px;">
+            <a href="datosUser.php?idUsua=<?php echo $_SESSION['Id_usua']; ?>" style="color:black; margin-top:5px; margin-left:5px;">
                 <i class="fa-solid fa-user fa-2x"></i>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
@@ -119,7 +119,8 @@ if(empty($_SESSION['idUsua'])){
                             <img src="<?php echo '../img/' . $row['img_tel']; ?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $row['nom_mod']; ?></h5>
-                                <p class="card-text">Cantidad: <input style=" width:60px" type="number" name="cantidad<?php echo $row['id_tel']; ?>" id="cantidad<?php echo $row['id_tel']; ?>" min="1" max="35" value="1"></p>
+                                <p class="card-text">Cantidad: <input style="width: 60px;" type="number" name="cantidad<?php echo $row['id_tel']; ?>" id="cantidad<?php echo $row['id_tel']; ?>" min="1" max="35" value="1" onchange="validateCantidad(this)">
+                                </p>
                                 <div class="d-flex flex-wrap justify-content-between align-items-center">
                                     <div class="btn-group me-2 mb-2">
                                         <button class="btn btn-outline-success" type="button" onclick="addProducto(<?php echo $row['id_tel']; ?>, '<?php echo hash_hmac('sha1', $row['id_tel'], KEY_TOKEN); ?>')">Agregar</button>
@@ -216,29 +217,37 @@ if(empty($_SESSION['idUsua'])){
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-    
+
     <script>
-        function addProducto(id, token){
+        function addProducto(id, token) {
             let url = 'carrito.php';
             let formData = new FormData();
-            let cantidad =document.getElementById('cantidad' + id).value;
-            formData.append('id',id);
-            formData.append('token',token);
-            formData.append('cantidad',cantidad);
+            let cantidad = document.getElementById('cantidad' + id).value;
+            formData.append('id', id);
+            formData.append('token', token);
+            formData.append('cantidad', cantidad);
 
-            fetch(url,{
-                method: 'POST',
-                body:formData,
-                mode:'cors'
-            }).then(response => response.json())
-            .then(data =>{
-                if(data.ok){
-                    let elemento=document.getElementById("num_cart")
-                    elemento.innerHTML = data.numero
-                }
-            })
+            fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'cors'
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        let elemento = document.getElementById("num_cart")
+                        elemento.innerHTML = data.numero
+                    }
+                })
         }
 
+        function validateCantidad(input) {
+            let cantidad = parseInt(input.value);
+            if (cantidad < 1) {
+                input.value = 1; 
+            } else if (cantidad > 35) {
+                input.value = 35;
+            }
+        }
     </script>
 </body>
 

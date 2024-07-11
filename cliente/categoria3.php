@@ -31,8 +31,8 @@ if(empty($_SESSION['idUsua'])){
                 <img src="../img/logo.jpg" class="logo">
                 <img class="imgses" src="../img/cerrarses.jpg" alt="Cerrar sesion" title="salir">
             </a>
-            <a href="checkout.php" style="color:black; margin-top:5px; margin-left:10px">
-                <i class="fa-solid fa-cart-plus fa-2x"></i>
+            <a href="datosUser.php?idUsua=<?php echo $_SESSION['Id_usua']; ?>" style="color:black; margin-top:5px; margin-left:5px;">
+                <i class="fa-solid fa-user fa-2x"></i>
             </a>
             <a href="datosUser.php" style="color:black; margin-top:5px; margin-left:5px;">
                 <i class="fa-solid fa-user fa-2x"></i>

@@ -1,7 +1,7 @@
 <?php
 include("../conexionBD.php");
 require "config.php";
-if(empty($_SESSION['idUsua'])){
+if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
 $producto = isset($_SESSION['carrito']['productos']) ? $_SESSION['carrito']['productos'] : NULL;
@@ -51,7 +51,7 @@ if ($producto != NULL) {
             <a href="checkout.php" style="color:black; margin-top:5px; margin-left:10px">
                 <i class="fa-solid fa-cart-plus fa-2x"></i>
             </a>
-            <a href="datosUser.php" style="color:black; margin-top:5px; margin-left:5px;">
+            <a href="datosUser.php?idUsua=<?php echo $_SESSION['Id_usua']; ?>" style="color:black; margin-top:5px; margin-left:5px;">
                 <i class="fa-solid fa-user fa-2x"></i>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
@@ -137,9 +137,12 @@ if ($producto != NULL) {
                 <?php } ?>
                 </table>
             </div>
+
             <div class="row">
                 <div class="col-md-5 offset-md-7 d-grid gap-2">
-                    <button class="btn btn-primary btn-lg">Realizar pago</button>
+                    <?php if (!empty($lista_carrito)) { ?>
+                        <button class="btn btn-primary btn-lg">Realizar pago</button>
+                    <?php } ?>
                 </div>
             </div>
         </div>
@@ -238,8 +241,6 @@ if ($producto != NULL) {
                     if (data.ok) {
                         let divsubtotal = document.getElementById('subtotal_' + id);
                         divsubtotal.innerHTML = data.sub;
-
-                        // Recalcula el total
                         let total = 0.00;
                         let list = document.getElementsByName('subtotal[]');
                         for (let i = 0; i < list.length; i++) {
@@ -295,7 +296,7 @@ if ($producto != NULL) {
         const listaCarrito = <?php echo json_encode($lista_carrito); ?>;
         localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
 
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const idUsua = "<?php echo $idUsua; ?>";
             const listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
             const tbody = document.querySelector("table tbody");
@@ -323,7 +324,11 @@ if ($producto != NULL) {
                     cantidadInput.value = producto.cantidad;
                     cantidadInput.size = "5";
                     cantidadInput.id = `cantidad_${producto.id_tel}`;
-                    cantidadInput.onchange = function () {
+                    cantidadInput.onchange = function() {
+                        // Valida que la cantidad ingresada no exceda el máximo
+                        if (parseInt(this.value) > parseInt(this.max)) {
+                            this.value = this.max;
+                        }
                         actualizaCantidad(this.value, producto.id_tel);
                     };
                     cantidadTd.appendChild(cantidadInput);

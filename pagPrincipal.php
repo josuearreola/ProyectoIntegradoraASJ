@@ -29,7 +29,7 @@
                     </div>
                 </div>
             </a>
-            <a href="#" style="color:black; margin-top:18px; margin-left:10px">
+            <a href="inicioSesion/iniciosesion.php" style="color:black; margin-top:18px; margin-left:10px">
                 <i class="fa-solid fa-cart-plus fa-2x"></i>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
@@ -78,21 +78,21 @@
                 <img src="img/carrusel2.jpg" class="d-block w-100 img-fluid" alt="...">
                 <div class="carousel-caption" style="position:absolute; top: 50%; transform: translateY(-50%); left: -40%; color:black;">
                     <h5>¡Conócenos más!</h5>
-                    <button class="btn bg-blag">Más información</button>
+                    <a href="#nuestrosprod"><button class="btn bg-blag">Más información</button></a>
                 </div>
             </div>
             <div class="carousel-item">
                 <img src="img/carrusel3.jpeg" class="d-block w-100 img-fluid" alt="...">
                 <div class="carousel-caption" style="position:absolute; top: 50%; transform: translateY(-50%); left: -40%; color:black;">
                     <h5>¡Descubre nuestras ofertas!</h5>
-                    <button class="btn bg-blag">Más información</button>
+                    <a href="#ofertas"><button class="btn bg-blag">Más información</button></a>
                 </div>
             </div>
             <div class="carousel-item">
                 <img src="img/carrusel4.jpg" class="d-block w-100 img-fluid" alt="...">
                 <div class="carousel-caption" style="position:absolute; top: -40%; transform: translateY(50%); right: -40%; color:black;">
                     <h5>¡La mejor calidad!</h5>
-                    <button class="btn ">Más información</button>
+                    <a href="productosPrin.php"><button class="btn bg-blag">Más información</button></a>
                 </div>
             </div>
         </div>
@@ -105,7 +105,7 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-    <p class="text-center fs-1" style="color:#fff;">Ofertas especiales</p>
+    <p class="text-center fs-1" style="color:#fff;" id="ofertas">Ofertas especiales</p>
 
     <main>
         <div class="container">
@@ -118,12 +118,28 @@
                             <p class="card-text">$500 de descuento</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <a href="" class="btn btn-primary">Más información</a>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#promocion1">Más información</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="modal fade" id="promocion1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">¡Oferta especial "Mi Fans"!</h5>
+                            </div>
+                            <div class="modal-body text-justify">
+                            ¡No te pierdas nuestra oferta especial 'Mi Fans'! Ahorra $500 en tu próxima compra con nosotros. Esta es una oportunidad única para obtener tus productos favoritos a un precio reducido. Visítanos en nuestra tienda o consulta más detalles a continuación. ¡Aprovecha esta oferta antes de que termine!
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col">
                     <div class="card shadow-sm">
                         <img src="img/pro2.jpg" alt="Promocion-2" class="card-img-top">
@@ -132,12 +148,28 @@
                             <p class="card-text">15% de descuento</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <a href="" class="btn btn-primary">Más información</a>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#promocion2">Más información</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="modal fade" id="promocion2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Mi zona de fans</h5>
+                            </div>
+                            <div class="modal-body text-justify">
+                            ¡Bienvenido a Mi Zona de Fans! Aprovecha nuestro exclusivo descuento del 15% en todos nuestros productos. Esta oferta es válida por tiempo limitado, así que no pierdas la oportunidad de obtener tus productos favoritos a un precio reducido. Visítanos en nuestra tienda o consulta más detalles a continuación. ¡No te lo pierdas!
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col">
                     <div class="card shadow-sm">
                         <img src="img/pro3.jpg" alt="Promocion-3" class="card-img-top">
@@ -146,8 +178,23 @@
                             <p class="card-text">$800 de descuento</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <a href="" class="btn btn-primary">Más información</a>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#promocion3">Más información</button>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="promocion3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Tu regalo de cumpleaños</h5>
+                            </div>
+                            <div class="modal-body text-justify">
+                            ¡Celebra tu cumpleaños con nosotros y recibe un descuento especial de $800 en tu compra! Esta oferta exclusiva es nuestro regalo para ti en tu día especial. No dejes pasar esta oportunidad y obtén tus productos favoritos con un descuento increíble. Visítanos en nuestra tienda o consulta más detalles a continuación. ¡Feliz cumpleaños!
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             </div>
                         </div>
                     </div>
@@ -155,8 +202,8 @@
             </div>
         </div>
     </main>
-    </main>
-    <p class="text-center fs-1" style="color:#fff;">Nuestros productos</p>
+
+    <p class="text-center fs-1" style="color:#fff;" id="nuestrosprod">Nuestros productos</p>
     <main>
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-5">
@@ -256,7 +303,6 @@
             <label for="btn-modal2" class="cerrar-modal"></label>
         </div>
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>
 
