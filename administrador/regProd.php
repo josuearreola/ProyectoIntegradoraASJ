@@ -2,9 +2,7 @@
 ob_start();
 include "../conexionBD.php";
 include "../denegacion.php";
-if(empty($_SESSION['idUsua'])){
-    header('location:../inicioSesion/iniciosesion.php');
-}
+
 
 if (!empty($_POST)) {
     $alert = '';
@@ -33,68 +31,78 @@ if (!empty($_POST)) {
 
         $imgProd='../img/img_producto.png';
 
+        if($precio>$costo){
 
-        if($nombre_foto != ''){
-            $destino ='../img/';
-            $img_nombre='img_'.md5(date('d-m-Y H:m:s'));
-            $imgProd=$img_nombre.'.jpg';
-            $src=$destino.$imgProd;
-        }
-
-        $queryMarca = "SELECT id_marca FROM marca WHERE nom_marc='$marca'";
-        $resultadoMarca = mysqli_query($conexion, $queryMarca);
-
-        if ($resultadoMarca && mysqli_num_rows($resultadoMarca) > 0) {
-            $rowMarca = mysqli_fetch_assoc($resultadoMarca);
-            $id_marca = $rowMarca['id_marca'];
-        } else {
-            $queryInsertMarca = "INSERT INTO marca (nom_marc) VALUES ('$marca')";
-            $resultadoInsertMarca = mysqli_query($conexion, $queryInsertMarca);
-
-            if ($resultadoInsertMarca) {
-                $id_marca = mysqli_insert_id($conexion);
-            } else {
-                $alert = 'Error al insertar la marca: ' . mysqli_error($conexion);
+            if($nombre_foto != ''){
+                $destino ='../img/';
+                $img_nombre='img_'.md5(date('d-m-Y H:m:s'));
+                $imgProd=$img_nombre.'.jpg';
+                $src=$destino.$imgProd;
             }
-        }
-
-        $queryModelo = "SELECT id_mod FROM modelo WHERE nom_mod='$modelo'";
-        $resultadoModelo = mysqli_query($conexion, $queryModelo);
-
-        if ($resultadoModelo && mysqli_num_rows($resultadoModelo) > 0) {
-            $rowModelo = mysqli_fetch_assoc($resultadoModelo);
-            $id_mod = $rowModelo['id_mod'];
-        } else {
-            $queryInsertModelo = "INSERT INTO modelo (nom_mod, id_marca) VALUES ('$modelo', '$id_marca')";
-            $resultadoInsertModelo = mysqli_query($conexion, $queryInsertModelo);
-            if ($resultadoInsertModelo) {
-                $id_mod = mysqli_insert_id($conexion);
-                $queryInsertTelefono = "INSERT INTO telefono (col_tel, cam_tel, alm_tel, ram_tel, pan_tel, bat_tel, proc_tel, prec_tel, costo_tel,img_tel, id_mod) 
-                                        VALUES ('$color', '$camara', '$almacenamiento', '$ram', '$pantalla', '$bateria', '$procesador', '$precio', '$costo','$imgProd', '$id_mod')";
-                $resultadoInsertTelefono = mysqli_query($conexion, $queryInsertTelefono);
-
-                if ($resultadoInsertTelefono) {
-                    if($nombre_foto != ''){
-                        move_uploaded_file($url_temp,$src);
-                    }
-                    $id_tele = mysqli_insert_id($conexion);
-                    $queryInsertInv="INSERT INTO inventario (exist_inv,id_suc,id_tel) values ('$existencia','$sucursal','$id_tele')";
-                    $resultInsertInv=mysqli_query($conexion,$queryInsertInv);
-                    if (!$resultInsertInv) {
-                        echo "Error al insertar en inventario: ". mysqli_error($conexion);
-                    } else {
-                        $alert = 'Producto registrado correctamente';
-                        exit;
-                    }
-                    $alert = 'Producto registrado correctamente';
+    
+            $queryMarca = "SELECT id_marca FROM marca WHERE nom_marc='$marca'";
+            $resultadoMarca = mysqli_query($conexion, $queryMarca);
+    
+            if ($resultadoMarca && mysqli_num_rows($resultadoMarca) > 0) {
+                $rowMarca = mysqli_fetch_assoc($resultadoMarca);
+                $id_marca = $rowMarca['id_marca'];
+            } else {
+                $queryInsertMarca = "INSERT INTO marca (nom_marc) VALUES ('$marca')";
+                $resultadoInsertMarca = mysqli_query($conexion, $queryInsertMarca);
+    
+                if ($resultadoInsertMarca) {
+                    $id_marca = mysqli_insert_id($conexion);
                 } else {
-                    $alert = 'Error al guardar el producto';
+                    $alert = 'Error al insertar la marca: ' . mysqli_error($conexion);
                 }
-            } else {
-                $alert = 'Error al insertar el modelo';
             }
+    
+            $queryModelo = "SELECT id_mod FROM modelo WHERE nom_mod='$modelo'";
+            $resultadoModelo = mysqli_query($conexion, $queryModelo);
+    
+            if ($resultadoModelo && mysqli_num_rows($resultadoModelo) > 0) {
+                $rowModelo = mysqli_fetch_assoc($resultadoModelo);
+                $id_mod = $rowModelo['id_mod'];
+            } else {
+                $queryInsertModelo = "INSERT INTO modelo (nom_mod, id_marca) VALUES ('$modelo', '$id_marca')";
+                $resultadoInsertModelo = mysqli_query($conexion, $queryInsertModelo);
+                if ($resultadoInsertModelo) {
+                    $id_mod = mysqli_insert_id($conexion);
+                    $queryInsertTelefono = "INSERT INTO telefono (col_tel, cam_tel, alm_tel, ram_tel, pan_tel, bat_tel, proc_tel, prec_tel, costo_tel,img_tel, id_mod) 
+                                            VALUES ('$color', '$camara', '$almacenamiento', '$ram', '$pantalla', '$bateria', '$procesador', '$precio', '$costo','$imgProd', '$id_mod')";
+                    $resultadoInsertTelefono = mysqli_query($conexion, $queryInsertTelefono);
+    
+                    if ($resultadoInsertTelefono) {
+                        if($nombre_foto != ''){
+                            move_uploaded_file($url_temp,$src);
+                        }
+                        $id_tele = mysqli_insert_id($conexion);
+                        $queryInsertInv="INSERT INTO inventario (exist_inv,id_suc,id_tel) values ('$existencia','$sucursal','$id_tele')";
+                        $resultInsertInv=mysqli_query($conexion,$queryInsertInv);
+                        if (!$resultInsertInv) {
+                            echo "Error al insertar en inventario: ". mysqli_error($conexion);
+                        } else {
+                            $alert = 'Producto registrado correctamente';
+                            
+                        }
+                        $alert = 'Producto registrado correctamente';
+                        
+                    } else {
+                        $alert = '<p class="msj_error">Error al guardar el producto </p>';
+                        
+                    }
+                } else {
+                    $alert = '<p class="msj_error">Error al insertar el modelo</p>';
+                }
+            }
+        }else{
+            $alert = '<p class="msj_error">El precio debe ser mayor al costo</p>';
         }
     }
+}
+if(empty($_SESSION['idUsua'])){
+    header('location:../inicioSesion/iniciosesion.php');
+    
 }
 ?>
 <!DOCTYPE html>

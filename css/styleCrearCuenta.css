@@ -198,6 +198,22 @@ header {
     }
 
 }
+.alert{
+    width: 100%;
+    background: #66ed7d66;
+    border-radius: 6px;
+    margin: 12px auto;
+    height: 35px;
+}
+.msj_error{
+    color: #e65656;
+}
+.msj_save{
+    color:#85f56f;
+}
+.alert p{
+    padding: 10px;
+}
 @media (max-width: 500px) {
     header{
         margin: 0;

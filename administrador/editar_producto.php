@@ -2,9 +2,7 @@
 ob_start();
 include "../conexionBD.php";
 include "../denegacion.php";
-if(empty($_SESSION['idUsua'])){
-    header('location:../inicioSesion/iniciosesion.php');
-}
+
 
 if (!empty($_POST)) {
     $alert = '';
@@ -33,35 +31,40 @@ if (!empty($_POST)) {
         $upd='';
 
 
-
-        if($nombre_foto != ''){
-            $destino ='../img/';
-            $img_nombre='img_'.md5(date('d-m-Y H:m:s'));
-            $imgProd=$img_nombre.'.jpg';
-            $src=$destino.$imgProd;
-        }else{
-            if ($_POST['foto_actual'] != $_POST['foto_remove']) {
-                $imgProducto='../img/img_producto.png';
-            }
-        }
-        
-            $queryUpdateTelefono = "UPDATE telefono SET col_tel='$color', cam_tel='$camara', alm_tel='$almacenamiento', ram_tel='$ram', pan_tel='$pantalla', bat_tel='$bateria', proc_tel='$procesador', prec_tel='$precio', costo_tel='$costo', img_tel='$imgProducto' WHERE id_tel='$id_tel'";
-            $resultadoUpdateTelefono = mysqli_query($conexion, $queryUpdateTelefono);
-        
-            if ($resultadoUpdateTelefono) {
-                if (($nombre_foto != '' && ($_POST['foto_actual'] != '../img/img_producto.png')) || ($_POST['foto_actual'] != $_POST['foto_remove'])) {
-                    unlink('../img/'.$_POST['foto_actual']);
-                }
-                if ($nombre_foto != '') {
-                    move_uploaded_file($url_temp,$src);
-                }
-                $alert='<p class="msg_save">Producto actualizado correctamente</p>';
+        if ($precio>$costo) {
             
+            if($nombre_foto != ''){
+                $destino ='../img/';
+                $img_nombre='img_'.md5(date('d-m-Y H:m:s'));
+                $imgProd=$img_nombre.'.jpg';
+                $src=$destino.$imgProd;
+            }else{
+                if ($_POST['foto_actual'] != $_POST['foto_remove']) {
+                    $imgProducto='../img/img_producto.png';
+                }
+            }
+            
+                $queryUpdateTelefono = "UPDATE telefono SET col_tel='$color', cam_tel='$camara', alm_tel='$almacenamiento', ram_tel='$ram', pan_tel='$pantalla', bat_tel='$bateria', proc_tel='$procesador', prec_tel='$precio', costo_tel='$costo', img_tel='$imgProducto' WHERE id_tel='$id_tel'";
+                $resultadoUpdateTelefono = mysqli_query($conexion, $queryUpdateTelefono);
+            
+                if ($resultadoUpdateTelefono) {
+                    if (($nombre_foto != '' && ($_POST['foto_actual'] != '../img/img_producto.png')) || ($_POST['foto_actual'] != $_POST['foto_remove'])) {
+                        unlink('../img/'.$_POST['foto_actual']);
+                    }
+                    if ($nombre_foto != '') {
+                        move_uploaded_file($url_temp,$src);
+                    }
+                    $alert='<p class="msg_save">Producto actualizado correctamente</p>';
+                
+            }
+        }else{
+            $alert = '<p class="msj_error">El precio debe ser mayor al costo</p>';
         }
     }
 }
-
-//validar prod//
+if(empty($_SESSION['idUsua'])){
+    header('location:../inicioSesion/iniciosesion.php');
+}
 
 if(empty($_REQUEST['id'])){
     header("location:listaProd.php");

@@ -14,6 +14,7 @@ if ($producto != NULL) {
         $sql->execute();
         $sql->bind_result($id_tel, $nom_mod, $prec_tel);
         $sql->fetch();
+        $sql->close();
         $producto_info = [
             'id_tel' => $id_tel,
             'nom_tel' => $nom_mod,
@@ -21,10 +22,16 @@ if ($producto != NULL) {
             'cantidad' => $cantidad
         ];
         $lista_carrito[] = $producto_info;
-        $sql->close();
     }
 }
-
+$suc = mysqli_query($conexion, "SELECT id_suc,nom_suc from sucursal");
+$sucursales = array();
+if ($suc->num_rows > 0) {
+    while ($row = $suc->fetch_assoc()) {
+        $sucursales[] = $row;
+    }
+}
+$sucursales_json = json_encode($sucursales);
 ?>
 
 <!DOCTYPE html>
@@ -107,14 +114,16 @@ if ($producto != NULL) {
                         <tr>
                             <th>Producto</th>
                             <th>Precio</th>
+                            <th>Sucursales</th>
                             <th>Cantidad</th>
                             <th>Subtotal</th>
+
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if ($lista_carrito == null) {
-                            echo '<tr><td colspan="5" class="text-center"><b>Lista vacia</b></td></tr>';
+                            echo '<tr><td colspan="6" class="text-center"><b>Lista vacia</b></td></tr>';
                         } else {
                             $total = 0;
                             foreach ($lista_carrito as $producto) {
@@ -129,10 +138,11 @@ if ($producto != NULL) {
                     </tbody>
 
                     <tr>
-                        <td colspan="3"></td>
-                        <td colspan="2">
+                        <td colspan="5"></td>
+                        <td colspan="3">
                             <p class="h5" id="total"><?php echo MONEDA . number_format($total, 2, '.', ','); ?></p>
                         </td>
+
                     </tr>
                 <?php } ?>
                 </table>
@@ -290,8 +300,28 @@ if ($producto != NULL) {
         }
     </script>
     <?php $lista_carrito_json = json_encode($lista_carrito); ?>
+    <?php
 
+    $sucursales_options = '';
+    foreach ($sucursales as $sucursal) {
+    $existencias = array();
+    foreach ($lista_carrito as $producto) {
+        $sql = $conexion->prepare("SELECT exist_inv FROM inventario WHERE id_tel = ? AND id_suc = ?");
+        $sql->bind_param("ii", $producto['id_tel'], $sucursal['id_suc']);
+        $sql->execute();
+        $sql->bind_result($existencia);
+        $sql->fetch();
+        $sql->close();
+        $existencias[$producto['id_tel']][$sucursal['id_suc']] = $existencia;
+    }
+
+    $sucursales_options .= '<option value="' . $sucursal['id_suc'] . '">' . $sucursal['nom_suc'] . '(' . array_sum($existencias) . ')</option>';
+}
+    ?>
     <script>
+        const sucursales = <?php echo $sucursales_json; ?>;
+
+
         const idUsua = "<?php echo $idUsua; ?>";
         const listaCarrito = <?php echo json_encode($lista_carrito); ?>;
         localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
@@ -315,6 +345,28 @@ if ($producto != NULL) {
                     precioTd.textContent = producto.prec_tel;
                     tr.appendChild(precioTd);
 
+                    const sucursalTd = document.createElement("td");
+                    const selectSucursal = document.createElement('select');
+                    selectSucursal.classList.add('form-select', 'form-select-sm');
+                    selectSucursal.name = `sucursal_${producto.id_tel}`;
+                    selectSucursal.innerHTML = '<?php echo $sucursales_options; ?>';
+                    selectSucursal.style.width = '180px';
+
+                    // Agregar existencias a cada opción de sucursal
+                    selectSucursal.addEventListener('change', function() {
+                        const idSucursal = this.value;
+                        const idTel = producto.id_tel;
+                        const existencia = existencias[idTel][idSucursal];
+                        const sucursalCell = document.getElementById(`sucursal_${idTel}`);
+                        const existenciaTd = document.createElement("td");
+                        existenciaTd.textContent = `Existencias: ${existencia}`;
+                        sucursalCell.innerHTML = "";
+                        sucursalCell.appendChild(existenciaTd);
+                    });
+
+                    sucursalTd.appendChild(selectSucursal);
+                    tr.appendChild(sucursalTd);
+
                     const cantidadTd = document.createElement("td");
                     const cantidadInput = document.createElement("input");
                     cantidadInput.type = "number";
@@ -325,11 +377,13 @@ if ($producto != NULL) {
                     cantidadInput.size = "5";
                     cantidadInput.id = `cantidad_${producto.id_tel}`;
                     cantidadInput.onchange = function() {
-                        // Valida que la cantidad ingresada no exceda el máximo
-                        if (parseInt(this.value) > parseInt(this.max)) {
+                        if (this.value == "" || isNaN(this.value) || parseInt(this.value) < parseInt(this.min) || parseInt(this.value) % 1 !== 0) {
+                            this.value = producto.cantidad;
+                        } else if (parseInt(this.value) > parseInt(this.max)) {
                             this.value = this.max;
+                        } else {
+                            actualizaCantidad(this.value, producto.id_tel);
                         }
-                        actualizaCantidad(this.value, producto.id_tel);
                     };
                     cantidadTd.appendChild(cantidadInput);
                     tr.appendChild(cantidadTd);
@@ -341,6 +395,8 @@ if ($producto != NULL) {
                     subtotalTd.name = "subtotal[]";
                     subtotalTd.textContent = `${subtotal.toFixed(2)}`;
                     tr.appendChild(subtotalTd);
+
+
 
                     const eliminarTd = document.createElement("td");
                     const eliminarBtn = document.createElement("a");
@@ -360,6 +416,7 @@ if ($producto != NULL) {
                 document.getElementById("total").textContent = `$${total.toFixed(2)}`;
             }
         });
+
 
         function actualizaCantidad(cantidad, id) {
             const idUsua = "<?php echo $idUsua; ?>";

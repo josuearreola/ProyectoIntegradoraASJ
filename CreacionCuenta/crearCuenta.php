@@ -20,7 +20,8 @@
             $id_usua=$conexion->insert_id;
             $consulta2="insert into cliente (nom_clie,email_clie,id_usua) values ('$nombre','$email','$id_usua')";
             $query3=mysqli_query($conexion,$consulta2);
-            header("../inicioSesion/iniciosesion.php");
+            $alert = '<p class="msj_save">Usuario creado exitosamente</p>';
+            
         }
     }
 }
@@ -68,9 +69,9 @@
                     <input class="form-Creacion" type="password" name="contraseña" id="contraseña" placeholder="Contraseña" required>
                     <p class="formulario__input-error" id="error-contraseña">La contraseña tiene que ser de 4 a 12 digitos</p>
                 </div>
-                <div class="alert"> 
-                    <?php echo isset($alert)? '<div class="alert-style">'. $alert . '</div>' : '';?>
-                </div>
+                <?php if (!empty($alert)) : ?>
+                <div class="alert"><?php echo $alert; ?></div>
+            <?php endif; ?>
                 <input type="submit" value="Crear Cuenta" class="btn-Creacion" id="btn-Creacion">
             </form>
         </div>
