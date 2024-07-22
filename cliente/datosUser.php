@@ -118,8 +118,13 @@ if ($result == 0) {
                             <a class="nav-link active lh-lg" aria-current="page" href="cliente.php">Inicio</a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link lh-lg" href="productos.php">Productos</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle active lh-lg" id="menusucursales" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales</a>
+                            <ul class="dropdown-menu bg-secondary" aria-labelledby="menusucursales">
+                                <li><a class="nav-link active lh-lg" href="productos.php?id=200">Sucursal CDMX</a></li>
+                                <li><a class="nav-link active lh-lg" href="productos.php?id=201">Sucursal Monterrey</a></li>
+                                <li><a class="nav-link active lh-lg" href="productos.php?id=202">Sucursal Querétaro</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active lh-lg" aria-current="page" href="checkout.php">

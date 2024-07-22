@@ -4,6 +4,19 @@ require "config.php";
 if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
+$sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
+$idSucur = $_GET['id'];
+$sucursal = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal where id_suc=$idSucur");
+$result = mysqli_num_rows($sucursal);
+if ($result == 0) {
+    header('location:cliente.php');
+} else {
+    while ($data = mysqli_fetch_array($sucursal)) {
+        $id_suc = $data['id_suc'];
+        $nom_suc = $data['id_suc'];
+    }
+}
+
 ?>
 
 
@@ -50,8 +63,13 @@ if (empty($_SESSION['idUsua'])) {
                         <li class="nav-item">
                             <a class="nav-link active lh-lg" aria-current="page" href="cliente.php">Inicio</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link active lh-lg" href="productos.php">Productos</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle active lh-lg" id="menusucursales" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales</a>
+                            <ul class="dropdown-menu bg-secondary" aria-labelledby="menusucursales">
+                                <li><a class="nav-link active lh-lg" href="productos.php?id=200">Sucursal CDMX</a></li>
+                                <li><a class="nav-link active lh-lg" href="productos.php?id=201">Sucursal Monterrey</a></li>
+                                <li><a class="nav-link active lh-lg" href="productos.php?id=202">Sucursal Querétaro</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active lh-lg" aria-current="page" href="checkout.php">
@@ -88,12 +106,12 @@ if (empty($_SESSION['idUsua'])) {
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4  row-cols-lg-4 g-5">
                 <?php
                 include("../conexionBD.php");
-                $where = " where 1=1 and estatus=1 ";
+                $where = " where 1=1 and telefono.estatus=1 and sucursal.id_suc= $id_suc";
                 $busqueda = mysqli_real_escape_string($conexion, $_REQUEST['busqueda'] ?? '');
                 if (empty($busqueda) == false) {
                     $where .= " AND (nom_mod LIKE '%$busqueda%' OR prec_tel LIKE '%$busqueda%' OR col_tel LIKE '%$busqueda%' OR cam_tel LIKE '%$busqueda%' OR alm_tel LIKE '%$busqueda%' OR pan_tel LIKE '%$busqueda%')";
                 }
-                $queryCuenta = "SELECT count(*) as cuenta FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod $where ;";
+                $queryCuenta = "SELECT count(*) as cuenta FROM modelo INNER JOIN telefono inner join inventario on telefono.id_tel=inventario.id_tel inner join sucursal on sucursal.id_suc=inventario.id_suc ON modelo.id_mod = telefono.id_mod $where ;";
                 $rescuenta = mysqli_query($conexion, $queryCuenta);
                 $rowcuenta = mysqli_fetch_assoc($rescuenta);
                 $total_registro = $rowcuenta['cuenta'];
@@ -109,7 +127,7 @@ if (empty($_SESSION['idUsua'])) {
                 }
                 $limite = " limit $inicioLimite,$elementosPorPag";
 
-                $query = "SELECT id_tel,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod $where $limite";
+                $query = "SELECT inventario.id_tel,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel ,sucursal.id_suc,exist_inv FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod inner join inventario on telefono.id_tel =inventario.id_tel inner join sucursal on sucursal.id_suc=inventario.id_suc $where $limite";
 
                 $res = mysqli_query($conexion, $query);
                 while ($row = mysqli_fetch_array($res)) {
@@ -119,7 +137,8 @@ if (empty($_SESSION['idUsua'])) {
                             <img src="<?php echo '../img/' . $row['img_tel']; ?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $row['nom_mod']; ?></h5>
-                                <p class="card-text">Cantidad: <input style="width: 60px;" type="number" name="cantidad<?php echo $row['id_tel']; ?>" id="cantidad<?php echo $row['id_tel']; ?>" min="1" max="35" value="1" onchange="validateCantidad(this)">
+                                <p class="card-text">Existencias: <?php echo $row['exist_inv'] ?></p>
+                                <p class="card-text">Cantidad: <input style="width: 60px;" type="number" name="cantidad<?php echo $row['id_tel']; ?>" id="cantidad<?php echo $row['id_tel']; ?>" min="1"  max="<?php echo $row['exist_inv'] ?>" data-max="<?php echo $row['exist_inv'] ?> value=" 1" step="1" onchange="validateCantidad(this)">
                                 </p>
                                 <div class="d-flex flex-wrap justify-content-between align-items-center">
                                     <div class="btn-group me-2 mb-2">
@@ -139,7 +158,7 @@ if (empty($_SESSION['idUsua'])) {
                     <ul class="pagination">
                         <?php if ($paginaSel != 1) { ?>
                             <li class="page-item">
-                                <a class="page-link" href="productos.php?modulo=productos&pagina=<?php echo ($paginaSel - 1); ?>" aria-label="Previous">
+                                <a class="page-link" href="productos.php?id&pagina=<?php echo ($paginaSel - 1); ?>" aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                 </a>
@@ -148,13 +167,13 @@ if (empty($_SESSION['idUsua'])) {
 
                         <?php for ($i = 1; $i <= $totalPaginas; $i++) { ?>
                             <li class="page-item <?php echo ($paginaSel == $i) ? " active " : " "; ?>">
-                                <a class="page-link" href="productos.php?modulo=productos&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                <a class="page-link" href="productos.php?id&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
                             </li>
                         <?php } ?>
 
                         <?php if ($paginaSel != $totalPaginas) { ?>
                             <li class="page-item">
-                                <a class="page-link" href="productos.php?modulo=productos&pagina=<?php echo ($paginaSel + 1); ?>" aria-label="Next">
+                                <a class="page-link" href="productos.php?id&pagina=<?php echo ($paginaSel + 1); ?>" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>
                                 </a>
@@ -219,6 +238,16 @@ if (empty($_SESSION['idUsua'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let cantidadInputs = document.querySelectorAll('input[type="number"][name^="cantidad"]');
+            cantidadInputs.forEach(input => {
+                if (!input.value || input.value < 1) {
+                    input.value = 1;
+                }
+            });
+
+        });
+
         function addProducto(id, token) {
             let url = 'carrito.php';
             let formData = new FormData();
@@ -241,11 +270,15 @@ if (empty($_SESSION['idUsua'])) {
         }
 
         function validateCantidad(input) {
-            let cantidad = parseInt(input.value);
-            if (cantidad < 1) {
-                input.value = 1; 
-            } else if (cantidad > 35) {
-                input.value = 35;
+            let cantidad = Math.round(parseFloat(input.value));
+            let max = parseInt(input.getAttribute('data-max'));
+
+            if (isNaN(cantidad) || cantidad < 1) {
+                input.value = 1;
+            } else if (cantidad > max) {
+                input.value = max;
+            } else {
+                input.value = cantidad;
             }
         }
     </script>

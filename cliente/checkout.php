@@ -9,29 +9,25 @@ $idUsua = $_SESSION['idUsua'];
 $lista_carrito = array();
 if ($producto != NULL) {
     foreach ($producto as $clave => $cantidad) {
-        $sql = $conexion->prepare("SELECT telefono.id_tel,nom_mod,prec_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod where telefono.id_tel=? and estatus=1 LIMIT 1");
+        $sql = $conexion->prepare("SELECT telefono.id_tel,nom_mod,prec_tel,exist_inv,sucursal.id_suc FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod inner join inventario on telefono.id_tel=inventario.id_tel inner join sucursal on sucursal.id_suc =inventario.id_suc where telefono.id_tel=? and telefono.estatus=1 LIMIT 1");
         $sql->bind_param("i", $clave);
         $sql->execute();
-        $sql->bind_result($id_tel, $nom_mod, $prec_tel);
+        $sql->bind_result($id_tel, $nom_mod, $prec_tel, $exist_inv,$id_suc);
         $sql->fetch();
         $sql->close();
         $producto_info = [
             'id_tel' => $id_tel,
             'nom_tel' => $nom_mod,
             'prec_tel' => $prec_tel,
-            'cantidad' => $cantidad
+            'exist_inv' => $exist_inv,
+            'cantidad' => $cantidad,
+            'id_suc' =>$id_suc
         ];
+
         $lista_carrito[] = $producto_info;
     }
 }
-$suc = mysqli_query($conexion, "SELECT id_suc,nom_suc from sucursal");
-$sucursales = array();
-if ($suc->num_rows > 0) {
-    while ($row = $suc->fetch_assoc()) {
-        $sucursales[] = $row;
-    }
-}
-$sucursales_json = json_encode($sucursales);
+$sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
 ?>
 
 <!DOCTYPE html>
@@ -74,8 +70,13 @@ $sucursales_json = json_encode($sucursales);
                         <li class="nav-item">
                             <a class="nav-link active lh-lg" aria-current="page" href="cliente.php">Inicio</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link active lh-lg" href="productos.php">Productos</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle active lh-lg" id="menusucursales" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales</a>
+                            <ul class="dropdown-menu bg-secondary" aria-labelledby="menusucursales">
+                                <li><a class="nav-link active lh-lg" href="productos.php?id=200">Sucursal CDMX</a></li>
+                                <li><a class="nav-link active lh-lg" href="productos.php?id=201">Sucursal Monterrey</a></li>
+                                <li><a class="nav-link active lh-lg" href="productos.php?id=202">Sucursal Querétaro</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active lh-lg" aria-current="page" href="checkout.php">
@@ -114,7 +115,6 @@ $sucursales_json = json_encode($sucursales);
                         <tr>
                             <th>Producto</th>
                             <th>Precio</th>
-                            <th>Sucursales</th>
                             <th>Cantidad</th>
                             <th>Subtotal</th>
 
@@ -138,7 +138,7 @@ $sucursales_json = json_encode($sucursales);
                     </tbody>
 
                     <tr>
-                        <td colspan="5"></td>
+                        <td colspan="2"></td>
                         <td colspan="3">
                             <p class="h5" id="total"><?php echo MONEDA . number_format($total, 2, '.', ','); ?></p>
                         </td>
@@ -300,27 +300,8 @@ $sucursales_json = json_encode($sucursales);
         }
     </script>
     <?php $lista_carrito_json = json_encode($lista_carrito); ?>
-    <?php
-
-    $sucursales_options = '';
-    foreach ($sucursales as $sucursal) {
-    $existencias = array();
-    foreach ($lista_carrito as $producto) {
-        $sql = $conexion->prepare("SELECT exist_inv FROM inventario WHERE id_tel = ? AND id_suc = ?");
-        $sql->bind_param("ii", $producto['id_tel'], $sucursal['id_suc']);
-        $sql->execute();
-        $sql->bind_result($existencia);
-        $sql->fetch();
-        $sql->close();
-        $existencias[$producto['id_tel']][$sucursal['id_suc']] = $existencia;
-    }
-
-    $sucursales_options .= '<option value="' . $sucursal['id_suc'] . '">' . $sucursal['nom_suc'] . '(' . array_sum($existencias) . ')</option>';
-}
-    ?>
+   
     <script>
-        const sucursales = <?php echo $sucursales_json; ?>;
-
 
         const idUsua = "<?php echo $idUsua; ?>";
         const listaCarrito = <?php echo json_encode($lista_carrito); ?>;
@@ -345,43 +326,24 @@ $sucursales_json = json_encode($sucursales);
                     precioTd.textContent = producto.prec_tel;
                     tr.appendChild(precioTd);
 
-                    const sucursalTd = document.createElement("td");
-                    const selectSucursal = document.createElement('select');
-                    selectSucursal.classList.add('form-select', 'form-select-sm');
-                    selectSucursal.name = `sucursal_${producto.id_tel}`;
-                    selectSucursal.innerHTML = '<?php echo $sucursales_options; ?>';
-                    selectSucursal.style.width = '180px';
-
-                    // Agregar existencias a cada opción de sucursal
-                    selectSucursal.addEventListener('change', function() {
-                        const idSucursal = this.value;
-                        const idTel = producto.id_tel;
-                        const existencia = existencias[idTel][idSucursal];
-                        const sucursalCell = document.getElementById(`sucursal_${idTel}`);
-                        const existenciaTd = document.createElement("td");
-                        existenciaTd.textContent = `Existencias: ${existencia}`;
-                        sucursalCell.innerHTML = "";
-                        sucursalCell.appendChild(existenciaTd);
-                    });
-
-                    sucursalTd.appendChild(selectSucursal);
-                    tr.appendChild(sucursalTd);
-
                     const cantidadTd = document.createElement("td");
                     const cantidadInput = document.createElement("input");
                     cantidadInput.type = "number";
                     cantidadInput.min = "1";
-                    cantidadInput.max = "35";
+                    cantidadInput.max = producto.exist_inv;
                     cantidadInput.step = "1";
                     cantidadInput.value = producto.cantidad;
                     cantidadInput.size = "5";
                     cantidadInput.id = `cantidad_${producto.id_tel}`;
                     cantidadInput.onchange = function() {
+                        let value = parseFloat(this.value);
+                        value = Math.round(value);
                         if (this.value == "" || isNaN(this.value) || parseInt(this.value) < parseInt(this.min) || parseInt(this.value) % 1 !== 0) {
                             this.value = producto.cantidad;
                         } else if (parseInt(this.value) > parseInt(this.max)) {
                             this.value = this.max;
                         } else {
+                            this.value = value;
                             actualizaCantidad(this.value, producto.id_tel);
                         }
                     };
