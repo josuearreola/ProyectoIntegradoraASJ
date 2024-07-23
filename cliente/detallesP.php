@@ -7,7 +7,7 @@ if(empty($_SESSION['idUsua'])){
 $id=isset($_GET['id']) ? $_GET['id'] : '';
 $token=isset($_GET['token']) ? $_GET['token'] : '';
 
-$sql="SELECT id_tel,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod";
+$sql="SELECT inventario.id_inv,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel,telefono.id_tel,sucursal.id_suc,exist_inv FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod inner join inventario on telefono.id_tel =inventario.id_tel inner join sucursal on sucursal.id_suc=inventario.id_suc";
 $result=mysqli_query($conexion,$sql);
 
 if($id == '' || $token == ''){
@@ -141,12 +141,7 @@ if($id == '' || $token == ''){
                         <h6 style="color:#fff">Pantalla: <?php echo $pantalla ?></h6>
                         <h6 style="color:#fff">Procesador: <?php echo $procesador ?></h6>
                         <h6 style="color:#fff">RAM: <?php echo $ram ?></h6>
-                        <h6 style="color:#fff">Cantidad:<input style=" width:60px" type="number" name="cantidad" id="cantidad" min="1" max="35" value="1" ></h6>
-                    </p>
-                    <div class="d-grip gap-3 col-10 mx-auto">
-                        <button class="btn btn-primary" type="button">Comprar ahora</button>
-                        <button class="btn btn-outline-primary" type="button" onclick="addProducto(<?php echo $id;?>, '<?php  echo $token_temp ?>')">Agregar al carrito</button>
-                    </div>
+                        
                 </div>
             </div>
         </div>
@@ -203,29 +198,6 @@ if($id == '' || $token == ''){
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 
-    <script>
-        function addProducto(id, token){
-            let url = 'carrito.php';
-            let formData = new FormData();
-            let cantidad =document.getElementById('cantidad').value;
-            formData.append('id',id);
-            formData.append('token',token);
-            formData.append('cantidad',cantidad);
-
-            fetch(url,{
-                method: 'POST',
-                body:formData,
-                mode:'cors'
-            }).then(response => response.json())
-            .then(data =>{
-                if(data.ok){
-                    let elemento=document.getElementById("num_cart")
-                    elemento.innerHTML = data.numero
-                }
-            })
-        }
-
-    </script>
 </body>
 
 </html>

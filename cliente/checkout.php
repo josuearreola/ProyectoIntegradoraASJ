@@ -9,10 +9,10 @@ $idUsua = $_SESSION['idUsua'];
 $lista_carrito = array();
 if ($producto != NULL) {
     foreach ($producto as $clave => $cantidad) {
-        $sql = $conexion->prepare("SELECT telefono.id_tel,nom_mod,prec_tel,exist_inv,sucursal.id_suc FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod inner join inventario on telefono.id_tel=inventario.id_tel inner join sucursal on sucursal.id_suc =inventario.id_suc where telefono.id_tel=? and telefono.estatus=1 LIMIT 1");
+        $sql = $conexion->prepare("SELECT telefono.id_tel,nom_mod,prec_tel,exist_inv,sucursal.id_suc,inventario.id_inv,nom_suc FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod inner join inventario on telefono.id_tel=inventario.id_tel inner join sucursal on sucursal.id_suc =inventario.id_suc where inventario.id_inv=? and inventario.estatus=1 LIMIT 1");
         $sql->bind_param("i", $clave);
         $sql->execute();
-        $sql->bind_result($id_tel, $nom_mod, $prec_tel, $exist_inv,$id_suc);
+        $sql->bind_result($id_tel, $nom_mod, $prec_tel, $exist_inv,$id_suc,$id_inv,$nom_suc);
         $sql->fetch();
         $sql->close();
         $producto_info = [
@@ -21,7 +21,9 @@ if ($producto != NULL) {
             'prec_tel' => $prec_tel,
             'exist_inv' => $exist_inv,
             'cantidad' => $cantidad,
-            'id_suc' =>$id_suc
+            'id_suc' =>$id_suc,
+            'id_inv' =>$id_inv,
+            'nom_suc' =>$nom_suc
         ];
 
         $lista_carrito[] = $producto_info;
@@ -114,6 +116,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                     <thead>
                         <tr>
                             <th>Producto</th>
+                            <th>Sucursal</th>
                             <th>Precio</th>
                             <th>Cantidad</th>
                             <th>Subtotal</th>
@@ -128,6 +131,8 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                             $total = 0;
                             foreach ($lista_carrito as $producto) {
                                 $_id = $producto['id_tel'];
+                                $id_inv=$producto['id_inv'];
+                                $nomSuc=$producto['nom_suc'];
                                 $nombre = $producto['nom_tel'];
                                 $precio = $producto['prec_tel'];
                                 $cantidad = $producto['cantidad'];
@@ -138,8 +143,8 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                     </tbody>
 
                     <tr>
-                        <td colspan="2"></td>
-                        <td colspan="3">
+                        <td colspan="4"></td>
+                        <td colspan="4">
                             <p class="h5" id="total"><?php echo MONEDA . number_format($total, 2, '.', ','); ?></p>
                         </td>
 
@@ -291,7 +296,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                     if (data.ok) {
 
                         let listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
-                        listaCarrito = listaCarrito.filter(producto => producto.id_tel != id);
+                        listaCarrito = listaCarrito.filter(producto => producto.id_inv != id);
                         localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
 
                         location.reload();
@@ -321,6 +326,10 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                     const nombreTd = document.createElement("td");
                     nombreTd.textContent = producto.nom_tel;
                     tr.appendChild(nombreTd);
+
+                    const nombresucTd = document.createElement("td");
+                    nombresucTd.textContent = producto.nom_suc;
+                    tr.appendChild(nombresucTd);
 
                     const precioTd = document.createElement("td");
                     precioTd.textContent = producto.prec_tel;
@@ -365,7 +374,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                     eliminarBtn.href = "#";
                     eliminarBtn.id = "eliminar";
                     eliminarBtn.className = "btn btn-warning btn-sm";
-                    eliminarBtn.dataset.bsId = producto.id_tel;
+                    eliminarBtn.dataset.bsId = producto.id_inv;
                     eliminarBtn.dataset.bsToggle = "modal";
                     eliminarBtn.dataset.bsTarget = "#eliminaModal";
                     eliminarBtn.textContent = "Eliminar";

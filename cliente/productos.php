@@ -127,7 +127,7 @@ if ($result == 0) {
                 }
                 $limite = " limit $inicioLimite,$elementosPorPag";
 
-                $query = "SELECT inventario.id_tel,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel ,sucursal.id_suc,exist_inv FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod inner join inventario on telefono.id_tel =inventario.id_tel inner join sucursal on sucursal.id_suc=inventario.id_suc $where $limite";
+                $query = "SELECT inventario.id_inv,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel,telefono.id_tel,sucursal.id_suc,exist_inv FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod inner join inventario on telefono.id_tel =inventario.id_tel inner join sucursal on sucursal.id_suc=inventario.id_suc $where $limite";
 
                 $res = mysqli_query($conexion, $query);
                 while ($row = mysqli_fetch_array($res)) {
@@ -138,11 +138,11 @@ if ($result == 0) {
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $row['nom_mod']; ?></h5>
                                 <p class="card-text">Existencias: <?php echo $row['exist_inv'] ?></p>
-                                <p class="card-text">Cantidad: <input style="width: 60px;" type="number" name="cantidad<?php echo $row['id_tel']; ?>" id="cantidad<?php echo $row['id_tel']; ?>" min="1"  max="<?php echo $row['exist_inv'] ?>" data-max="<?php echo $row['exist_inv'] ?> value=" 1" step="1" onchange="validateCantidad(this)">
+                                <p class="card-text">Cantidad: <input style="width: 60px;" type="number" name="cantidad<?php echo $row['id_inv']; ?>" id="cantidad<?php echo $row['id_inv']; ?>" min="1"  max="<?php echo $row['exist_inv'] ?>" data-max="<?php echo $row['exist_inv'] ?> value=" 1" step="1" onchange="validateCantidad(this)">
                                 </p>
                                 <div class="d-flex flex-wrap justify-content-between align-items-center">
                                     <div class="btn-group me-2 mb-2">
-                                        <button class="btn btn-outline-success" type="button" onclick="addProducto(<?php echo $row['id_tel']; ?>, '<?php echo hash_hmac('sha1', $row['id_tel'], KEY_TOKEN); ?>')">Agregar</button>
+                                        <button class="btn btn-outline-success" type="button" onclick="addProducto(<?php echo $row['id_inv']; ?>, '<?php echo hash_hmac('sha1', $row['id_inv'], KEY_TOKEN); ?>')">Agregar</button>
                                     </div>
                                     <div class="btn-group mb-2">
                                         <a href="detallesP.php?id=<?php echo $row['id_tel']; ?>&token=<?php echo hash_hmac('sha1', $row['id_tel'], KEY_TOKEN); ?>" class="btn btn-primary">Detalles</a>
@@ -158,7 +158,7 @@ if ($result == 0) {
                     <ul class="pagination">
                         <?php if ($paginaSel != 1) { ?>
                             <li class="page-item">
-                                <a class="page-link" href="productos.php?id&pagina=<?php echo ($paginaSel - 1); ?>" aria-label="Previous">
+                                <a class="page-link" href="productos.php?id=<?php echo $idSucur ?>&pagina=<?php echo ($paginaSel - 1); ?>" aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                 </a>
@@ -167,13 +167,13 @@ if ($result == 0) {
 
                         <?php for ($i = 1; $i <= $totalPaginas; $i++) { ?>
                             <li class="page-item <?php echo ($paginaSel == $i) ? " active " : " "; ?>">
-                                <a class="page-link" href="productos.php?id&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                <a class="page-link" href="productos.php?id=<?php echo $idSucur ?>&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
                             </li>
                         <?php } ?>
 
                         <?php if ($paginaSel != $totalPaginas) { ?>
                             <li class="page-item">
-                                <a class="page-link" href="productos.php?id&pagina=<?php echo ($paginaSel + 1); ?>" aria-label="Next">
+                                <a class="page-link" href="productos.php?id=<?php echo $idSucur ?>&pagina=<?php echo ($paginaSel + 1); ?>" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>
                                 </a>
