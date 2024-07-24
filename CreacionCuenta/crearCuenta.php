@@ -1,27 +1,26 @@
-<?php 
-    $alert="";
-    if(!empty($_POST)){
-        if(empty($_POST["nombre"])||empty($_POST["usuario"])||empty($_POST["email"])||empty($_POST["contraseña"])){
-            $alert="Ingrese todos los campos";
-        }else{
+<?php
+$alert = "";
+if (!empty($_POST)) {
+    if (empty($_POST["nombre"]) || empty($_POST["usuario"]) || empty($_POST["email"]) || empty($_POST["contraseña"])) {
+        $alert = "Ingrese todos los campos";
+    } else {
         require_once("../conexionBD.php");
-        $nombre=mysqli_real_escape_string($conexion,$_POST["nombre"]);
-        $usuario=mysqli_real_escape_string($conexion,$_POST["usuario"]);
-        $email= mysqli_real_escape_string($conexion,$_POST["email"]);
-        $contraseña=$_POST["contraseña"];
-        $nombre=mysqli_real_escape_string($conexion,$_POST["nombre"]);
-        $user=mysqli_real_escape_string($conexion,$_POST["usuario"]);
-        $email=mysqli_real_escape_string($conexion,$_POST["email"]);
-        $pass=md5($_POST["contraseña"]);
-        $tip_usua="cliente";
-        $consulta1="insert into usuario (nom_usua,tip_usua,pass_usua) values ('$usuario','$tip_usua',MD5('$contraseña'))";
-        $query1=mysqli_query($conexion,$consulta1);
-        if($query1===true){
-            $id_usua=$conexion->insert_id;
-            $consulta2="insert into cliente (nom_clie,email_clie,id_usua) values ('$nombre','$email','$id_usua')";
-            $query3=mysqli_query($conexion,$consulta2);
+        $nombre = mysqli_real_escape_string($conexion, $_POST["nombre"]);
+        $usuario = mysqli_real_escape_string($conexion, $_POST["usuario"]);
+        $email = mysqli_real_escape_string($conexion, $_POST["email"]);
+        $contraseña = $_POST["contraseña"];
+        $nombre = mysqli_real_escape_string($conexion, $_POST["nombre"]);
+        $user = mysqli_real_escape_string($conexion, $_POST["usuario"]);
+        $email = mysqli_real_escape_string($conexion, $_POST["email"]);
+        $pass = md5($_POST["contraseña"]);
+        $tip_usua = "cliente";
+        $consulta1 = "insert into usuario (nom_usua,tip_usua,pass_usua) values ('$usuario','$tip_usua',MD5('$contraseña'))";
+        $query1 = mysqli_query($conexion, $consulta1);
+        if ($query1 === true) {
+            $id_usua = $conexion->insert_id;
+            $consulta2 = "insert into cliente (nom_clie,email_clie,id_usua) values ('$nombre','$email','$id_usua')";
+            $query3 = mysqli_query($conexion, $consulta2);
             $alert = '<p class="msj_save">Usuario creado exitosamente</p>';
-            
         }
     }
 }
@@ -30,14 +29,16 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear una cuenta</title>
-    
+
     <link rel="stylesheet" href="../css/styleCrearCuenta.css">
     <link rel="icon" href="../img/logo.ico">
 </head>
+
 <body>
     <header>
         <div class="info_usua">
@@ -70,8 +71,8 @@
                     <p class="formulario__input-error" id="error-contraseña">La contraseña tiene que ser de 4 a 12 digitos</p>
                 </div>
                 <?php if (!empty($alert)) : ?>
-                <div class="alert"><?php echo $alert; ?></div>
-            <?php endif; ?>
+                    <div class="alert"><?php echo $alert; ?></div>
+                <?php endif; ?>
                 <input type="submit" value="Crear Cuenta" class="btn-Creacion" id="btn-Creacion">
             </form>
         </div>
@@ -117,7 +118,7 @@
                     Para consultas relacionadas con garantías, devoluciones o reemplazos, póngase en contacto con nosotros y le guiaremos a través del proceso de manera rápida y sencilla.</p>
                 <p>Facturación y Pagos:
                     Para cualquier pregunta relacionada con facturas, pagos o información de cuentas, nuestro equipo de atención al cliente le proporcionará la asistencia necesaria para resolver su consulta de manera eficiente.</p>
-                    <div class="btn-cerrar2">
+                <div class="btn-cerrar2">
                     <label for="btn-modal2">Aceptar</label>
                 </div>
             </div>
@@ -126,4 +127,5 @@
     </footer>
     <script src="../javascript/validacion.js"></script>
 </body>
+
 </html>

@@ -188,7 +188,17 @@ main>.container{
     width: 100%;
     object-fit: cover;
   }
-  
+  input[disabled] {
+    background-color: #b0b0b5 !important;
+    color: #030303 !important; 
+    cursor: not-allowed !important;
+}
+
+.toggle-link {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 @media (max-width: 500px) {
     .carousel-item h5{
         display: none;

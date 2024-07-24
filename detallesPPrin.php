@@ -89,8 +89,13 @@ if ($id == '' || $token == '') {
                         <li class="nav-item">
                             <a class="nav-link active lh-lg" aria-current="page" href="pagPrincipal.php">Inicio</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link lh-lg" href="productosPrin.php">Productos</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle active lh-lg" id="menusucursales" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales</a>
+                            <ul class="dropdown-menu bg-secondary" aria-labelledby="menusucursales">
+                                <li><a class="nav-link active lh-lg" href="productosPrin.php?id=200">Sucursal CDMX</a></li>
+                                <li><a class="nav-link active lh-lg" href="productosPrin.php?id=201">Sucursal Monterrey</a></li>
+                                <li><a class="nav-link active lh-lg" href="productosPrin.php?id=202">Sucursal Querétaro</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Categorias </a>
@@ -134,10 +139,7 @@ if ($id == '' || $token == '') {
                     <h6 style="color:#fff">Procesador: <?php echo $procesador ?></h6>
                     <h6 style="color:#fff">RAM: <?php echo $ram ?></h6>
                     </p>
-                    <div class="d-grip gap-3 col-10 mx-auto">
-                        <button class="btn btn-primary" type="button" onclick="location.href='inicioSesion/iniciosesion.php';">Comprar ahora</button>
-                        <button class="btn btn-outline-primary" type="button" onclick="location.href='inicioSesion/iniciosesion.php';">Agregar al carrito</button>
-                    </div>
+                    
                 </div>
             </div>
         </div>

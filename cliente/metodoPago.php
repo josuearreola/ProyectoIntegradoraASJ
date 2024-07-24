@@ -1,19 +1,28 @@
 <?php
-include("../conexionBD.php");
+include "../conexionBD.php";
 require "config.php";
+
+
+
+
+
+
+
+
+$idUsua = $_SESSION['idUsua'];
 if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
 $producto = isset($_SESSION['carrito']['productos']) ? $_SESSION['carrito']['productos'] : NULL;
 $idUsua = $_SESSION['idUsua'];
 $lista_carrito = array();
-$total=0;
+$total = 0;
 if ($producto != NULL) {
     foreach ($producto as $clave => $cantidad) {
         $sql = $conexion->prepare("SELECT telefono.id_tel,nom_mod,prec_tel,exist_inv,sucursal.id_suc,inventario.id_inv,nom_suc FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod inner join inventario on telefono.id_tel=inventario.id_tel inner join sucursal on sucursal.id_suc =inventario.id_suc where inventario.id_inv=? and inventario.estatus=1 LIMIT 1");
         $sql->bind_param("i", $clave);
         $sql->execute();
-        $sql->bind_result($id_tel, $nom_mod, $prec_tel, $exist_inv,$id_suc,$id_inv,$nom_suc);
+        $sql->bind_result($id_tel, $nom_mod, $prec_tel, $exist_inv, $id_suc, $id_inv, $nom_suc);
         $sql->fetch();
         $sql->close();
         $producto_info = [
@@ -22,9 +31,9 @@ if ($producto != NULL) {
             'prec_tel' => $prec_tel,
             'exist_inv' => $exist_inv,
             'cantidad' => $cantidad,
-            'id_suc' =>$id_suc,
-            'id_inv' =>$id_inv,
-            'nom_suc' =>$nom_suc
+            'id_suc' => $id_suc,
+            'id_inv' => $id_inv,
+            'nom_suc' => $nom_suc
         ];
 
         $lista_carrito[] = $producto_info;
@@ -32,6 +41,7 @@ if ($producto != NULL) {
 }
 $_SESSION['carrito_total'] = $total;
 $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
+
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +56,10 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
     <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../css/stylecliente.css">
     <link rel="icon" href="../img/logo.ico">
+    <script src="https://www.paypal.com/sdk/js?client-id=<?php echo CLIENT_ID ?>&currency=<?php echo CURRENCY?>"></script>
 </head>
+
+
 
 <body>
     <nav class="navbar bg-secondary navbar-expand-lg border-top border-bottom border-3 border-light">
@@ -55,7 +68,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                 <img src="../img/logo.jpg" class="logo">
                 <img class="imgses" src="../img/cerrarses.jpg" alt="Cerrar sesion" title="salir">
             </a>
-            <a href="checkout.php" style="color:black; margin-top:5px; margin-left:10px">
+            <a href="checkout.php" style="color:black; margin-top:5px; margin-left:-2px">
                 <i class="fa-solid fa-cart-plus fa-2x"></i>
             </a>
             <a href="datosUser.php?idUsua=<?php echo $_SESSION['Id_usua']; ?>" style="color:black; margin-top:5px; margin-left:5px;">
@@ -72,7 +85,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <li class="nav-item">
-                            <a class="nav-link active lh-lg" aria-current="page" href="cliente.php">Inicio</a>
+                            <a class="nav-link active lh-lg" aria-current="page" href="checkout.php">Inicio</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle active lh-lg" id="menusucursales" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales</a>
@@ -112,75 +125,61 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
     </nav>
 
     <main>
+
         <div class="container">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Sucursal</th>
-                            <th>Precio</th>
-                            <th>Cantidad</th>
-                            <th>Subtotal</th>
-
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if ($lista_carrito == null) {
-                            echo '<tr><td colspan="6" class="text-center"><b>Lista vacia</b></td></tr>';
-                        } else {
-                            $total = 0;
-                            foreach ($lista_carrito as $producto) {
-                                $_id = $producto['id_tel'];
-                                $id_inv=$producto['id_inv'];
-                                $nomSuc=$producto['nom_suc'];
-                                $nombre = $producto['nom_tel'];
-                                $precio = $producto['prec_tel'];
-                                $cantidad = $producto['cantidad'];
-                                $subtotal = $cantidad * $precio;
-                                $total += $subtotal;
-                        ?>
-                            <?php } ?>
-                    </tbody>
-
-                    <tr>
-                        <td colspan="4"></td>
-                        <td colspan="4">
-                            <p class="h5" id="total"><?php echo MONEDA . number_format($total, 2, '.', ','); ?></p>
-                        </td>
-
-                    </tr>
-                <?php } ?>
-                </table>
-            </div>
-
             <div class="row">
-                <div class="col-md-5 offset-md-7 d-grid gap-2">
-                    <?php if (!empty($lista_carrito)) { ?>
-                        <a class="btn btn-primary btn-lg" href="datosEnvio.php?id=<?php echo $idUsua?>">Realizar pago</a>
-                    <?php } ?>
+                <div class="col-6">
+                    <h4 style="color:#ffffff">Detalles de pago</h4>
+                    <div id="paypal-button-container"></div>
+                </div>
+                <div class="col-6">
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Sucursal</th>
+                                    <th>Subtotal</th>
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if ($lista_carrito == null) {
+                                    echo '<tr><td colspan="6" class="text-center"><b>Lista vacia</b></td></tr>';
+                                } else {
+                                    $total = 0;
+                                    foreach ($lista_carrito as $producto) {
+                                        $_id = $producto['id_tel'];
+                                        $id_inv = $producto['id_inv'];
+                                        $nomSuc = $producto['nom_suc'];
+                                        $nombre = $producto['nom_tel'];
+                                        $precio = $producto['prec_tel'];
+                                        $cantidad = $producto['cantidad'];
+                                        $subtotal = $cantidad * $precio;
+                                        $total += $subtotal;
+                                ?>
+                                    <?php } ?>
+                            </tbody>
+
+                            <tr>
+                               
+                                <td colspan="3">
+                                    <p class="h5 text-end" id="total"><?php echo MONEDA . number_format($total, 2, '.', ','); ?></p>
+                                </td>
+
+                            </tr>
+                        <?php } ?>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
-    <div class="modal fade" id="eliminaModal" tabindex="-1" aria-labelledby="eliminaModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="eliminaModalLabel">Alerta</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ¿Desea eliminar el producto de la lista?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button id="btn-elimina" type="button" class="btn btn-danger" onclick="eliminar()">Eliminar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+
+
+
     <footer class="footerpagprinc">
         <div class="container">
             <div>
@@ -232,6 +231,51 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
+
+
+
+    <script>
+        paypal.Buttons({
+            style: {
+                color: 'blue',
+                shape: 'pill',
+                label: 'pay'
+            },
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: <?php echo $total; ?>
+                        }
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                let url='captura.php';
+                actions.order.capture().then(function(detalles) {
+                    console.log(detalles);
+                    let url='captura.php';
+                    return fetch(url,{
+                        method:'post',
+                        headers:{
+                            'content-type':'application/json'
+                        },
+                        body:JSON.stringify({
+                            detalles:detalles
+                        })
+                    })
+                });
+            },
+            onCancel: function(data) {
+                alert("pago cancelado")
+                console.log(data);
+            }
+        }).render('#paypal-button-container');
+    </script>
+
+
+
 
     <script>
         let eliminaModal = document.getElementById('eliminaModal')
@@ -307,9 +351,8 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
         }
     </script>
     <?php $lista_carrito_json = json_encode($lista_carrito); ?>
-   
-    <script>
 
+    <script>
         const idUsua = "<?php echo $idUsua; ?>";
         const listaCarrito = <?php echo json_encode($lista_carrito); ?>;
         localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
@@ -333,33 +376,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                     nombresucTd.textContent = producto.nom_suc;
                     tr.appendChild(nombresucTd);
 
-                    const precioTd = document.createElement("td");
-                    precioTd.textContent = producto.prec_tel;
-                    tr.appendChild(precioTd);
 
-                    const cantidadTd = document.createElement("td");
-                    const cantidadInput = document.createElement("input");
-                    cantidadInput.type = "number";
-                    cantidadInput.min = "1";
-                    cantidadInput.max = producto.exist_inv;
-                    cantidadInput.step = "1";
-                    cantidadInput.value = producto.cantidad;
-                    cantidadInput.size = "5";
-                    cantidadInput.id = `cantidad_${producto.id_tel}`;
-                    cantidadInput.onchange = function() {
-                        let value = parseFloat(this.value);
-                        value = Math.round(value);
-                        if (this.value == "" || isNaN(this.value) || parseInt(this.value) < parseInt(this.min) || parseInt(this.value) % 1 !== 0) {
-                            this.value = producto.cantidad;
-                        } else if (parseInt(this.value) > parseInt(this.max)) {
-                            this.value = this.max;
-                        } else {
-                            this.value = value;
-                            actualizaCantidad(this.value, producto.id_tel);
-                        }
-                    };
-                    cantidadTd.appendChild(cantidadInput);
-                    tr.appendChild(cantidadTd);
 
                     const subtotalTd = document.createElement("td");
                     const subtotal = producto.cantidad * producto.prec_tel;
@@ -368,20 +385,6 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                     subtotalTd.name = "subtotal[]";
                     subtotalTd.textContent = `${subtotal.toFixed(2)}`;
                     tr.appendChild(subtotalTd);
-
-
-
-                    const eliminarTd = document.createElement("td");
-                    const eliminarBtn = document.createElement("a");
-                    eliminarBtn.href = "#";
-                    eliminarBtn.id = "eliminar";
-                    eliminarBtn.className = "btn btn-warning btn-sm";
-                    eliminarBtn.dataset.bsId = producto.id_inv;
-                    eliminarBtn.dataset.bsToggle = "modal";
-                    eliminarBtn.dataset.bsTarget = "#eliminaModal";
-                    eliminarBtn.textContent = "Eliminar";
-                    eliminarTd.appendChild(eliminarBtn);
-                    tr.appendChild(eliminarTd);
 
                     tbody.appendChild(tr);
                 });

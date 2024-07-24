@@ -1,6 +1,20 @@
 <?php
 include("conexionBD.php");
 require "configPPrin.php";
+if (isset($_GET['id'])) {
+    $idSucur = $_GET['id'];
+    $sucursal = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal where id_suc=$idSucur");
+    $result = mysqli_num_rows($sucursal);
+    if ($result == 0) {
+        header('location:pagPrincipal.php');
+    } else {
+        while ($data = mysqli_fetch_array($sucursal)) {
+            $id_suc = $data['id_suc'];
+            $nom_suc = $data['nom_suc'];
+        }
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +48,7 @@ require "configPPrin.php";
                     </div>
                 </div>
             </a>
-            <a href="#" style="color:black; margin-top:18px; margin-left:10px">
+            <a href="inicioSesion/iniciosesion.php" style="color:black; margin-top:18px; margin-left:10px">
                 <i class="fa-solid fa-cart-plus fa-2x"></i>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
@@ -50,8 +64,13 @@ require "configPPrin.php";
                         <li class="nav-item">
                             <a class="nav-link active lh-lg" aria-current="page" href="pagPrincipal.php">Inicio</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link lh-lg" href="productosPrin.php">Productos</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle active lh-lg" id="menusucursales" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales</a>
+                            <ul class="dropdown-menu bg-secondary" aria-labelledby="menusucursales">
+                                <li><a class="nav-link active lh-lg" href="productosPrin.php?id=200">Sucursal CDMX</a></li>
+                                <li><a class="nav-link active lh-lg" href="productosPrin.php?id=201">Sucursal Monterrey</a></li>
+                                <li><a class="nav-link active lh-lg" href="productosPrin.php?id=202">Sucursal Querétaro</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Categorias </a>
@@ -86,12 +105,12 @@ require "configPPrin.php";
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4  row-cols-lg-4 g-5">
                 <?php
-                $where = " where 1=1 and estatus=1";
+                $where = " where 1=1 and telefono.estatus=1 and sucursal.id_suc= $id_suc";
                 $busqueda = mysqli_real_escape_string($conexion, $_REQUEST['busqueda'] ?? '');
                 if (empty($busqueda) == false) {
                     $where .= " AND (nom_mod LIKE '%$busqueda%' OR prec_tel LIKE '%$busqueda%' OR col_tel LIKE '%$busqueda%' OR cam_tel LIKE '%$busqueda%' OR alm_tel LIKE '%$busqueda%' OR pan_tel LIKE '%$busqueda%')";
                 }
-                $queryCuenta = "SELECT count(*) as cuenta FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod $where ;";
+                $queryCuenta = "SELECT count(*) as cuenta FROM modelo INNER JOIN telefono inner join inventario on telefono.id_tel=inventario.id_tel inner join sucursal on sucursal.id_suc=inventario.id_suc ON modelo.id_mod = telefono.id_mod $where ;";
                 $rescuenta = mysqli_query($conexion, $queryCuenta);
                 $rowcuenta = mysqli_fetch_assoc($rescuenta);
                 $total_registro = $rowcuenta['cuenta'];
@@ -107,7 +126,7 @@ require "configPPrin.php";
                 }
                 $limite = " limit $inicioLimite,$elementosPorPag";
 
-                $query = "SELECT id_tel,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod $where $limite";
+                $query = "SELECT inventario.id_inv,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel,telefono.id_tel,sucursal.id_suc,exist_inv FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod inner join inventario on telefono.id_tel =inventario.id_tel inner join sucursal on sucursal.id_suc=inventario.id_suc $where $limite";
 
                 $res = mysqli_query($conexion, $query);
                 while ($row = mysqli_fetch_array($res)) {
@@ -117,6 +136,8 @@ require "configPPrin.php";
                             <img src="<?php echo 'img/'.$row['img_tel']; ?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $row['nom_mod']; ?></h5>
+                                <p class="card-text">Existencias: <?php echo $row['exist_inv'] ?></p>
+                                <p class="card-text">Cantidad: <input style="width: 60px;" type="number" name="cantidad<?php echo $row['id_inv']; ?>" id="cantidad<?php echo $row['id_inv']; ?>" min="1"  max="<?php echo $row['exist_inv'] ?>" data-max="<?php echo $row['exist_inv'] ?> value=" 1" step="1" onchange="validateCantidad(this)">
                                 <p class="card-text"></p>
                                 <div class="d-flex flex-wrap justify-content-between align-items-center">
                                     <div class="btn-group me-2 mb-2">
@@ -212,6 +233,51 @@ require "configPPrin.php";
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let cantidadInputs = document.querySelectorAll('input[type="number"][name^="cantidad"]');
+            cantidadInputs.forEach(input => {
+                if (!input.value || input.value < 1) {
+                    input.value = 1;
+                }
+            });
+
+        });
+
+        function addProducto(id, token) {
+            let url = 'carrito.php';
+            let formData = new FormData();
+            let cantidad = document.getElementById('cantidad' + id).value;
+            formData.append('id', id);
+            formData.append('token', token);
+            formData.append('cantidad', cantidad);
+
+            fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'cors'
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        let elemento = document.getElementById("num_cart")
+                        elemento.innerHTML = data.numero
+                    }
+                })
+        }
+
+        function validateCantidad(input) {
+            let cantidad = Math.round(parseFloat(input.value));
+            let max = parseInt(input.getAttribute('data-max'));
+
+            if (isNaN(cantidad) || cantidad < 1) {
+                input.value = 1;
+            } else if (cantidad > max) {
+                input.value = max;
+            } else {
+                input.value = cantidad;
+            }
+        }
+    </script>
 </body>
 
 </html>
