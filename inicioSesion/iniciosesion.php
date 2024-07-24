@@ -18,7 +18,7 @@ if (!empty($_SESSION['active'])) {
             $user = mysqli_real_escape_string($conexion, $_POST['usuario']);
             $pass = md5(mysqli_real_escape_string($conexion, $_POST['contraseña']));
 
-            $query = mysqli_query($conexion, "select * from usuario where nom_usua = '$user' and pass_usua='$pass'");
+            $query = mysqli_query($conexion, "select * from usuario inner join cliente on usuario.id_usua=cliente.id_usua where nom_usua = '$user' and pass_usua='$pass'");
             mysqli_close($conexion);
             $result = mysqli_num_rows($query);
             if ($result > 0) {
@@ -28,6 +28,7 @@ if (!empty($_SESSION['active'])) {
                 $_SESSION['tipUsua'] = $data['tip_usua'];
                 $_SESSION['passUsua'] = $data['pass_usua'];
                 $_SESSION['Id_usua']= $data['id_usua'];
+                $_SESSION['Id_clie']= $data['id_clie'];
                 header('location: ..\roles.php');
             } else {
                 $alert = 'El usuario o la clave son incorrectos';

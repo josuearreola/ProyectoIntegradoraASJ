@@ -176,10 +176,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
             </div>
         </div>
     </main>
-    
-
-
-
+   
     <footer class="footerpagprinc">
         <div class="container">
             <div>
