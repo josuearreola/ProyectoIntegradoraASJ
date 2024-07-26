@@ -8,30 +8,48 @@ $producto = isset($_SESSION['carrito']['productos']) ? $_SESSION['carrito']['pro
 $idUsua = $_SESSION['idUsua'];
 $lista_carrito = array();
 $total=0;
-if ($producto != NULL) {
-    foreach ($producto as $clave => $cantidad) {
-        $sql = $conexion->prepare("SELECT telefono.id_tel,nom_mod,prec_tel,exist_inv,sucursal.id_suc,inventario.id_inv,nom_suc FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod inner join inventario on telefono.id_tel=inventario.id_tel inner join sucursal on sucursal.id_suc =inventario.id_suc where inventario.id_inv=? and inventario.estatus=1 LIMIT 1");
-        $sql->bind_param("i", $clave);
-        $sql->execute();
-        $sql->bind_result($id_tel, $nom_mod, $prec_tel, $exist_inv,$id_suc,$id_inv,$nom_suc);
-        $sql->fetch();
-        $sql->close();
-        $producto_info = [
-            'id_tel' => $id_tel,
-            'nom_tel' => $nom_mod,
-            'prec_tel' => $prec_tel,
-            'exist_inv' => $exist_inv,
-            'cantidad' => $cantidad,
-            'id_suc' =>$id_suc,
-            'id_inv' =>$id_inv,
-            'nom_suc' =>$nom_suc
-        ];
 
-        $lista_carrito[] = $producto_info;
-    }
+if (!empty($_SESSION['pago_completado'])) {
+    // Limpiar el carrito de sesión y localStorage
+    unset($_SESSION['carrito']);
+    unset($_SESSION['carrito_total']);
+    
+    // Limpiar localStorage con JavaScript
+    $clearLocalStorageScript = "<script>localStorage.removeItem('carrito_" . $_SESSION['idUsua'] . "');</script>";
+    
+    // Incluir el script para limpiar localStorage
+    echo $clearLocalStorageScript;
+    
+    // Limpiar la variable de sesión
+    unset($_SESSION['pago_completado']);
+}else{
+    if ($producto != NULL) {
+            foreach ($producto as $clave => $cantidad) {
+                $sql = $conexion->prepare("SELECT telefono.id_tel,nom_mod,prec_tel,exist_inv,sucursal.id_suc,inventario.id_inv,nom_suc FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod inner join inventario on telefono.id_tel=inventario.id_tel inner join sucursal on sucursal.id_suc =inventario.id_suc where inventario.id_inv=? and inventario.estatus=1 LIMIT 1");
+                $sql->bind_param("i", $clave);
+                $sql->execute();
+                $sql->bind_result($id_tel, $nom_mod, $prec_tel, $exist_inv,$id_suc,$id_inv,$nom_suc);
+                $sql->fetch();
+                $sql->close();
+                $producto_info = [
+                    'id_tel' => $id_tel,
+                    'nom_tel' => $nom_mod,
+                    'prec_tel' => $prec_tel,
+                    'exist_inv' => $exist_inv,
+                    'cantidad' => $cantidad,
+                    'id_suc' =>$id_suc,
+                    'id_inv' =>$id_inv,
+                    'nom_suc' =>$nom_suc
+                ];
+        
+                $lista_carrito[] = $producto_info;
+            }
+        }
 }
+
 $_SESSION['carrito_total'] = $total;
 $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
+
 ?>
 
 <!DOCTYPE html>

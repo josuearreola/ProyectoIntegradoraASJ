@@ -4,7 +4,6 @@ require 'config.php';
 
 $json = file_get_contents('php://input');
 $datos = json_decode($json, true);
-print_r($datos);
 
 if (is_array($datos)) {
     $id_transaccion = $datos['detalles']['id'];
@@ -23,22 +22,22 @@ if (is_array($datos)) {
     // Insertar en la tabla venta
     $insertVenta = $conexion->prepare("INSERT INTO venta (fec_vta, id_clie) VALUES (?, ?)");
     $insertVenta->bind_param("si", $fecha_create, $idClie);
-    
+
     if ($insertVenta->execute()) {
         $idVta = $conexion->insert_id;
 
         // Actualizar en la tabla venta
         $updateVenta = $conexion->prepare("UPDATE venta SET fec_vta = ?, id_clie = ? WHERE id_vta = ?");
         $updateVenta->bind_param("ssi", $fecha_create, $idClie, $idVta);
-        
+
         if ($updateVenta->execute()) {
             // Insertar en la tabla pago
             $insertPago = $conexion->prepare("INSERT INTO pago (fec_pago, id_vta) VALUES (?, ?)");
             $insertPago->bind_param("si", $fecha_nueva, $idVta);
-            
+
             if ($insertPago->execute()) {
                 $idPago = $conexion->insert_id;
-                
+
                 if ($idPago) {
                     $tipPago = "Tarjeta";
                     $costoEnv = "120.00";
@@ -48,13 +47,34 @@ if (is_array($datos)) {
 
                     $updatePago = $conexion->prepare("UPDATE pago SET fec_pago = ?, cant_pago = ?, tip_pago = ?, id_vta = ?, costo_env = ?, id_env = ? WHERE id_pago = ?");
                     $updatePago->bind_param("ssssssi", $fecha_nueva, $total, $tipPago, $idVta, $costoEnv, $idEnvio, $idPago);
-                    
+
                     if ($updatePago->execute()) {
-                        echo "Pago actualizado correctamente.";
-                        $EstatusEnv="Pagado";
-                        $updateEnv=$conexion->prepare("UPDATE envio SET estatus_env = ? WHERE id_env = ?");
-                        $updateEnv->bind_param("si", $EstatusEnv,$idEnvio);
+                        $EstatusEnv = "Pagado";
+                        $updateEnv = $conexion->prepare("UPDATE envio SET estatus_env = ? WHERE id_env = ?");
+                        $updateEnv->bind_param("si", $EstatusEnv, $idEnvio);
                         $updateEnv->execute();
+                        $carrito = $_SESSION['carrito']['productos'];
+                        
+                        // Insertar cada producto en la tabla venta_inv
+                        foreach ($carrito as $clave => $cantidad) {
+                            $sql = $conexion->prepare("SELECT id_inv FROM inventario WHERE id_inv = ?");
+                            $sql->bind_param("i", $clave);
+                            $sql->execute();
+                            $sql->bind_result($id_inv);
+                            $sql->fetch();
+                            $sql->close();
+
+                            $insertVentaInv = $conexion->prepare("INSERT INTO venta_inv (id_inv, id_vta, cant_inv) VALUES (?, ?, ?)");
+                            $insertVentaInv->bind_param("iii", $id_inv, $idVta, $cantidad);
+
+                            if (!$insertVentaInv->execute()) {
+                                echo "Error al insertar en la tabla venta_inv: " . $insertVentaInv->error;
+                                break;
+                            }else{
+                                header('Location:checkout.php');
+                            }
+                        }
+
                     } else {
                         echo "Error al actualizar el pago: " . $updatePago->error;
                     }

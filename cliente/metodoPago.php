@@ -2,7 +2,7 @@
 include "../conexionBD.php";
 require "config.php";
 
-
+$_SESSION['pago_completado'] = true;
 
 
 
@@ -56,7 +56,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
     <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../css/stylecliente.css">
     <link rel="icon" href="../img/logo.ico">
-    <script src="https://www.paypal.com/sdk/js?client-id=<?php echo CLIENT_ID ?>&currency=<?php echo CURRENCY?>"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=<?php echo CLIENT_ID ?>&currency=<?php echo CURRENCY ?>"></script>
 </head>
 
 
@@ -141,7 +141,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                                     <th>Producto</th>
                                     <th>Sucursal</th>
                                     <th>Subtotal</th>
-                                   
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -163,7 +163,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                             </tbody>
 
                             <tr>
-                               
+
                                 <td colspan="3">
                                     <p class="h5 text-end" id="total"><?php echo MONEDA . number_format($total, 2, '.', ','); ?></p>
                                 </td>
@@ -176,7 +176,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
             </div>
         </div>
     </main>
-   
+
     <footer class="footerpagprinc">
         <div class="container">
             <div>
@@ -249,19 +249,25 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                 });
             },
             onApprove: function(data, actions) {
-                let url='captura.php';
+                localStorage.clear();
+                let url = 'captura.php';
                 actions.order.capture().then(function(detalles) {
                     console.log(detalles);
-                    let url='captura.php';
-                    return fetch(url,{
-                        method:'post',
-                        headers:{
-                            'content-type':'application/json'
+                    return fetch(url, {
+                        method: 'post',
+                        headers: {
+                            'content-type': 'application/json'
                         },
-                        body:JSON.stringify({
-                            detalles:detalles
+                        body: JSON.stringify({
+                            detalles: detalles
                         })
-                    })
+                    });
+                }).then(() => {
+                    localStorage.removeItem('carrito_<?php echo $idUsua?>')
+                    window.location.href = 'checkout.php';
+
+                }).catch(error => {
+                    console.error('Error al capturar el pago:', error);
                 });
             },
             onCancel: function(data) {

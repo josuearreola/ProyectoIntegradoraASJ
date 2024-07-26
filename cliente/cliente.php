@@ -21,6 +21,7 @@ if (empty($_SESSION['idUsua'])) {
     <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../css/stylecliente.css">
     <link rel="icon" href="../img/logo.ico">
+    
 </head>
 
 <body>
