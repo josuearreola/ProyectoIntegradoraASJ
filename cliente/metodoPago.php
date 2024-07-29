@@ -39,7 +39,7 @@ if ($producto != NULL) {
         $lista_carrito[] = $producto_info;
     }
 }
-$_SESSION['carrito_total'] = $total;
+
 $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
 
 ?>
@@ -232,7 +232,36 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
 
 
 
-    <script>
+  <script>
+    // Función para calcular el descuento
+    function calcularDescuento(total) {
+        let descuento = 0;
+        let totalConDescuento = total;
+
+        if (total > 40000) {
+            descuento = 800;
+            totalConDescuento -= descuento;
+        } else if (total > 30000) {
+            descuento = total * 0.15;
+            totalConDescuento -= descuento;
+        } else if (total > 20000) {
+            descuento = 500;
+            totalConDescuento -= descuento;
+        }
+
+        return {
+            totalConDescuento,
+            descuento
+        };
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const idUsua = "<?php echo $idUsua; ?>";
+        const listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
+        let total = listaCarrito.reduce((acc, producto) => acc + (producto.cantidad * producto.prec_tel), 0);
+        const { totalConDescuento } = calcularDescuento(total);
+
+        // Renderizar el botón de PayPal
         paypal.Buttons({
             style: {
                 color: 'blue',
@@ -243,7 +272,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                 return actions.order.create({
                     purchase_units: [{
                         amount: {
-                            value: <?php echo $total; ?>
+                            value: totalConDescuento.toFixed(2) // Usar el total con descuento
                         }
                     }]
                 });
@@ -263,19 +292,20 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                         })
                     });
                 }).then(() => {
-                    localStorage.removeItem('carrito_<?php echo $idUsua?>')
+                    localStorage.removeItem('carrito_<?php echo $idUsua?>');
                     window.location.href = 'checkout.php';
-
                 }).catch(error => {
                     console.error('Error al capturar el pago:', error);
                 });
             },
             onCancel: function(data) {
-                alert("pago cancelado")
+                alert("Pago cancelado");
                 console.log(data);
             }
         }).render('#paypal-button-container');
-    </script>
+    });
+</script>
+
 
 
 
@@ -392,7 +422,16 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                     tbody.appendChild(tr);
                 });
 
-                document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+                const {
+                    totalConDescuento,
+                    descuento
+                } = calcularDescuento(total);
+                const totalElement = document.getElementById("total");
+                totalElement.innerHTML = `
+                ${descuento > 0 ? `<del style="color: #666; font-size: 14px; text-decoration: line-through;">$${total.toFixed(2)}</del> ` : ''}
+                <span style="color: #000; font-size: 18px;">$${totalConDescuento.toFixed(2)}</span>
+                ${descuento > 0 ? `<small style="color: #666;"> (Descuento: $${descuento.toFixed(2)})</small>` : ''}
+                `;
             }
         });
 
@@ -414,6 +453,63 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
 
             let total = listaCarrito.reduce((acc, producto) => acc + (producto.cantidad * producto.prec_tel), 0);
             document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+        }
+
+
+        function calcularDescuento(total) {
+            let descuento = 0;
+            let totalConDescuento = total;
+
+            if (total > 40000) {
+                descuento = 800;
+                totalConDescuento -= descuento;
+            } else if (total > 30000) {
+                descuento = total * 0.15;
+                totalConDescuento -= descuento;
+            } else if (total > 20000) {
+                descuento = 500;
+                totalConDescuento -= descuento;
+            }
+
+            return {
+                totalConDescuento,
+                descuento
+            };
+        }
+
+        // ...
+
+        let total = listaCarrito.reduce((acc, producto) => acc + (producto.cantidad * producto.prec_tel), 0);
+        const {
+            totalConDescuento,
+            descuento
+        } = calcularDescuento(total);
+
+
+
+        enviarTotalConDescuento(totalConDescuento);
+
+        function enviarTotalConDescuento(totalConDescuento) {
+            fetch('actualizar_total.php', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        totalConDescuento
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        console.log('Total con descuento actualizado en el servidor');
+                    } else {
+                        console.error('Error al actualizar el total con descuento en el servidor');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error en la petición AJAX:', error);
+                });
         }
     </script>
 </body>

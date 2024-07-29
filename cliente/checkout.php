@@ -7,47 +7,38 @@ if (empty($_SESSION['idUsua'])) {
 $producto = isset($_SESSION['carrito']['productos']) ? $_SESSION['carrito']['productos'] : NULL;
 $idUsua = $_SESSION['idUsua'];
 $lista_carrito = array();
-$total=0;
+$total = 0;
 
 if (!empty($_SESSION['pago_completado'])) {
-    // Limpiar el carrito de sesión y localStorage
     unset($_SESSION['carrito']);
     unset($_SESSION['carrito_total']);
-    
-    // Limpiar localStorage con JavaScript
     $clearLocalStorageScript = "<script>localStorage.removeItem('carrito_" . $_SESSION['idUsua'] . "');</script>";
-    
-    // Incluir el script para limpiar localStorage
     echo $clearLocalStorageScript;
-    
-    // Limpiar la variable de sesión
     unset($_SESSION['pago_completado']);
-}else{
+} else {
     if ($producto != NULL) {
-            foreach ($producto as $clave => $cantidad) {
-                $sql = $conexion->prepare("SELECT telefono.id_tel,nom_mod,prec_tel,exist_inv,sucursal.id_suc,inventario.id_inv,nom_suc FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod inner join inventario on telefono.id_tel=inventario.id_tel inner join sucursal on sucursal.id_suc =inventario.id_suc where inventario.id_inv=? and inventario.estatus=1 LIMIT 1");
-                $sql->bind_param("i", $clave);
-                $sql->execute();
-                $sql->bind_result($id_tel, $nom_mod, $prec_tel, $exist_inv,$id_suc,$id_inv,$nom_suc);
-                $sql->fetch();
-                $sql->close();
-                $producto_info = [
-                    'id_tel' => $id_tel,
-                    'nom_tel' => $nom_mod,
-                    'prec_tel' => $prec_tel,
-                    'exist_inv' => $exist_inv,
-                    'cantidad' => $cantidad,
-                    'id_suc' =>$id_suc,
-                    'id_inv' =>$id_inv,
-                    'nom_suc' =>$nom_suc
-                ];
-        
-                $lista_carrito[] = $producto_info;
-            }
+        foreach ($producto as $clave => $cantidad) {
+            $sql = $conexion->prepare("SELECT telefono.id_tel,nom_mod,prec_tel,exist_inv,sucursal.id_suc,inventario.id_inv,nom_suc FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod inner join inventario on telefono.id_tel=inventario.id_tel inner join sucursal on sucursal.id_suc =inventario.id_suc where inventario.id_inv=? and inventario.estatus=1 LIMIT 1");
+            $sql->bind_param("i", $clave);
+            $sql->execute();
+            $sql->bind_result($id_tel, $nom_mod, $prec_tel, $exist_inv, $id_suc, $id_inv, $nom_suc);
+            $sql->fetch();
+            $sql->close();
+            $producto_info = [
+                'id_tel' => $id_tel,
+                'nom_tel' => $nom_mod,
+                'prec_tel' => $prec_tel,
+                'exist_inv' => $exist_inv,
+                'cantidad' => $cantidad,
+                'id_suc' => $id_suc,
+                'id_inv' => $id_inv,
+                'nom_suc' => $nom_suc
+            ];
+            $lista_carrito[] = $producto_info;
         }
+    }
 }
 
-$_SESSION['carrito_total'] = $total;
 $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
 
 ?>
@@ -151,8 +142,8 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                             $total = 0;
                             foreach ($lista_carrito as $producto) {
                                 $_id = $producto['id_tel'];
-                                $id_inv=$producto['id_inv'];
-                                $nomSuc=$producto['nom_suc'];
+                                $id_inv = $producto['id_inv'];
+                                $nomSuc = $producto['nom_suc'];
                                 $nombre = $producto['nom_tel'];
                                 $precio = $producto['prec_tel'];
                                 $cantidad = $producto['cantidad'];
@@ -165,6 +156,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                     <tr>
                         <td colspan="4"></td>
                         <td colspan="4">
+
                             <p class="h5" id="total"><?php echo MONEDA . number_format($total, 2, '.', ','); ?></p>
                         </td>
 
@@ -176,7 +168,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
             <div class="row">
                 <div class="col-md-5 offset-md-7 d-grid gap-2">
                     <?php if (!empty($lista_carrito)) { ?>
-                        <a class="btn btn-primary btn-lg" href="datosEnvio.php?id=<?php echo $idUsua?>">Realizar pago</a>
+                        <a class="btn btn-primary btn-lg" href="datosEnvio.php?id=<?php echo $idUsua ?>">Realizar pago</a>
                     <?php } ?>
                 </div>
             </div>
@@ -325,9 +317,8 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
         }
     </script>
     <?php $lista_carrito_json = json_encode($lista_carrito); ?>
-   
-    <script>
 
+    <script>
         const idUsua = "<?php echo $idUsua; ?>";
         const listaCarrito = <?php echo json_encode($lista_carrito); ?>;
         localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
@@ -404,7 +395,17 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                     tbody.appendChild(tr);
                 });
 
-                document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+
+                const {
+                    totalConDescuento,
+                    descuento
+                } = calcularDescuento(total);
+                const totalElement = document.getElementById("total");
+                totalElement.innerHTML = `
+                ${descuento > 0 ? `<del style="color: #666; font-size: 14px; text-decoration: line-through;">$${total.toFixed(2)}</del> ` : ''}
+                <span style="color: #000; font-size: 18px;">$${totalConDescuento.toFixed(2)}</span>
+                ${descuento > 0 ? `<small style="color: #666;"> (Descuento: $${descuento.toFixed(2)})</small>` : ''}
+                `;
             }
         });
 
@@ -426,6 +427,62 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
 
             let total = listaCarrito.reduce((acc, producto) => acc + (producto.cantidad * producto.prec_tel), 0);
             document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+        }
+
+        function calcularDescuento(total) {
+            let descuento = 0;
+            let totalConDescuento = total;
+
+            if (total > 40000) {
+                descuento = 800;
+                totalConDescuento -= descuento;
+            } else if (total > 30000) {
+                descuento = total * 0.15;
+                totalConDescuento -= descuento;
+            } else if (total > 20000) {
+                descuento = 500;
+                totalConDescuento -= descuento;
+            }
+
+            return {
+                totalConDescuento,
+                descuento
+            };
+        }
+
+        // ...
+
+        let total = listaCarrito.reduce((acc, producto) => acc + (producto.cantidad * producto.prec_tel), 0);
+        const {
+            totalConDescuento,
+            descuento
+        } = calcularDescuento(total);
+
+
+
+        enviarTotalConDescuento(totalConDescuento);
+
+        function enviarTotalConDescuento(totalConDescuento) {
+            fetch('actualizar_total.php', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        totalConDescuento
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        console.log('Total con descuento actualizado en el servidor');
+                    } else {
+                        console.error('Error al actualizar el total con descuento en el servidor');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error en la petición AJAX:', error);
+                });
         }
     </script>
 </body>
