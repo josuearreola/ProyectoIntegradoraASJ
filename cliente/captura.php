@@ -25,10 +25,16 @@ if (is_array($datos)) {
 
     if ($insertVenta->execute()) {
         $idVta = $conexion->insert_id;
-
-        // Actualizar en la tabla venta
-        $updateVenta = $conexion->prepare("UPDATE venta SET fec_vta = ?, id_clie = ? WHERE id_vta = ?");
-        $updateVenta->bind_param("ssi", $fecha_create, $idClie, $idVta);
+        $id_prom=0;
+        if($total>20000){
+            $id_prom=700;
+        }elseif($total>30000){
+            $id_prom=701;
+        }elseif($total>40000){
+            $id_prom=702;
+        }
+        $updateVenta = $conexion->prepare("UPDATE venta SET fec_vta = ?, id_clie = ?,id_prom=? WHERE id_vta = ?");
+        $updateVenta->bind_param("ssi", $fecha_create, $idClie, $idVta,$id_prom);
 
         if ($updateVenta->execute()) {
             // Insertar en la tabla pago
