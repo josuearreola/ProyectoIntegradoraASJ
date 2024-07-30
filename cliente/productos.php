@@ -87,6 +87,7 @@ if ($result == 0) {
                         <form class="form-inline ml-3" action="productos.php">
                             <div class="input-group input-group-sm">
                                 <input class="form-control form-control-navbar bg-dark-subtle" type="search" placeholder="Buscar" aria-label="Search" name="busqueda" value="<?php echo $_REQUEST['busqueda'] ?? ''; ?>">
+                                <input type="hidden" name="id" value="<?php echo $idSucur; ?>">
                                 <input type="hidden" name="modulo" value="productos">
                                 <div class="input-group-append">
                                     <button class="btn btn-navbar" type="submit">
@@ -138,7 +139,7 @@ if ($result == 0) {
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $row['nom_mod']; ?></h5>
                                 <p class="card-text">Existencias: <?php echo $row['exist_inv'] ?></p>
-                                <p class="card-text">Cantidad: <input style="width: 60px;" type="number" name="cantidad<?php echo $row['id_inv']; ?>" id="cantidad<?php echo $row['id_inv']; ?>" min="1"  max="<?php echo $row['exist_inv'] ?>" data-max="<?php echo $row['exist_inv'] ?> value=" 1" step="1" onchange="validateCantidad(this)">
+                                <p class="card-text">Cantidad: <input style="width: 60px;" type="number" name="cantidad<?php echo $row['id_inv']; ?>" id="cantidad<?php echo $row['id_inv']; ?>" min="1" max="<?php echo $row['exist_inv'] ?>" data-max="<?php echo $row['exist_inv'] ?> value=" 1" step="1" onchange="validateCantidad(this)">
                                 </p>
                                 <div class="d-flex flex-wrap justify-content-between align-items-center">
                                     <div class="btn-group me-2 mb-2">

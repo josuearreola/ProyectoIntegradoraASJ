@@ -2,10 +2,31 @@
 ob_start();
 include("../denegacion.php");
 include "../conexionBD.php";
-if(empty($_SESSION['idUsua'])){
+
+if (!empty($_POST)) {
+    if(empty($_POST('existencia'))){
+        echo "<script>alert('El campo de existencia no puede estar vacío.'); window.location.href = 'listaSuc.php';</script>";
+    }else{
+        $existencia = $_POST['existencia'];
+        $id_tel = $_POST['telefono'];
+        $sucursal = $_POST['sucursal'];
+    
+        if ($sucursal == 'all') {
+            // Inserta un registro para cada sucursal
+            $queryInsertInv = mysqli_query($conexion, "INSERT INTO inventario (exist_inv, id_suc, id_tel) SELECT '$existencia', sucursal.id_suc, '$id_tel' FROM sucursal WHERE sucursal.estatus = 1");
+        } else {
+            // Inserta un registro para la sucursal seleccionada
+            $queryInsertInv = mysqli_query($conexion, "INSERT INTO inventario (exist_inv, id_suc, id_tel) VALUES ('$existencia', '$sucursal', '$id_tel')");
+        }
+    }
+}
+
+
+if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,7 +40,39 @@ if(empty($_SESSION['idUsua'])){
     <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
     <link rel="icon" href="../img/logo.ico">
     <link rel="stylesheet" href="../css/styleadministrador.css">
+    <style>
+        #agregarProductoModal .modal-content {
+            background-color: #171717;
+        }
 
+        #agregarProductoModal .modal-content label {
+            color: #fff;
+        }
+
+        #agregarProductoModal .modal-content select,
+        #agregarProductoModal .modal-content input {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        #agregarProductoModal .modal-content select option {
+            background-color: #333;
+            color: #fff;
+        }
+
+        #agregarProductoModal .modal-content .btn-primary {
+            background-color: #333;
+            border: none;
+        }
+
+        #agregarProductoModal .modal-content .btn-secondary {
+            background-color: #666;
+            border: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -92,7 +145,7 @@ if(empty($_SESSION['idUsua'])){
     <section id="container">
         <h1 class="text_prin">Lista de sucursales</h1>
         <a href="regSuc.php" class="btn_new">Registrar sucursal</a>
-        
+        <button class="btn_new" data-bs-toggle="modal" data-bs-target="#agregarProductoModal">Agregar producto</button>
 
         <div class="container">
             <div class="table-responsive">
@@ -130,7 +183,7 @@ if(empty($_SESSION['idUsua'])){
                         while ($data = mysqli_fetch_array($query)) {
                     ?>
                             <tbody>
-                                <tr >
+                                <tr>
                                     <td><?php echo $data["id_suc"] ?></td>
                                     <td><?php echo $data["nom_suc"] ?></td>
                                     <td><?php echo $data["col_suc"] ?></td>
@@ -186,6 +239,53 @@ if(empty($_SESSION['idUsua'])){
             </nav>
         <?php } ?>
     </section>
+
+    <div class="modal fade" id="agregarProductoModal" tabindex="-1" aria-labelledby="agregarProductoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="agregarProductoModalLabel" style="color:#ffffff">Agregar Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Contenido del formulario para agregar producto -->
+                    <form method="post" action="listaSuc.php">
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Telefono</label>
+                            <select name="telefono" id="telefono">
+                                <?php
+                                $telefono = mysqli_query($conexion, "SELECT id_tel, nom_mod from modelo inner join telefono on modelo.id_mod=telefono.id_mod where telefono.estatus=1");
+                                while ($tel = mysqli_fetch_array($telefono)) {
+                                    echo "<option value='" . $tel['id_tel'] . "'>" . $tel['nom_mod'] . "</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="sucursal" class="form-label">Sucursal</label>
+                            <select name="sucursal" id="sucursal">
+                                <option value="all">Todas las sucursales</option>
+                                <?php
+                                $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc from sucursal");
+                                while ($suc = mysqli_fetch_array($sucursales)) {
+                                    echo "<option value='" . $suc['id_suc'] . "'>" . $suc['nom_suc'] . "</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="existencia" class="form-label">Existencia</label>
+                            <input type="number" name="existencia" id="existencia" min="1" placeholder="Existencia" value="1" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Producto</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>

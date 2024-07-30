@@ -83,6 +83,7 @@ if (isset($_GET['id'])) {
                         <form class="form-inline ml-3" action="productosPrin.php">
                             <div class="input-group input-group-sm">
                                 <input class="form-control form-control-navbar bg-dark-subtle" type="search" placeholder="Buscar" aria-label="Search" name="busqueda" value="<?php echo $_REQUEST['busqueda'] ?? ''; ?>">
+                                <input type="hidden" name="id" value="<?php echo $idSucur; ?>">
                                 <input type="hidden" name="modulo" value="productos">
                                 <div class="input-group-append">
                                     <button class="btn btn-navbar" type="submit">

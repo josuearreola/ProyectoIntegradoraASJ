@@ -322,8 +322,8 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
         const idUsua = "<?php echo $idUsua; ?>";
         const listaCarrito = <?php echo json_encode($lista_carrito); ?>;
         localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
-
         document.addEventListener("DOMContentLoaded", function() {
+
             const idUsua = "<?php echo $idUsua; ?>";
             const listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
             const tbody = document.querySelector("table tbody");
@@ -426,7 +426,18 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
             localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
 
             let total = listaCarrito.reduce((acc, producto) => acc + (producto.cantidad * producto.prec_tel), 0);
-            document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+
+            const {
+                totalConDescuento,
+                descuento
+            } = calcularDescuento(total);
+
+            const totalElement = document.getElementById("total");
+            totalElement.innerHTML = `
+    ${descuento > 0 ? `<del style="color: #666; font-size: 14px; text-decoration: line-through;">$${total.toFixed(2)}</del> ` : ''}
+    <span style="color: #000; font-size: 18px;">$${totalConDescuento.toFixed(2)}</span>
+    ${descuento > 0 ? `<small style="color: #666;"> (Descuento: $${descuento.toFixed(2)})</small>` : ''}
+    `;
         }
 
         function calcularDescuento(total) {

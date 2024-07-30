@@ -7,7 +7,7 @@ include "../denegacion.php";
 if (!empty($_POST)) {
     $alert = '';
     
-    if (empty($_POST['marca']) || empty($_POST['modelo']) || empty($_POST['precio']) || empty($_POST['costo']) || empty($_POST['color']) || empty($_POST['camara']) || empty($_POST['almacenamiento']) || empty($_POST['ram']) || empty($_POST['pantalla']) || empty($_POST['bateria']) || empty($_POST['procesador']) || empty($_POST['sucursal']) || empty($_POST['existencia'])) {
+    if (empty($_POST['marca']) || empty($_POST['modelo']) || empty($_POST['precio']) || empty($_POST['costo']) || empty($_POST['color']) || empty($_POST['camara']) || empty($_POST['almacenamiento']) || empty($_POST['ram']) || empty($_POST['pantalla']) || empty($_POST['bateria']) || empty($_POST['procesador'])) {
         $alert = '<p class="msj_error">Todos los campos son obligatorios </p>';
     } else {
         $marca = mysqli_real_escape_string($conexion,$_POST['marca']);
@@ -21,8 +21,6 @@ if (!empty($_POST)) {
         $pantalla = mysqli_real_escape_string($conexion, $_POST['pantalla']);
         $bateria = mysqli_real_escape_string($conexion, $_POST['bateria']);
         $procesador = mysqli_real_escape_string($conexion, $_POST['procesador']);
-        $sucursal=mysqli_real_escape_string($conexion,$_POST['sucursal']);
-        $existencia=mysqli_real_escape_string($conexion,$_POST['existencia']);
         $foto = $_FILES['foto']; 
 
         $nombre_foto = $foto['name'];
@@ -76,15 +74,7 @@ if (!empty($_POST)) {
                         if($nombre_foto != ''){
                             move_uploaded_file($url_temp,$src);
                         }
-                        $id_tele = mysqli_insert_id($conexion);
-                        $queryInsertInv="INSERT INTO inventario (exist_inv,id_suc,id_tel) values ('$existencia','$sucursal','$id_tele')";
-                        $resultInsertInv=mysqli_query($conexion,$queryInsertInv);
-                        if (!$resultInsertInv) {
-                            echo "Error al insertar en inventario: ". mysqli_error($conexion);
-                        } else {
-                            $alert = 'Producto registrado correctamente';
-                            
-                        }
+                       
                         $alert = 'Producto registrado correctamente';
                         
                     } else {
@@ -206,21 +196,6 @@ if(empty($_SESSION['idUsua'])){
                     <div class="col-md-6">
                         <label for="costo">Costo del telefono:</label>
                         <input type="text" name="costo" id="costo" placeholder="Costo del telefono" required>
-                    </div>
-                    <div class="col-md-12">
-                        <label for="costo">Sucursal:</label>
-                        <select name="sucursal" id="sucursal">
-                            <?php
-                            $sucursales = mysqli_query($conexion,"SELECT id_suc,nom_suc from sucursal");
-                            while($suc=mysqli_fetch_array($sucursales)){
-                                echo "<option value='" . $suc['id_suc'] . "'>" . $suc['nom_suc'] . "</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="col-md-12">
-                        <label for="existencia"></label>
-                        <input type="number" name="existencia" id="existencia" min="1" placeholder="Existencia" required>
                     </div>
                     <div class="col-md-12">
                         <a href="#" id="mostrarDatosTel" class="toggle-direccion">Datos generales</a>

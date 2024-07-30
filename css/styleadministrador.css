@@ -728,3 +728,34 @@ a{
 
 
 
+ #agregarProductoModal .modal-content {
+            background-color: #171717;
+        }
+
+        #agregarProductoModal .modal-content label {
+            color: #fff;
+        }
+
+        #agregarProductoModal .modal-content select,
+        #agregarProductoModal .modal-content input {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        #agregarProductoModal .modal-content select option {
+            background-color: #333;
+            color: #fff;
+        }
+
+        #agregarProductoModal .modal-content .btn-primary {
+            background-color: #333;
+            border: none;
+        }
+
+        #agregarProductoModal .modal-content .btn-secondary {
+            background-color: #666;
+            border: none;
+        }

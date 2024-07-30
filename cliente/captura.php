@@ -19,71 +19,73 @@ if (is_array($datos)) {
 
     $idClie = $_SESSION['Id_clie'];
 
+    // Asignar id_prom basado en el total
+    $id_prom = NULL;
+    if ($total > 40000) {
+        $id_prom = 702;
+    } elseif ($total > 30000) {
+        $id_prom = 701;
+    } elseif ($total > 20000) {
+        $id_prom = 700;
+    }
+
     // Insertar en la tabla venta
-    $insertVenta = $conexion->prepare("INSERT INTO venta (fec_vta, id_clie) VALUES (?, ?)");
-    $insertVenta->bind_param("si", $fecha_create, $idClie);
+    $insertVenta = $conexion->prepare("INSERT INTO venta (fec_vta, id_clie, id_prom) VALUES (?, ?, ?)");
+    $insertVenta->bind_param("sii", $fecha_create, $idClie, $id_prom);
 
     if ($insertVenta->execute()) {
-        $idVta = $conexion->insert_id;
+        $idVta = $insertVenta->insert_id;
 
-        // Actualizar en la tabla venta
-        $updateVenta = $conexion->prepare("UPDATE venta SET fec_vta = ?, id_clie = ? WHERE id_vta = ?");
-        $updateVenta->bind_param("ssi", $fecha_create, $idClie, $idVta);
+        // Insertar en la tabla pago
+        $insertPago = $conexion->prepare("INSERT INTO pago (fec_pago, id_vta) VALUES (?, ?)");
+        $insertPago->bind_param("si", $fecha_nueva, $idVta);
 
-        if ($updateVenta->execute()) {
-            // Insertar en la tabla pago
-            $insertPago = $conexion->prepare("INSERT INTO pago (fec_pago, id_vta) VALUES (?, ?)");
-            $insertPago->bind_param("si", $fecha_nueva, $idVta);
+        if ($insertPago->execute()) {
+            $idPago = $conexion->insert_id;
 
-            if ($insertPago->execute()) {
-                $idPago = $conexion->insert_id;
+            if ($idPago) {
+                $tipPago = "Tarjeta";
+                $costoEnv = "120.00";
+                $result = mysqli_query($conexion, "SELECT MAX(id_env) AS max_id FROM envio");
+                $row = mysqli_fetch_assoc($result);
+                $idEnvio = $row['max_id'];
 
-                if ($idPago) {
-                    $tipPago = "Tarjeta";
-                    $costoEnv = "120.00";
-                    $result = mysqli_query($conexion, "SELECT MAX(id_env) AS max_id FROM envio");
-                    $row = mysqli_fetch_assoc($result);
-                    $idEnvio = $row['max_id'];
+                $updatePago = $conexion->prepare("UPDATE pago SET fec_pago = ?, cant_pago = ?, tip_pago = ?, id_vta = ?, costo_env = ?, id_env = ? WHERE id_pago = ?");
+                $updatePago->bind_param("ssssssi", $fecha_nueva, $total, $tipPago, $idVta, $costoEnv, $idEnvio, $idPago);
 
-                    $updatePago = $conexion->prepare("UPDATE pago SET fec_pago = ?, cant_pago = ?, tip_pago = ?, id_vta = ?, costo_env = ?, id_env = ? WHERE id_pago = ?");
-                    $updatePago->bind_param("ssssssi", $fecha_nueva, $total, $tipPago, $idVta, $costoEnv, $idEnvio, $idPago);
+                if ($updatePago->execute()) {
+                    $EstatusEnv = "Pagado";
+                    $updateEnv = $conexion->prepare("UPDATE envio SET estatus_env = ? WHERE id_env = ?");
+                    $updateEnv->bind_param("si", $EstatusEnv, $idEnvio);
+                    $updateEnv->execute();
+                    $carrito = $_SESSION['carrito']['productos'];
+                    
+                    // Insertar cada producto en la tabla venta_inv
+                    foreach ($carrito as $clave => $cantidad) {
+                        $sql = $conexion->prepare("SELECT id_inv FROM inventario WHERE id_inv = ?");
+                        $sql->bind_param("i", $clave);
+                        $sql->execute();
+                        $sql->bind_result($id_inv);
+                        $sql->fetch();
+                        $sql->close();
 
-                    if ($updatePago->execute()) {
-                        $EstatusEnv = "Pagado";
-                        $updateEnv = $conexion->prepare("UPDATE envio SET estatus_env = ? WHERE id_env = ?");
-                        $updateEnv->bind_param("si", $EstatusEnv, $idEnvio);
-                        $updateEnv->execute();
-                        $carrito = $_SESSION['carrito']['productos'];
-                        
-                        // Insertar cada producto en la tabla venta_inv
-                        foreach ($carrito as $clave => $cantidad) {
-                            $sql = $conexion->prepare("SELECT id_inv FROM inventario WHERE id_inv = ?");
-                            $sql->bind_param("i", $clave);
-                            $sql->execute();
-                            $sql->bind_result($id_inv);
-                            $sql->fetch();
-                            $sql->close();
+                        $insertVentaInv = $conexion->prepare("INSERT INTO venta_inv (id_inv, id_vta, cant_inv) VALUES (?, ?, ?)");
+                        $insertVentaInv->bind_param("iii", $id_inv, $idVta, $cantidad);
 
-                            $insertVentaInv = $conexion->prepare("INSERT INTO venta_inv (id_inv, id_vta, cant_inv) VALUES (?, ?, ?)");
-                            $insertVentaInv->bind_param("iii", $id_inv, $idVta, $cantidad);
-
-                            if (!$insertVentaInv->execute()) {
-                                echo "Error al insertar en la tabla venta_inv: " . $insertVentaInv->error;
-                                break;
-                            }else{
-                                header('Location:checkout.php');
-                            }
+                        if (!$insertVentaInv->execute()) {
+                            echo "Error al insertar en la tabla venta_inv: " . $insertVentaInv->error;
+                            break;
+                        } else {
+                            header('Location:checkout.php');
                         }
-
-                    } else {
-                        echo "Error al actualizar el pago: " . $updatePago->error;
                     }
+
+                } else {
+                    echo "Error al actualizar el pago: " . $updatePago->error;
                 }
-            } else {
-                echo "Error al insertar en la tabla pago: " . $insertPago->error;
             }
         } else {
-            echo "Error al actualizar la venta: " . $updateVenta->error;
+            echo "Error al insertar en la tabla pago: " . $insertPago->error;
         }
     } else {
         echo "Error al insertar en la tabla venta: " . $insertVenta->error;
