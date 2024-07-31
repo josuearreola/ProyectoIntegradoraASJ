@@ -18,8 +18,8 @@ if (!empty($_POST)) {
         $result = mysqli_query($conexion, "SELECT MAX(id_env) AS max_id FROM envio");
         $row = mysqli_fetch_assoc($result);
         $idEnvio = $row['max_id'] + 1;
-
-        $sqlEnv = mysqli_query($conexion, "INSERT INTO envio(id_env,n1_env,ap_env,am_env,call_env,col_env,numi_env,nume_env,cp_env) VALUES($idEnvio,'$nombreRec','$apellidopRec','$apellidomRec','$calleRec','$coloniaRec',$numiRec,$numeRec,$cpRec)");
+        $costoEnv = "120.00";
+        $sqlEnv = mysqli_query($conexion, "INSERT INTO envio(id_env,n1_env,ap_env,am_env,call_env,col_env,numi_env,nume_env,cp_env,costo_env) VALUES($idEnvio,'$nombreRec','$apellidopRec','$apellidomRec','$calleRec','$coloniaRec',$numiRec,$numeRec,$cpRec,$costoEnv)");
         if ($sqlEnv === true) {
             header('Location: metodoPago.php?id= echo $idUsua');
             exit;
@@ -84,9 +84,15 @@ if ($result == 0) {
             <a href="checkout.php" style="color:black; margin-top:5px; margin-left:-2px">
                 <i class="fa-solid fa-cart-plus fa-2x"></i>
             </a>
-            <a href="datosUser.php?idUsua=<?php echo $_SESSION['Id_usua']; ?>" style="color:black; margin-top:5px; margin-left:5px;">
-                <i class="fa-solid fa-user fa-2x"></i>
-            </a>
+            <div class="div-sesion">
+                <i class="fa-solid fa-user fa-2x" style="color:black"></i>
+                <div class="menu-Sesion">
+                    <ul class="ul-sesion">
+                        <li class="li-sesion"><a href="datosUser.php?idUsua=<?php echo $_SESSION['Id_usua']; ?>">Mi perfil</a></li>
+                        <li class="li-sesion"><a href="misCompras.php?idUsua=<?php echo $_SESSION['Id_clie']; ?>">Mis compras</a></li>
+                    </ul>
+                </div>
+            </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>

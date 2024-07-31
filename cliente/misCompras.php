@@ -1,26 +1,26 @@
 <?php
-include("../conexionBD.php");
+include "../conexionBD.php";
 require "config.php";
+$idUsua = $_SESSION['idUsua'];
 if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
-$sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
-$idSucur = $_GET['id'];
-$sucursal = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal where id_suc=$idSucur");
-$result = mysqli_num_rows($sucursal);
-if ($result == 0) {
+$idClie = $_SESSION['Id_clie'];
+$idCl = $_GET['idUsua'];
+$cliente = mysqli_query($conexion, "SELECT id_clie from cliente where id_clie=$idCl");
+$result = mysqli_num_rows($cliente);
+if ($result == 0 || $idCl== null) {
     header('location:cliente.php');
-} else {
-    while ($data = mysqli_fetch_array($sucursal)) {
-        $id_suc = $data['id_suc'];
-        $nom_suc = $data['nom_suc'];
-    }
 }
-$idUsua = $_SESSION['idUsua'];
+
+
+$sqlQuery = $conexion->prepare("SELECT venta.id_vta,fec_vta,tip_pago,cant_pago from venta inner join pago on venta.id_vta=pago.id_vta where id_clie =? ORDER by date(fec_vta) desc;");
+$sqlQuery->bind_param("i", $idClie);
+$sqlQuery->execute();
+$result = $sqlQuery->get_result();
+
+
 ?>
-
-
-
 
 
 <!DOCTYPE html>
@@ -35,6 +35,7 @@ $idUsua = $_SESSION['idUsua'];
     <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../css/stylecliente.css">
     <link rel="icon" href="../img/logo.ico">
+
 </head>
 
 <body>
@@ -44,7 +45,7 @@ $idUsua = $_SESSION['idUsua'];
                 <img src="../img/logo.jpg" class="logo">
                 <img class="imgses" src="../img/cerrarses.jpg" alt="Cerrar sesion" title="salir">
             </a>
-            <a href="checkout.php" style="color:black; margin-top:5px; margin-left:10px">
+            <a href="checkout.php" style="color:black; margin-top:5px; margin-left:-2px">
                 <i class="fa-solid fa-cart-plus fa-2x"></i>
             </a>
             <div class="div-sesion">
@@ -56,6 +57,7 @@ $idUsua = $_SESSION['idUsua'];
                     </ul>
                 </div>
             </div>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -67,7 +69,7 @@ $idUsua = $_SESSION['idUsua'];
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <li class="nav-item">
-                            <a class="nav-link active lh-lg" aria-current="page" href="cliente.php">Inicio</a>
+                            <a class="nav-link active lh-lg" aria-current="page" href="checkout.php">Inicio</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle active lh-lg" id="menusucursales" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales</a>
@@ -93,7 +95,6 @@ $idUsua = $_SESSION['idUsua'];
                         <form class="form-inline ml-3" action="productos.php">
                             <div class="input-group input-group-sm">
                                 <input class="form-control form-control-navbar bg-dark-subtle" type="search" placeholder="Buscar" aria-label="Search" name="busqueda" value="<?php echo $_REQUEST['busqueda'] ?? ''; ?>">
-                                <input type="hidden" name="id" value="<?php echo $idSucur; ?>">
                                 <input type="hidden" name="modulo" value="productos">
                                 <div class="input-group-append">
                                     <button class="btn btn-navbar" type="submit">
@@ -106,94 +107,39 @@ $idUsua = $_SESSION['idUsua'];
             </div>
         </div>
     </nav>
-   
 
-    <p class="text-center fs-1" style="color:#fff;">NUESTROS PRODUCTOS</p>
-    <p class="text-center fs-3" style="color:#fff; font-size: 12px;"><?php echo $nom_suc; ?></p> 
     <main>
         <div class="container">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4  row-cols-lg-4 g-5">
-                <?php
-                include("../conexionBD.php");
-                $where = " where 1=1 and telefono.estatus=1 and sucursal.id_suc= $id_suc and exist_inv>0";
-                $busqueda = mysqli_real_escape_string($conexion, $_REQUEST['busqueda'] ?? '');
-                if (empty($busqueda) == false) {
-                    $where .= " AND (nom_mod LIKE '%$busqueda%' OR prec_tel LIKE '%$busqueda%' OR col_tel LIKE '%$busqueda%' OR cam_tel LIKE '%$busqueda%' OR alm_tel LIKE '%$busqueda%' OR pan_tel LIKE '%$busqueda%')";
-                }
-                $queryCuenta = "SELECT count(*) as cuenta FROM modelo INNER JOIN telefono inner join inventario on telefono.id_tel=inventario.id_tel inner join sucursal on sucursal.id_suc=inventario.id_suc ON modelo.id_mod = telefono.id_mod $where ;";
-                $rescuenta = mysqli_query($conexion, $queryCuenta);
-                $rowcuenta = mysqli_fetch_assoc($rescuenta);
-                $total_registro = $rowcuenta['cuenta'];
+            <h4 style="color:#ffffff">Mis compras "<?php echo $idUsua?>"</h4>
+            <hr style="color:#ffffff">
 
-                $elementosPorPag = 8;
-                $totalPaginas = ceil($total_registro / $elementosPorPag);
-                $paginaSel = $_REQUEST['pagina'] ?? false;
-                if ($paginaSel == false) {
-                    $inicioLimite = 0;
-                    $paginaSel = 1;
-                } else {
-                    $inicioLimite = ($paginaSel - 1) * $elementosPorPag;
-                }
-                $limite = " limit $inicioLimite,$elementosPorPag";
-
-                $query = "SELECT inventario.id_inv,nom_mod, prec_tel, img_tel, col_tel, cam_tel, alm_tel, pan_tel,telefono.id_tel,sucursal.id_suc,exist_inv,nom_suc FROM modelo INNER JOIN telefono ON modelo.id_mod = telefono.id_mod inner join inventario on telefono.id_tel =inventario.id_tel inner join sucursal on sucursal.id_suc=inventario.id_suc $where $limite";
-
-                $res = mysqli_query($conexion, $query);
-                while ($row = mysqli_fetch_array($res)) {
-                ?>
-                    <div class="col">
-                    
-                        <div class="card shadow-sm">
-                            <img src="<?php echo '../img/' . $row['img_tel']; ?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo $row['nom_mod']; ?></h5>
-                                <p class="card-text">Existencias: <?php echo $row['exist_inv'] ?></p>
-                                <p class="card-text">Cantidad: <input style="width: 60px;" type="number" name="cantidad<?php echo $row['id_inv']; ?>" id="cantidad<?php echo $row['id_inv']; ?>" min="1" max="<?php echo $row['exist_inv'] ?>" data-max="<?php echo $row['exist_inv'] ?> value=" 1" step="1" onchange="validateCantidad(this)">
-                                </p>
-                                <div class="d-flex flex-wrap justify-content-between align-items-center">
-                                    <div class="btn-group me-2 mb-2">
-                                        <button class="btn btn-outline-success" type="button" onclick="addProducto(<?php echo $row['id_inv']; ?>, '<?php echo hash_hmac('sha1', $row['id_inv'], KEY_TOKEN); ?>')">Agregar</button>
-                                    </div>
-                                    <div class="btn-group mb-2">
-                                        <a href="detallesP.php?id=<?php echo $row['id_tel']; ?>&token=<?php echo hash_hmac('sha1', $row['id_tel'], KEY_TOKEN); ?>" class="btn btn-primary">Detalles</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <?php
+            while ($row = $result->fetch_assoc()) { ?>
+                <div class="card mb-3 bg-light border-secondary">
+                    <div class="card-header">
+                        <?php echo $row['fec_vta']	?>
                     </div>
-                <?php } ?>
-            </div>
-            <?php if ($totalPaginas > 0) { ?>
-                <nav aria-label="Page navigation">
-                    <ul class="pagination">
-                        <?php if ($paginaSel != 1) { ?>
-                            <li class="page-item">
-                                <a class="page-link" href="productos.php?id=<?php echo $idSucur ?>&pagina=<?php echo ($paginaSel - 1); ?>" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                            </li>
-                        <?php } ?>
-
-                        <?php for ($i = 1; $i <= $totalPaginas; $i++) { ?>
-                            <li class="page-item <?php echo ($paginaSel == $i) ? " active " : " "; ?>">
-                                <a class="page-link" href="productos.php?id=<?php echo $idSucur ?>&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
-                            </li>
-                        <?php } ?>
-
-                        <?php if ($paginaSel != $totalPaginas) { ?>
-                            <li class="page-item">
-                                <a class="page-link" href="productos.php?id=<?php echo $idSucur ?>&pagina=<?php echo ($paginaSel + 1); ?>" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </li>
-                        <?php } ?>
-                    </ul>
-                </nav>
+                    <div class="card-body">
+                        <h5 class="card-title">Folio: <?php echo $row['id_vta']?></h5>
+                        <p class="card-text">Total: <?php echo $row['cant_pago']?> </p>
+                        <a href="detalle_compra.php?orden=<?php echo $row['id_vta'];?>" class="btn btn-primary">Ver compra</a>
+                    </div>
+                </div>
+                
             <?php } ?>
         </div>
+        
     </main>
+
+
+
+
+
+
+
+
+
+
 
 
     <footer class="footerpagprinc">
@@ -246,52 +192,6 @@ $idUsua = $_SESSION['idUsua'];
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let cantidadInputs = document.querySelectorAll('input[type="number"][name^="cantidad"]');
-            cantidadInputs.forEach(input => {
-                if (!input.value || input.value < 1) {
-                    input.value = 1;
-                }
-            });
-
-        });
-
-        function addProducto(id, token) {
-            let url = 'carrito.php';
-            let formData = new FormData();
-            let cantidad = document.getElementById('cantidad' + id).value;
-            formData.append('id', id);
-            formData.append('token', token);
-            formData.append('cantidad', cantidad);
-
-            fetch(url, {
-                    method: 'POST',
-                    body: formData,
-                    mode: 'cors'
-                }).then(response => response.json())
-                .then(data => {
-                    if (data.ok) {
-                        let elemento = document.getElementById("num_cart")
-                        elemento.innerHTML = data.numero
-                    }
-                })
-        }
-
-        function validateCantidad(input) {
-            let cantidad = Math.round(parseFloat(input.value));
-            let max = parseInt(input.getAttribute('data-max'));
-
-            if (isNaN(cantidad) || cantidad < 1) {
-                input.value = 1;
-            } else if (cantidad > max) {
-                input.value = max;
-            } else {
-                input.value = cantidad;
-            }
-        }
-    </script>
 </body>
 
 </html>

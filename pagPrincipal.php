@@ -19,7 +19,7 @@
                 <a href="#" class="enlace">
                     <img src="img/logo.jpg" alt="" class="logo">
                 </a>
-                <div class="div-sesion ">
+                <div class="div-sesion">
                     <i class="fa-regular fa-user"></i>
                     <div class="menu-Sesion">
                         <ul class="ul-sesion">
@@ -97,7 +97,8 @@
                 <img src="img/carrusel4.jpg" class="d-block w-100 img-fluid" alt="...">
                 <div class="carousel-caption" style="position:absolute; top: -40%; transform: translateY(50%); right: -40%; color:black;">
                     <h5>¡La mejor calidad!</h5>
-                    <a href="productosPrin.php"><button class="btn bg-blag">Más información</button></a>
+                    <a href="#nuestrosprod"><button class="btn bg-blag">Más información</button></a>
+                    
                 </div>
             </div>
         </div>

@@ -119,52 +119,45 @@ require "configPPrin.php";
                 ?>
                     <div class="col">
                         <div class="card shadow-sm">
-                            <img src="<?php echo 'img/'.$row['img_tel']; ?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
+                            <img src="<?php echo 'img/' . $row['img_tel']; ?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
                             <div class="card-body">
-                                <h5 class="card-title"><?php echo $row['nom_mod']; ?></h5>
-                                <p class="card-text"></p>
-                                <div class="d-flex flex-wrap justify-content-between align-items-center">
-                                    <div class="btn-group me-2 mb-2">
-                                        <a href="" class="btn btn-success">Comprar</a>
-                                    </div>
-                                    <div class="btn-group mb-2">
-                                        <a href="detallesPPrin.php?id=<?php echo $row['id_tel']; ?>&token=<?php echo hash_hmac('sha1', $row['id_tel'], KEY_TOKEN); ?>" class="btn btn-primary">Detalles</a>
-                                    </div>
-                                </div>
+                                <h4 class="card-title"><?php echo $row['nom_mod']; ?></h4>
+                                <h6 class="card-title"><?php echo $row['prec_tel']; ?></h6>
                             </div>
                         </div>
                     </div>
-                <?php } ?>
             </div>
-            <?php if ($totalPaginas > 0) { ?>
-                <nav aria-label="Page navigation">
-                    <ul class="pagination">
-                        <?php if ($paginaSel != 1) { ?>
-                            <li class="page-item">
-                                <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo ($paginaSel - 1); ?>" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                            </li>
-                        <?php } ?>
+        <?php } ?>
+        </div>
+        <?php if ($totalPaginas > 0) { ?>
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <?php if ($paginaSel != 1) { ?>
+                        <li class="page-item">
+                            <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo ($paginaSel - 1); ?>" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                    <?php } ?>
 
-                        <?php for ($i = 1; $i <= $totalPaginas; $i++) { ?>
-                            <li class="page-item <?php echo ($paginaSel == $i) ? " active " : " "; ?>">
-                                <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
-                            </li>
-                        <?php } ?>
+                    <?php for ($i = 1; $i <= $totalPaginas; $i++) { ?>
+                        <li class="page-item <?php echo ($paginaSel == $i) ? " active " : " "; ?>">
+                            <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+                        </li>
+                    <?php } ?>
 
-                        <?php if ($paginaSel != $totalPaginas) { ?>
-                            <li class="page-item">
-                                <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo ($paginaSel + 1); ?>" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </li>
-                        <?php } ?>
-                    </ul>
-                </nav>
-            <?php } ?>
+                    <?php if ($paginaSel != $totalPaginas) { ?>
+                        <li class="page-item">
+                            <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo ($paginaSel + 1); ?>" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    <?php } ?>
+                </ul>
+            </nav>
+        <?php } ?>
         </div>
     </main>
     <footer class="footerpagprinc">

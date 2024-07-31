@@ -3,12 +3,6 @@ include "../conexionBD.php";
 require "config.php";
 
 $_SESSION['pago_completado'] = true;
-
-
-
-
-
-
 $idUsua = $_SESSION['idUsua'];
 if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
@@ -71,9 +65,15 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
             <a href="checkout.php" style="color:black; margin-top:5px; margin-left:-2px">
                 <i class="fa-solid fa-cart-plus fa-2x"></i>
             </a>
-            <a href="datosUser.php?idUsua=<?php echo $_SESSION['Id_usua']; ?>" style="color:black; margin-top:5px; margin-left:5px;">
-                <i class="fa-solid fa-user fa-2x"></i>
-            </a>
+            <div class="div-sesion">
+                <i class="fa-solid fa-user fa-2x" style="color:black"></i>
+                <div class="menu-Sesion">
+                    <ul class="ul-sesion">
+                        <li class="li-sesion"><a href="datosUser.php?idUsua=<?php echo $_SESSION['Id_usua']; ?>">Mi perfil</a></li>
+                        <li class="li-sesion"><a href="misCompras.php?idUsua=<?php echo $_SESSION['Id_clie']; ?>">Mis compras</a></li>
+                    </ul>
+                </div>
+            </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -301,7 +301,10 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
             onCancel: function(data) {
                 alert("Pago cancelado");
                 console.log(data);
-            }
+            },
+            fundingSource: paypal.FUNDING.PAYPAL,
+            disableFunding: [paypal.FUNDING.CARD]
+
         }).render('#paypal-button-container');
     });
 </script>
@@ -386,8 +389,8 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
     <?php $lista_carrito_json = json_encode($lista_carrito); ?>
 
     <script>
-        const idUsua = "<?php echo $idUsua; ?>";
-        const listaCarrito = <?php echo json_encode($lista_carrito); ?>;
+       const idUsua = "<?php echo $idUsua; ?>";
+       const listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
         localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
 
         document.addEventListener("DOMContentLoaded", function() {

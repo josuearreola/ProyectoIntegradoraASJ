@@ -21,7 +21,7 @@ if (empty($_SESSION['idUsua'])) {
     <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../css/stylecliente.css">
     <link rel="icon" href="../img/logo.ico">
-    
+
 </head>
 
 <body>
@@ -34,9 +34,16 @@ if (empty($_SESSION['idUsua'])) {
             <a href="checkout.php" style="color:black; margin-top:5px; margin-left:-2px">
                 <i class="fa-solid fa-cart-plus fa-2x"></i>
             </a>
-            <a href="datosUser.php?idUsua=<?php echo $_SESSION['Id_usua']; ?>" style="color:black; margin-top:5px; margin-left:5px;">
-                <i class="fa-solid fa-user fa-2x"></i>
-            </a>
+            <div class="div-sesion">
+                <i class="fa-solid fa-user fa-2x" style="color:black"></i>
+                <div class="menu-Sesion">
+                    <ul class="ul-sesion">
+                        <li class="li-sesion"><a href="datosUser.php?idUsua=<?php echo $_SESSION['Id_usua']; ?>">Mi perfil</a></li>
+                        <li class="li-sesion"><a href="misCompras.php?idUsua=<?php echo $_SESSION['Id_clie']; ?>">Mis compras</a></li>
+                    </ul>
+                </div>
+            </div>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -48,7 +55,7 @@ if (empty($_SESSION['idUsua'])) {
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <li class="nav-item">
-                            <a class="nav-link active lh-lg" aria-current="page" href="checkout.php">Inicio</a>
+                            <a class="nav-link active lh-lg" aria-current="page" href="cliente.php">Inicio</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle active lh-lg" id="menusucursales" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales</a>
@@ -107,7 +114,7 @@ if (empty($_SESSION['idUsua'])) {
                 <img src="../img/carrusel4.jpg" class="d-block w-100 img-fluid" alt="...">
                 <div class="carousel-caption" style="position:absolute; top: -40%; transform: translateY(50%); right: -40%; color:black;">
                     <h5>¡La mejor calidad!</h5>
-                    <a href="productos.php"><button class="btn bg-blag">Más información</button></a>
+                    <a href="#nuestrosprod "><button class="btn bg-blag">Más información</button></a>
                 </div>
             </div>
         </div>

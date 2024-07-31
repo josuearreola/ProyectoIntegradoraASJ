@@ -34,9 +34,15 @@ if(empty($_SESSION['idUsua'])){
             <a href="checkout.php" style="color:black; margin-top:5px; margin-left:10px">
                 <i class="fa-solid fa-cart-plus fa-2x"></i>
             </a>
-            <a href="datosUser.php?idUsua=<?php echo $_SESSION['Id_usua']; ?>" style="color:black; margin-top:5px; margin-left:5px;">
-                <i class="fa-solid fa-user fa-2x"></i>
-            </a>
+            <div class="div-sesion">
+                <i class="fa-solid fa-user fa-2x" style="color:black"></i>
+                <div class="menu-Sesion">
+                    <ul class="ul-sesion">
+                        <li class="li-sesion"><a href="datosUser.php?idUsua=<?php echo $_SESSION['Id_usua']; ?>">Mi perfil</a></li>
+                        <li class="li-sesion"><a href="misCompras.php?idUsua=<?php echo $_SESSION['Id_clie']; ?>">Mis compras</a></li>
+                    </ul>
+                </div>
+            </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -123,16 +129,8 @@ if(empty($_SESSION['idUsua'])){
                         <div class="card shadow-sm">
                             <img src="<?php echo '../img/' . $row['img_tel']; ?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
                             <div class="card-body">
-                                <h5 class="card-title"><?php echo $row['nom_mod']; ?></h5>
-                                <p class="card-text">Cantidad: <input style=" width:60px" type="number" name="cantidad<?php echo $row['id_tel']; ?>" id="cantidad<?php echo $row['id_tel']; ?>" min="1" max="35" value="1"></p>
-                                <div class="d-flex flex-wrap justify-content-between align-items-center">
-                                    <div class="btn-group me-2 mb-2">
-                                        <button class="btn btn-outline-success" type="button" onclick="addProducto(<?php echo $row['id_tel']; ?>, '<?php echo hash_hmac('sha1', $row['id_tel'], KEY_TOKEN); ?>')">Agregar</button>
-                                    </div>
-                                    <div class="btn-group mb-2">
-                                        <a href="detallesP.php?id=<?php echo $row['id_tel']; ?>&token=<?php echo hash_hmac('sha1', $row['id_tel'], KEY_TOKEN); ?>" class="btn btn-primary">Detalles</a>
-                                    </div>
-                                </div>
+                                <h4 class="card-title"><?php echo $row['nom_mod']; ?></h4>
+                                <h6 class="card-title"><?php echo $row['prec_tel']; ?></h6>
                             </div>
                         </div>
                     </div>

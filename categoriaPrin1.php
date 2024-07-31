@@ -119,18 +119,10 @@ require "configPPrin.php";
                 ?>
                     <div class="col">
                         <div class="card shadow-sm">
-                            <img src="<?php echo 'img/'.$row['img_tel']; ?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
+                            <img src="<?php echo 'img/' . $row['img_tel']; ?>" alt="ProEstre-1" class="card-img-top img-thumbnail">
                             <div class="card-body">
-                                <h5 class="card-title"><?php echo $row['nom_mod']; ?></h5>
-                                <p class="card-text"></p>
-                                <div class="d-flex flex-wrap justify-content-between align-items-center">
-                                    <div class="btn-group me-2 mb-2">
-                                        <a href="" class="btn btn-success">Comprar</a>
-                                    </div>
-                                    <div class="btn-group mb-2">
-                                        <a href="detallesPPrin.php?id=<?php echo $row['id_tel']; ?>&token=<?php echo hash_hmac('sha1', $row['id_tel'], KEY_TOKEN); ?>" class="btn btn-primary">Detalles</a>
-                                    </div>
-                                </div>
+                                <h4 class="card-title"><?php echo $row['nom_mod']; ?></h4>
+                                <h6 class="card-title"><?php echo $row['prec_tel']; ?></h6>
                             </div>
                         </div>
                     </div>

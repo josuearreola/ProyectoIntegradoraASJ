@@ -4,6 +4,7 @@ require "config.php";
 if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
+
 $producto = isset($_SESSION['carrito']['productos']) ? $_SESSION['carrito']['productos'] : NULL;
 $idUsua = $_SESSION['idUsua'];
 $lista_carrito = array();
@@ -67,9 +68,15 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
             <a href="checkout.php" style="color:black; margin-top:5px; margin-left:10px">
                 <i class="fa-solid fa-cart-plus fa-2x"></i>
             </a>
-            <a href="datosUser.php?idUsua=<?php echo $_SESSION['Id_usua']; ?>" style="color:black; margin-top:5px; margin-left:5px;">
-                <i class="fa-solid fa-user fa-2x"></i>
-            </a>
+            <div class="div-sesion">
+                <i class="fa-solid fa-user fa-2x" style="color:black"></i>
+                <div class="menu-Sesion">
+                    <ul class="ul-sesion">
+                        <li class="li-sesion"><a href="datosUser.php?idUsua=<?php echo $_SESSION['Id_usua']; ?>">Mi perfil</a></li>
+                        <li class="li-sesion"><a href="misCompras.php?idUsua=<?php echo $_SESSION['Id_clie']; ?>">Mis compras</a></li>
+                    </ul>
+                </div>
+            </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -424,7 +431,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
             });
 
             localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
-
+            actualizarSesion(id, cantidad);
             let total = listaCarrito.reduce((acc, producto) => acc + (producto.cantidad * producto.prec_tel), 0);
 
             const {
@@ -434,10 +441,11 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
 
             const totalElement = document.getElementById("total");
             totalElement.innerHTML = `
-    ${descuento > 0 ? `<del style="color: #666; font-size: 14px; text-decoration: line-through;">$${total.toFixed(2)}</del> ` : ''}
-    <span style="color: #000; font-size: 18px;">$${totalConDescuento.toFixed(2)}</span>
-    ${descuento > 0 ? `<small style="color: #666;"> (Descuento: $${descuento.toFixed(2)})</small>` : ''}
-    `;
+            ${descuento > 0 ? `<del style="color: #666; font-size: 14px; text-decoration: line-through;">$${total.toFixed(2)}</del> ` : ''}
+            <span style="color: #000; font-size: 18px;">$${totalConDescuento.toFixed(2)}</span>
+            ${descuento > 0 ? `<small style="color: #666;"> (Descuento: $${descuento.toFixed(2)})</small>` : ''}
+            `;
+            
         }
 
         function calcularDescuento(total) {
@@ -494,6 +502,30 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                 .catch(error => {
                     console.error('Error en la petición AJAX:', error);
                 });
+        }
+
+
+        function actualizarSesion(productoId, cantidad) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'actualizar_sesion.php');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // Procesar la respuesta del servidor
+                    let response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        // La sesión se actualizó correctamente
+                        console.log('ok');
+                    } else {
+                        // Ocurrió un error al actualizar la sesión
+                        console.error('Error al actualizar la sesión: ' + response.message);
+                    }
+                } else {
+                    // Ocurrió un error en la solicitud AJAX
+                    console.error('Error en la solicitud AJAX: ' + xhr.statusText);
+                }
+            };
+            xhr.send('productoId=' + productoId + '&cantidad=' + cantidad);
         }
     </script>
 </body>

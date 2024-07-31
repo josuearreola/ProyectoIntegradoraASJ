@@ -102,6 +102,7 @@ if (isset($_GET['id'])) {
 
 
     <p class="text-center fs-1" style="color:#fff;">NUESTROS PRODUCTOS</p>
+    <p class="text-center fs-3" style="color:#fff; font-size: 12px;"><?php echo $nom_suc; ?></p> 
     <main>
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4  row-cols-lg-4 g-5">
@@ -116,7 +117,7 @@ if (isset($_GET['id'])) {
                 $rowcuenta = mysqli_fetch_assoc($rescuenta);
                 $total_registro = $rowcuenta['cuenta'];
 
-                $elementosPorPag = 10;
+                $elementosPorPag = 8;
                 $totalPaginas = ceil($total_registro / $elementosPorPag);
                 $paginaSel = $_REQUEST['pagina'] ?? false;
                 if ($paginaSel == false) {
@@ -158,7 +159,7 @@ if (isset($_GET['id'])) {
                     <ul class="pagination">
                         <?php if ($paginaSel != 1) { ?>
                             <li class="page-item">
-                                <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo ($paginaSel - 1); ?>" aria-label="Previous">
+                                <a class="page-link" href="productosPrin.php?id=<?php echo $idSucur ?>&pagina=<?php echo ($paginaSel - 1); ?>" aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                 </a>
@@ -167,13 +168,13 @@ if (isset($_GET['id'])) {
 
                         <?php for ($i = 1; $i <= $totalPaginas; $i++) { ?>
                             <li class="page-item <?php echo ($paginaSel == $i) ? " active " : " "; ?>">
-                                <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                <a class="page-link" href="productosPrin.php?id=<?php echo $idSucur ?>&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
                             </li>
                         <?php } ?>
 
                         <?php if ($paginaSel != $totalPaginas) { ?>
                             <li class="page-item">
-                                <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo ($paginaSel + 1); ?>" aria-label="Next">
+                                <a class="page-link" href="productosPrin.php?id=<?php echo $idSucur ?>&pagina=<?php echo ($paginaSel + 1); ?>" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>
                                 </a>
