@@ -2,7 +2,7 @@
 ob_start();
 include("../denegacion.php");
 include "../conexionBD.php";
-if(empty($_SESSION['idUsua'])){
+if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
 ?>
@@ -49,15 +49,12 @@ if(empty($_SESSION['idUsua'])){
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevo usuario</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de usuarios</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaUsuElimin.php">Usuarios eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Facturas</a>
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Facturas eliminadas</a></li>
+                                        <li><a class="dropdown-item border-0" href="listaFacturas.php">Lista de facturas</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -65,7 +62,6 @@ if(empty($_SESSION['idUsua'])){
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regProd.php">Nuevos productos</a></li>
                                         <li><a class="dropdown-item border-0" href="listaProd.php">Lista de productos</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaProdElimin.php">Productos eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -73,7 +69,6 @@ if(empty($_SESSION['idUsua'])){
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regSuc.php">Nueva sucursal</a></li>
                                         <li><a class="dropdown-item border-0" href="listaSuc.php">Lista de sucursales</a></li>
-                                        <li><a class="dropdown-item border-0" href="listaSucElimin.php">Sucursales eliminadas</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -103,12 +98,13 @@ if(empty($_SESSION['idUsua'])){
                             <th>Correo electronico</th>
                             <th>Usuario</th>
                             <th>Rol</th>
+                            <th>Estatus</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <?php
-                    
-                    $sql_register = mysqli_query($conexion, "select count(*) as total_registro from usuario inner join cliente on usuario.id_usua=cliente.id_usua where usuario.estatus=1 and cliente.estatus=1");
+
+                    $sql_register = mysqli_query($conexion, "select count(*) as total_registro from usuario inner join cliente on usuario.id_usua=cliente.id_usua");
                     $result_register = mysqli_fetch_array($sql_register);
                     $total_registro = $result_register['total_registro'];
                     $por_pagina = 5;
@@ -119,7 +115,7 @@ if(empty($_SESSION['idUsua'])){
                     }
                     $desde = ($pagina - 1) * $por_pagina;
                     $total_paginas = ceil($total_registro / $por_pagina);
-                    $query = mysqli_query($conexion, "SELECT usuario.id_usua,nom_clie,nom_usua,email_clie,tip_usua FROM usuario inner join cliente ON usuario.id_usua=cliente.id_usua where usuario.estatus=1 and cliente.estatus=1 ORDER by id_usua asc limit $desde,$por_pagina");
+                    $query = mysqli_query($conexion, "SELECT usuario.id_usua,nom_clie,nom_usua,email_clie,tip_usua,usuario.estatus FROM usuario inner join cliente ON usuario.id_usua=cliente.id_usua ORDER by id_usua asc limit $desde,$por_pagina");
                     $result = mysqli_num_rows($query);
                     if ($result > 0) {
                         while ($data = mysqli_fetch_array($query)) {
@@ -132,11 +128,23 @@ if(empty($_SESSION['idUsua'])){
                                     <td><?php echo $data["nom_usua"] ?></td>
                                     <td><?php echo $data["tip_usua"] ?></td>
                                     <td>
-                                        <a class="link_edit" href="editar_usuario.php?id=<?php print($data["id_usua"]) ?>">Editar</a>
                                         <?php
-                                        if ($data["id_usua"] != 1300) { ?>
-                                            |
-                                            <a class="link_delete" href="eliminarconfirm_usuario.php?id=<?php print($data["id_usua"]) ?>">Eliminar</a>
+                                        if ($data["estatus"] == 1) {
+                                            echo '<span class="status-active">Activo</span>';
+                                        } else {
+                                            echo '<span class="status-inactive">Desactivado</span>';
+                                        }
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php if ($data["estatus"] == 1) { ?>
+                                            <a class="link_edit" href="editar_usuario.php?id=<?php print($data["id_usua"]) ?>">Editar</a>
+                                            <?php if ($data["id_usua"] != 1300) { ?>
+                                                |
+                                                <a class="link_delete" href="eliminarconfirm_usuario.php?id=<?php print($data["id_usua"]) ?>">Eliminar</a>
+                                            <?php } ?>
+                                        <?php } else { ?>
+                                            <a class="link_edit" href="RecuperarUsu.php?id=<?php print($data["id_usua"]) ?>">Recuperar</a>
                                         <?php } ?>
                                     </td>
                                 </tr>

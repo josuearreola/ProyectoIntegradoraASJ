@@ -6,11 +6,11 @@ include "../denegacion.php";
 
 if (!empty($_POST)) {
     $alert = '';
-    
-    if (empty($_POST['id'])|| empty($_POST['precio']) || empty($_POST['costo']) || empty($_POST['color']) || empty($_POST['camara']) || empty($_POST['almacenamiento']) || empty($_POST['ram']) || empty($_POST['pantalla']) || empty($_POST['bateria']) || empty($_POST['procesador']) || empty($_POST['foto_actual']) || empty($_POST['foto_remove'])) {
+
+    if (empty($_POST['id']) || empty($_POST['precio']) || empty($_POST['costo']) || empty($_POST['color']) || empty($_POST['camara']) || empty($_POST['almacenamiento']) || empty($_POST['ram']) || empty($_POST['pantalla']) || empty($_POST['bateria']) || empty($_POST['procesador']) || empty($_POST['foto_actual']) || empty($_POST['foto_remove'])) {
         $alert = '<p class="msj_error">Todos los campos son obligatorios </p>';
     } else {
-        $id_tel=$_POST['id'];
+        $id_tel = $_POST['id'];
         $precio = $_POST['precio'];
         $costo = $_POST['costo'];
         $color = $_POST['color'];
@@ -20,72 +20,71 @@ if (!empty($_POST)) {
         $pantalla = $_POST['pantalla'];
         $bateria = $_POST['bateria'];
         $procesador = $_POST['procesador'];
-        $imgProducto=$_POST['foto_actual'];
-        $imgRemove=$_POST['foto_remove'];
+        $imgProducto = $_POST['foto_actual'];
+        $imgRemove = $_POST['foto_remove'];
 
-        $foto = $_FILES['foto']; 
+        $foto = $_FILES['foto'];
         $nombre_foto = $foto['name'];
         $type = $foto['type'];
         $url_temp = $foto['tmp_name'];
 
-        $upd='';
+        $upd = '';
 
 
-        if ($precio>$costo) {
-            
-            if($nombre_foto != ''){
-                $destino ='../img/';
-                $img_nombre='img_'.md5(date('d-m-Y H:m:s'));
-                $imgProd=$img_nombre.'.jpg';
-                $src=$destino.$imgProd;
-            }else{
+        if ($precio > $costo) {
+
+            if ($nombre_foto != '') {
+                $destino = '../img/';
+                $img_nombre = 'img_' . md5(date('d-m-Y H:m:s'));
+                $imgProd = $img_nombre . '.jpg';
+                $src = $destino . $imgProd;
+            } else {
                 if ($_POST['foto_actual'] != $_POST['foto_remove']) {
-                    $imgProducto='../img/img_producto.png';
+                    $imgProducto = '../img/img_producto.png';
                 }
             }
-            
-                $queryUpdateTelefono = "UPDATE telefono SET col_tel='$color', cam_tel='$camara', alm_tel='$almacenamiento', ram_tel='$ram', pan_tel='$pantalla', bat_tel='$bateria', proc_tel='$procesador', prec_tel='$precio', costo_tel='$costo', img_tel='$imgProducto' WHERE id_tel='$id_tel'";
-                $resultadoUpdateTelefono = mysqli_query($conexion, $queryUpdateTelefono);
-            
-                if ($resultadoUpdateTelefono) {
-                    if (($nombre_foto != '' && ($_POST['foto_actual'] != '../img/img_producto.png')) || ($_POST['foto_actual'] != $_POST['foto_remove'])) {
-                        unlink('../img/'.$_POST['foto_actual']);
-                    }
-                    if ($nombre_foto != '') {
-                        move_uploaded_file($url_temp,$src);
-                    }
-                    $alert='<p class="msg_save">Producto actualizado correctamente</p>';
-                
+
+            $queryUpdateTelefono = "UPDATE telefono SET col_tel='$color', cam_tel='$camara', alm_tel='$almacenamiento', ram_tel='$ram', pan_tel='$pantalla', bat_tel='$bateria', proc_tel='$procesador', prec_tel='$precio', costo_tel='$costo', img_tel='$imgProducto' WHERE id_tel='$id_tel'";
+            $resultadoUpdateTelefono = mysqli_query($conexion, $queryUpdateTelefono);
+
+            if ($resultadoUpdateTelefono) {
+                if (($nombre_foto != '' && ($_POST['foto_actual'] != '../img/img_producto.png')) || ($_POST['foto_actual'] != $_POST['foto_remove'])) {
+                    unlink('../img/' . $_POST['foto_actual']);
+                }
+                if ($nombre_foto != '') {
+                    move_uploaded_file($url_temp, $src);
+                }
+                $alert = '<p class="msg_save">Producto actualizado correctamente</p>';
             }
-        }else{
+        } else {
             $alert = '<p class="msj_error">El precio debe ser mayor al costo</p>';
         }
     }
 }
-if(empty($_SESSION['idUsua'])){
+if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
 
-if(empty($_REQUEST['id'])){
+if (empty($_REQUEST['id'])) {
     header("location:listaProd.php");
-}else{
-    $id_producto=$_REQUEST['id'];
+} else {
+    $id_producto = $_REQUEST['id'];
     if (!is_numeric($id_producto)) {
         header("location:listaProd.php");
     }
-    $query_producto=mysqli_query($conexion,"SELECT nom_marc,nom_mod,id_tel,col_tel,cam_tel,alm_tel,ram_tel,pan_tel,bat_tel,proc_tel,prec_tel,costo_tel,img_tel from marca inner join modelo on marca.id_marca = modelo.id_marca inner join telefono on modelo.id_mod=telefono.id_mod where id_tel='$id_producto' and estatus=1");
-    $result_producto=mysqli_num_rows($query_producto);
+    $query_producto = mysqli_query($conexion, "SELECT nom_marc,nom_mod,id_tel,col_tel,cam_tel,alm_tel,ram_tel,pan_tel,bat_tel,proc_tel,prec_tel,costo_tel,img_tel from marca inner join modelo on marca.id_marca = modelo.id_marca inner join telefono on modelo.id_mod=telefono.id_mod where id_tel='$id_producto' and estatus=1");
+    $result_producto = mysqli_num_rows($query_producto);
 
-    $foto= '';
-    $classRemove='notBlock';
+    $foto = '';
+    $classRemove = 'notBlock';
 
-    if ($result_producto>0) {
-        $data_producto=mysqli_fetch_assoc($query_producto);
+    if ($result_producto > 0) {
+        $data_producto = mysqli_fetch_assoc($query_producto);
         if ($data_producto['img_tel'] != '../img/img_producto.png') {
-           $classRemove='';
-           $foto='<img id="img" src="../img/'.$data_producto['img_tel'].'" alt="producto">';
+            $classRemove = '';
+            $foto = '<img id="img" src="../img/' . $data_producto['img_tel'] . '" alt="producto">';
         }
-    }else{
+    } else {
         header("location:listaProd.php");
     }
 }
@@ -133,15 +132,12 @@ if(empty($_REQUEST['id'])){
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevo usuario</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de usuarios</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaUsuElimin.php">Usuarios eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Facturas</a>
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Facturas eliminadas</a></li>
+                                        <li><a class="dropdown-item border-0" href="listaFacturas.php">Lista de facturas</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -149,7 +145,6 @@ if(empty($_REQUEST['id'])){
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regProd.php">Nuevos productos</a></li>
                                         <li><a class="dropdown-item border-0" href="listaProd.php">Lista de productos</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaProdElimin.php">Productos eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -157,7 +152,6 @@ if(empty($_REQUEST['id'])){
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regSuc.php">Nueva sucursal</a></li>
                                         <li><a class="dropdown-item border-0" href="listaSuc.php">Lista de sucursales</a></li>
-                                        <li><a class="dropdown-item border-0" href="listaSucElimin.php">Sucursales eliminadas</a></li>
                                     </ul>
                                 </li>
                         </div>
@@ -176,24 +170,24 @@ if(empty($_REQUEST['id'])){
             <?php endif; ?>
             <form class="formProd" action="editar_producto.php" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="id" value="<?php echo $data_producto['id_tel']; ?>">
-                <input type="hidden" id="foto_actual" name="foto_actual" value="<?php echo $data_producto['img_tel'];?>">
-                <input type="hidden" id="foto_remove" name="foto_remove" value="<?php echo $data_producto['img_tel'];?>">
+                <input type="hidden" id="foto_actual" name="foto_actual" value="<?php echo $data_producto['img_tel']; ?>">
+                <input type="hidden" id="foto_remove" name="foto_remove" value="<?php echo $data_producto['img_tel']; ?>">
                 <div class="row">
                     <div class="col-md-6">
                         <label for="marca">Marca del telefono:</label>
-                        <input type="text" name="marca" id="marca" placeholder="Marca del telefono" value="<?php echo $data_producto['nom_marc']?>" readonly required>
+                        <input type="text" name="marca" id="marca" placeholder="Marca del telefono" value="<?php echo $data_producto['nom_marc'] ?>" readonly required>
                     </div>
                     <div class="col-md-6">
                         <label for="modelo">Modelo del telefono:</label>
-                        <input type="text" name="modelo" id="modelo" placeholder="Modelo del telefono"value="<?php echo $data_producto['nom_mod']?>" readonly required>
+                        <input type="text" name="modelo" id="modelo" placeholder="Modelo del telefono" value="<?php echo $data_producto['nom_mod'] ?>" readonly required>
                     </div>
                     <div class="col-md-6">
                         <label for="precio">Precio del telefono:</label>
-                        <input type="text" name="precio" id="precio" placeholder="Precio del telefono" value="<?php echo $data_producto['prec_tel']?>" required>
+                        <input type="text" name="precio" id="precio" placeholder="Precio del telefono" value="<?php echo $data_producto['prec_tel'] ?>" required>
                     </div>
                     <div class="col-md-6">
                         <label for="costo">Costo del telefono:</label>
-                        <input type="text" name="costo" id="costo" placeholder="Costo del telefono" value="<?php echo $data_producto['costo_tel']?>" required>
+                        <input type="text" name="costo" id="costo" placeholder="Costo del telefono" value="<?php echo $data_producto['costo_tel'] ?>" required>
                     </div>
                     <div class="col-md-12">
                         <a href="#" id="mostrarDatosTel" class="toggle-direccion">Datos generales</a>
@@ -202,40 +196,40 @@ if(empty($_REQUEST['id'])){
                         <div class=" row">
                             <div class="col-md-6">
                                 <label for="color">Color:</label>
-                                <input type="text" name="color" id="color" class="form-control datosTel" placeholder="Color" value="<?php echo $data_producto['col_tel']?>" required>
+                                <input type="text" name="color" id="color" class="form-control datosTel" placeholder="Color" value="<?php echo $data_producto['col_tel'] ?>" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="camara">Camara:</label>
-                                <input type="text" name="camara" id="camara" class="form-control datosTel" placeholder="Camara" value="<?php echo $data_producto['cam_tel']?>" required>
+                                <input type="text" name="camara" id="camara" class="form-control datosTel" placeholder="Camara" value="<?php echo $data_producto['cam_tel'] ?>" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="almacenamiento">Almacenamiento:</label>
-                                <input type="text" name="almacenamiento" id="almacenamiento" class="form-control datosTel" placeholder="Almacenamiento" value="<?php echo $data_producto['alm_tel']?>" required>
+                                <input type="text" name="almacenamiento" id="almacenamiento" class="form-control datosTel" placeholder="Almacenamiento" value="<?php echo $data_producto['alm_tel'] ?>" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="ram">RAM:</label>
-                                <input type="text" name="ram" id="ram" class="form-control datosTel" placeholder="RAM" value="<?php echo $data_producto['ram_tel']?>" required>
+                                <input type="text" name="ram" id="ram" class="form-control datosTel" placeholder="RAM" value="<?php echo $data_producto['ram_tel'] ?>" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="pantalla">Pantalla:</label>
-                                <input type="text" name="pantalla" id="pantalla" class="form-control datosTel" placeholder="Pantalla" value="<?php echo $data_producto['pan_tel']?>" required>
+                                <input type="text" name="pantalla" id="pantalla" class="form-control datosTel" placeholder="Pantalla" value="<?php echo $data_producto['pan_tel'] ?>" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="bateria">Bateria:</label>
-                                <input type="text" name="bateria" id="bateria" class="form-control datosTel" placeholder="Bateria" value="<?php echo $data_producto['bat_tel']?>" required>
+                                <input type="text" name="bateria" id="bateria" class="form-control datosTel" placeholder="Bateria" value="<?php echo $data_producto['bat_tel'] ?>" required>
                             </div>
                             <div class="col-md-12">
                                 <label for="procesador">Procesador:</label>
-                                <input type="text" name="procesador" id="procesador" class="form-control datosTel" placeholder="Procesador" value="<?php echo $data_producto['proc_tel']?>" required>
+                                <input type="text" name="procesador" id="procesador" class="form-control datosTel" placeholder="Procesador" value="<?php echo $data_producto['proc_tel'] ?>" required>
                             </div>
                         </div>
                     </div>
                     <div class="photo">
                         <label for="foto">Foto</label>
                         <div class="prevPhoto">
-                            <span class="delPhoto <?php echo $classRemove;?>">X</span>
+                            <span class="delPhoto <?php echo $classRemove; ?>">X</span>
                             <label for="foto"></label>
-                            <?php echo $foto;?>
+                            <?php echo $foto; ?>
                         </div>
                         <div class="upimg">
                             <input type="file" name="foto" id="foto">

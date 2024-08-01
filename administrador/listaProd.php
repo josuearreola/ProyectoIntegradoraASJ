@@ -2,7 +2,7 @@
 ob_start();
 include("../denegacion.php");
 include "../conexionBD.php";
-if(empty($_SESSION['idUsua'])){
+if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
 ?>
@@ -49,15 +49,12 @@ if(empty($_SESSION['idUsua'])){
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevo usuario</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de usuarios</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaUsuElimin.php">Usuarios eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Facturas</a>
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Facturas eliminadas</a></li>
+                                        <li><a class="dropdown-item border-0" href="listaFacturas.php">Lista de facturas</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -65,7 +62,6 @@ if(empty($_SESSION['idUsua'])){
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regProd.php">Nuevos productos</a></li>
                                         <li><a class="dropdown-item border-0" href="listaProd.php">Lista de productos</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaProdElimin.php">Productos eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -73,7 +69,6 @@ if(empty($_SESSION['idUsua'])){
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regSuc.php">Nueva sucursal</a></li>
                                         <li><a class="dropdown-item border-0" href="listaSuc.php">Lista de sucursales</a></li>
-                                        <li><a class="dropdown-item border-0" href="listaSucElimin.php">Sucursales eliminadas</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -91,8 +86,8 @@ if(empty($_SESSION['idUsua'])){
 
     <section id="container">
         <h1 class="text_prin">Lista de productos</h1>
-        <a href="regProd.php"  class="btn_new">Registrar producto</a>
-        <a href="reporteProd.php"  class="btn_new">Generar reporte</a>
+        <a href="regProd.php" class="btn_new">Registrar producto</a>
+        <a href="reporteProd.php" class="btn_new">Generar reporte</a>
         <div class="container">
             <div class="table-responsive">
                 <table class="table table-sm table-dark table-hover table-striped tamañoLetra">
@@ -111,14 +106,15 @@ if(empty($_SESSION['idUsua'])){
                             <th>Precio</th>
                             <th>Costo</th>
                             <th>Imagen</th>
-                            <th >Acciones</th>
+                            <th>Estatus</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <?php
-                    $sql_register = mysqli_query($conexion, "select count(*) as total_registro from marca inner join modelo on marca.id_marca = modelo.id_marca inner join telefono on modelo.id_mod=telefono.id_mod where estatus=1");
+                    $sql_register = mysqli_query($conexion, "select count(*) as total_registro from marca inner join modelo on marca.id_marca = modelo.id_marca inner join telefono on modelo.id_mod=telefono.id_mod ");
                     $result_register = mysqli_fetch_array($sql_register);
                     $total_registro = $result_register['total_registro'];
-                    $por_pagina = 5;
+                    $por_pagina = 4;
                     if (empty($_GET['pagina'])) {
                         $pagina = 1;
                     } else {
@@ -126,14 +122,14 @@ if(empty($_SESSION['idUsua'])){
                     }
                     $desde = ($pagina - 1) * $por_pagina;
                     $total_paginas = ceil($total_registro / $por_pagina);
-                    $query = mysqli_query($conexion, "SELECT nom_marc,nom_mod,id_tel,col_tel,cam_tel,alm_tel,ram_tel,pan_tel,bat_tel,proc_tel,prec_tel,costo_tel,img_tel from marca inner join modelo on marca.id_marca = modelo.id_marca inner join telefono on modelo.id_mod=telefono.id_mod where estatus=1 ORDER BY id_tel asc limit $desde,$por_pagina");
+                    $query = mysqli_query($conexion, "SELECT nom_marc,nom_mod,id_tel,col_tel,cam_tel,alm_tel,ram_tel,pan_tel,bat_tel,proc_tel,prec_tel,costo_tel,img_tel,estatus from marca inner join modelo on marca.id_marca = modelo.id_marca inner join telefono on modelo.id_mod=telefono.id_mod ORDER BY id_tel asc limit $desde,$por_pagina");
                     $result = mysqli_num_rows($query);
                     if ($result > 0) {
                         while ($data = mysqli_fetch_array($query)) {
-                            if($data['img_tel']!='img_producto.png'){
-                                $foto='../img/'.$data['img_tel'];
-                            }else{
-                                $foto='img'.$data['img_tel'];
+                            if ($data['img_tel'] != 'img_producto.png') {
+                                $foto = '../img/' . $data['img_tel'];
+                            } else {
+                                $foto = 'img' . $data['img_tel'];
                             }
                     ?>
                             <tbody>
@@ -151,10 +147,23 @@ if(empty($_SESSION['idUsua'])){
                                     <td><?php echo $data['prec_tel'] ?></td>
                                     <td><?php echo $data['costo_tel'] ?></td>
                                     <td class="img_producto"><img src="<?php echo $foto ?>" alt="producto"></td>
+                                    <td>
+                                        <?php
+                                        if ($data["estatus"] == 1) {
+                                            echo '<span class="status-active">Activo</span>';
+                                        } else {
+                                            echo '<span class="status-inactive">Desactivado</span>';
+                                        }
+                                        ?>
+                                    </td>
                                     <td class="nowrap">
-                                        <a class="link_edit" href="editar_producto.php?id=<?php print($data["id_tel"]) ?>">Editar</a>
-                                        |
-                                        <a class="link_delete" href="eliminarconfirm_producto.php?id=<?php print($data["id_tel"]) ?>">Eliminar</a>
+                                        <?php if ($data["estatus"] == 1) { ?>
+                                            <a class="link_edit" href="editar_producto.php?id=<?php print($data["id_tel"]) ?>">Editar</a>
+                                            |
+                                            <a class="link_delete" href="eliminarconfirm_producto.php?id=<?php print($data["id_tel"]) ?>">Eliminar</a>
+                                        <?php } else { ?>
+                                            <a class="link_edit" href="RecuperarProd.php?id=<?php print($data["id_tel"]) ?>">Recuperar</a>
+                                        <?php } ?>
                                     </td>
                                 </tr>
                             </tbody>

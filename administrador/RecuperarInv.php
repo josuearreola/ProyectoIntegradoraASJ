@@ -8,11 +8,11 @@ if (empty($_SESSION['idUsua'])) {
 if (!empty($_POST)) {
     $idInv = $_POST['idinv'];
     $idSuc = $_POST['idsuc'];
-    $query_delete1 = mysqli_query($conexion, "UPDATE inventario SET estatus = 0 where id_inv=$idInv ");
+    $query_delete1 = mysqli_query($conexion, "UPDATE inventario SET estatus = 1 where id_inv=$idInv ");
     if ($query_delete1) {
         header("location:inventarioSuc.php?id=$idSuc");
     } else {
-        echo "Error al eliminar";
+        echo "Error al recuperar";
     }
 }
 
@@ -108,7 +108,7 @@ if ($result == 0) {
     <section id="container">
 
         <div class="data_delete">
-            <h2 class="h2preg">¿Esta seguro de eliminar el siguiente inventario?</h2>
+            <h2 class="h2preg">¿Esta seguro de recuperar el siguiente inventario?</h2>
             <p class="p-text">ID: <span><?php echo $idInv ?></span></p>
             <p class="p-text">Nombre de la sucursal: <span><?php echo $nomSuc ?></span></p>
             <p class="p-text">Modelo : <span><?php echo $modelo ?></span></p>

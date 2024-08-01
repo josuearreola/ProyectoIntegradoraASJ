@@ -2,7 +2,7 @@
 ob_start();
 include("../denegacion.php");
 include "../conexionBD.php";
-if(empty($_SESSION['idUsua'])){
+if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
 if (empty($_REQUEST['id'])) {
@@ -10,7 +10,7 @@ if (empty($_REQUEST['id'])) {
 } else {
 
     $idSuc = $_REQUEST['id'];
-    $query = mysqli_query($conexion, "select id_inv,exist_inv,id_suc,id_tel from inventario where inventario.id_suc='$idSuc'");
+    $query = mysqli_query($conexion, "select id_inv,exist_inv,inventario.id_suc,id_tel,nom_suc from inventario inner join sucursal on sucursal.id_suc=inventario.id_suc where inventario.id_suc='$idSuc'");
     $result = mysqli_num_rows($query);
     if ($result > 0) {
         while ($data = mysqli_fetch_array($query)) {
@@ -18,6 +18,7 @@ if (empty($_REQUEST['id'])) {
             $existencia = $data['exist_inv'];
             $idSucursal = $data['id_suc'];
             $idTel = $data['id_tel'];
+            $nomSucursal = $data['nom_suc'];
         }
     } else {
         header('location:listaSuc.php');
@@ -67,15 +68,12 @@ if (empty($_REQUEST['id'])) {
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevo usuario</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de usuarios</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaUsuElimin.php">Usuarios eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Facturas</a>
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Facturas eliminadas</a></li>
+                                        <li><a class="dropdown-item border-0" href="listaFacturas.php">Lista de facturas</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -83,7 +81,6 @@ if (empty($_REQUEST['id'])) {
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regProd.php">Nuevos productos</a></li>
                                         <li><a class="dropdown-item border-0" href="listaProd.php">Lista de productos</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaProdElimin.php">Productos eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -91,11 +88,10 @@ if (empty($_REQUEST['id'])) {
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regSuc.php">Nueva sucursal</a></li>
                                         <li><a class="dropdown-item border-0" href="listaSuc.php">Lista de sucursales</a></li>
-                                        <li><a class="dropdown-item border-0" href="listaSucElimin.php">Sucursales eliminadas</a></li>
                                     </ul>
                                 </li>
                             </ul>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -105,26 +101,30 @@ if (empty($_REQUEST['id'])) {
     </header>
 
     <section id="container">
-        <h1 class="text_prin">Lista de inventario</h1>
-        <a href="listaSuc.php" class="btn_new">Sucursales</a>
-        <a href="reporteInv.php?id=<?php echo $idSuc;?>"  class="btn_new">Generar reporte</a>
+        <div class="d-flex align-items-center mb-3">
+            <div>
+                <h1 class="text_prin">Lista de inventario</h1>
+                <h6 style="color:#ffffff"><?php echo $nomSucursal ?></h6>
+            </div>
+            <a href="reporteInv.php?id=<?php echo $idSuc; ?>" class="btn btn-primary ms-5" target="_blank">Generar reporte</a>
+        </div>
         <div class="container">
             <div class="table-responsive">
                 <table class="table table-sm table-dark">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre de la sucursal</th>
                             <th>Modelo de telefono</th>
                             <th>Existencia</th>
+                            <th>Estatus</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <?php
-                    $sql_register = mysqli_query($conexion, "SELECT count(*) as total_registro from inventario inner join telefono on inventario.id_tel=telefono.id_tel inner join modelo on modelo.id_mod = telefono.id_mod inner join sucursal on sucursal.id_suc = inventario.id_suc where inventario.estatus=1 and inventario.id_suc=$idSuc");
+                    $sql_register = mysqli_query($conexion, "SELECT count(*) as total_registro from inventario inner join telefono on inventario.id_tel=telefono.id_tel inner join modelo on modelo.id_mod = telefono.id_mod inner join sucursal on sucursal.id_suc = inventario.id_suc where inventario.id_suc=$idSuc");
                     $result_register = mysqli_fetch_array($sql_register);
                     $total_registro = $result_register['total_registro'];
-                    $por_pagina = 5;
+                    $por_pagina = 10;
                     if (empty($_GET['pagina'])) {
                         $pagina = 1;
                     } else {
@@ -132,8 +132,7 @@ if (empty($_REQUEST['id'])) {
                     }
                     $desde = ($pagina - 1) * $por_pagina;
                     $total_paginas = ceil($total_registro / $por_pagina);
-
-                    $query = mysqli_query($conexion, "SELECT inventario.id_inv,nom_suc,nom_mod,exist_inv FROM inventario inner join telefono on inventario.id_tel=telefono.id_tel inner join modelo on modelo.id_mod = telefono.id_mod inner join sucursal on sucursal.id_suc = inventario.id_suc where inventario.estatus=1  and inventario.id_suc=$idSuc ORDER by id_inv asc limit $desde,$por_pagina");
+                    $query = mysqli_query($conexion, "SELECT inventario.id_inv,nom_suc,nom_mod,exist_inv,inventario.estatus FROM inventario inner join telefono on inventario.id_tel=telefono.id_tel inner join modelo on modelo.id_mod = telefono.id_mod inner join sucursal on sucursal.id_suc = inventario.id_suc where inventario.id_suc=$idSuc ORDER by id_inv asc limit $desde,$por_pagina");
                     $result = mysqli_num_rows($query);
                     if ($result > 0) {
                         while ($data = mysqli_fetch_array($query)) {
@@ -141,13 +140,25 @@ if (empty($_REQUEST['id'])) {
                             <tbody>
                                 <tr>
                                     <td><?php echo $data["id_inv"] ?></td>
-                                    <td><?php echo $data["nom_suc"] ?></td>
                                     <td><?php echo $data["nom_mod"] ?></td>
                                     <td><?php echo $data["exist_inv"] ?></td>
                                     <td>
-                                        <a class="link_edit" href="editarInv.php?id=<?php echo($data["id_inv"]); ?>">Editar</a>
-                                        |
-                                        <a class="link_delete" href="eliminarconfirmInv.php?id=<?php echo($data["id_inv"]); ?>">Eliminar</a>
+                                        <?php
+                                        if ($data["estatus"] == 1) {
+                                            echo '<span class="status-active">Activo</span>';
+                                        } else {
+                                            echo '<span class="status-inactive">Desactivado</span>';
+                                        }
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php if ($data["estatus"] == 1) { ?>
+                                            <a class="link_edit" href="editarInv.php?id=<?php echo ($data["id_inv"]); ?>">Editar</a>
+                                            |
+                                            <a class="link_delete" href="eliminarconfirmInv.php?idSuc=<?php echo $idSuc ?>&id=<?php echo ($data["id_inv"]); ?>">Eliminar</a>
+                                        <?php } else { ?>
+                                            <a class="link_edit" href="RecuperarInv.php?idSuc=<?php echo $idSuc ?>&id=<?php echo ($data["id_inv"]); ?>">Recuperar</a>
+                                        <?php } ?>
                                     </td>
                                 </tr>
                             </tbody>

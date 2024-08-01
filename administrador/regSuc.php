@@ -2,7 +2,7 @@
 ob_start();
 include "../conexionBD.php";
 include("../denegacion.php");
-if(empty($_SESSION['idUsua'])){
+if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
 if (!empty($_POST)) {
@@ -11,29 +11,27 @@ if (!empty($_POST)) {
         $alert = '<p class="msj_error">Todos los campos son obligatorios</p>';
     } else {
         $nombre = mysqli_real_escape_string($conexion, $_POST['nombre']);
-        
+
         $colonia =  mysqli_real_escape_string($conexion, $_POST['colonia']);
         $calle =  mysqli_real_escape_string($conexion, $_POST['calle']);
         $cp =  mysqli_real_escape_string($conexion, $_POST['cp']);
         $numi =  mysqli_real_escape_string($conexion, $_POST['numi']);
         $nume =  mysqli_real_escape_string($conexion, $_POST['nume']);
         $id_ciudad = isset($_POST['id_ciudad']) ? mysqli_real_escape_string($conexion, $_POST['id_ciudad']) : '';
-        if($id_ciudad != ''){
+        if ($id_ciudad != '') {
 
-            $queryCount=mysqli_query($conexion,"SELECT COUNT(*) as count FROM sucursal  WHERE nom_suc = '$nombre' AND col_suc = '$colonia' AND cp_suc = '$cp' AND ni_suc = '$numi' AND ne_suc = '$nume' AND call_suc = '$calle' AND id_ciu = '$id_ciudad'");
-            $row=mysqli_fetch_assoc($queryCount);
-            if ($row ['count']>0) {
-                $alert="Ya existe una sucursal con esos datos";
-            }else{
+            $queryCount = mysqli_query($conexion, "SELECT COUNT(*) as count FROM sucursal  WHERE nom_suc = '$nombre' AND col_suc = '$colonia' AND cp_suc = '$cp' AND ni_suc = '$numi' AND ne_suc = '$nume' AND call_suc = '$calle' AND id_ciu = '$id_ciudad'");
+            $row = mysqli_fetch_assoc($queryCount);
+            if ($row['count'] > 0) {
+                $alert = "Ya existe una sucursal con esos datos";
+            } else {
                 $query = mysqli_query($conexion, "insert into sucursal (nom_suc,col_suc,cp_suc,ni_suc,ne_suc,call_suc,id_ciu) values ('$nombre','$colonia','$cp','$numi','$nume','$calle','$id_ciudad')");
                 if ($query === true) {
                     $alert = "Sucursal registrada exitosamente";
                     header("regSuc.php");
-                    
                 } else {
                     $alert = "Fallo al registrar la sucursal";
                     header("regSuc.php");
-                    
                 }
             }
         }
@@ -84,15 +82,12 @@ $estados = mysqli_query($conexion, "SELECT id_est,nom_est from estado");
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevo usuario</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de usuarios</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaUsuElimin.php">Usuarios eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Facturas</a>
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Facturas eliminadas</a></li>
+                                        <li><a class="dropdown-item border-0" href="listaFacturas.php">Lista de facturas</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -108,7 +103,6 @@ $estados = mysqli_query($conexion, "SELECT id_est,nom_est from estado");
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regSuc.php">Nueva sucursal</a></li>
                                         <li><a class="dropdown-item border-0" href="listaSuc.php">Lista de sucursales</a></li>
-                                        <li><a class="dropdown-item border-0" href="listaSucElimin.php">Sucursales eliminadas</a></li>
                                     </ul>
                                 </li>
                         </div>
@@ -201,7 +195,7 @@ $estados = mysqli_query($conexion, "SELECT id_est,nom_est from estado");
         });
     </script>
     <script>
-         document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             var estadosSelect = document.getElementById('estados');
             var ciudadesSelect = document.getElementById('ciudades');
             var idCiudadInput = document.getElementById('id_ciudad');

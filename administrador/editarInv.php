@@ -2,7 +2,7 @@
 ob_start();
 include "../conexionBD.php";
 include("../denegacion.php");
-if(empty($_SESSION['idUsua'])){
+if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
 if (!empty($_POST)) {
@@ -10,22 +10,21 @@ if (!empty($_POST)) {
     if (empty($_POST['idinv']) || empty($_POST['sucursal']) || empty($_POST['modelo']) || empty($_POST['existencia'])) {
         $alert = '<p class="msj_error">Todos los campos son obligatorios</p>';
     } else {
-        $idInve=$_POST['idinv'];
+        $idInve = $_POST['idinv'];
         $sucursal = $_POST['sucursal'];
         $modelo = $_POST['modelo'];
         $existencia = $_POST['existencia'];
-        
+
         $query = mysqli_query($conexion, "SELECT inventario.id_inv,nom_suc,nom_mod,exist_inv FROM inventario inner join sucursal on sucursal.id_suc=inventario.id_suc inner join telefono on telefono.id_tel=inventario.id_tel inner join modelo on modelo.id_mod=telefono.id_mod where id_inv = $idInve");
         $resultado = mysqli_fetch_array($query);
         if ($resultado <= 0) {
             $alert = '<p class="msj_error">Error al actualizar el inventario</p>';
             exit;
         } else {
-            $updateExist=mysqli_query($conexion,"UPDATE inventario set exist_inv='$existencia' where id_inv=$idInve");
-            if($updateExist === true){
+            $updateExist = mysqli_query($conexion, "UPDATE inventario set exist_inv='$existencia' where id_inv=$idInve");
+            if ($updateExist === true) {
                 $alert = '<p class="msj_save">Inventario autorizado correctamente</p>';
-                
-            }else{
+            } else {
                 $alert = '<p class="msj_error">Error al  el inventario</p>';
                 exit;
             }
@@ -41,12 +40,12 @@ $sql = mysqli_query($conexion, "SELECT inventario.id_inv,nom_suc,nom_mod,exist_i
 $result = mysqli_num_rows($sql);
 if ($result == 0) {
     header('Location:inventarioSuc.php');
-}else{
-    while($data=mysqli_fetch_array($sql)){
-        $idinv=$data['id_inv'];
-        $nomSuc=$data['nom_suc'];
-        $modelo=$data['nom_mod'];
-        $existencia=$data['exist_inv'];
+} else {
+    while ($data = mysqli_fetch_array($sql)) {
+        $idinv = $data['id_inv'];
+        $nomSuc = $data['nom_suc'];
+        $modelo = $data['nom_mod'];
+        $existencia = $data['exist_inv'];
     }
 }
 ?>
@@ -67,7 +66,7 @@ if ($result == 0) {
 </head>
 
 <body>
-<header class="header">
+    <header class="header">
         <div>
             <nav class="navbar bg-secondary navbar-expand-lg border-top border-bottom border-3 border-light">
                 <div class="container-fluid">
@@ -93,15 +92,12 @@ if ($result == 0) {
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevo usuario</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de usuarios</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaUsuElimin.php">Usuarios eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Facturas</a>
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Facturas eliminadas</a></li>
+                                        <li><a class="dropdown-item border-0" href="listaFacturas.php">Lista de facturas</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -109,7 +105,6 @@ if ($result == 0) {
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regProd.php">Nuevos productos</a></li>
                                         <li><a class="dropdown-item border-0" href="listaProd.php">Lista de productos</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaProdElimin.php">Productos eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -117,7 +112,6 @@ if ($result == 0) {
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regSuc.php">Nueva sucursal</a></li>
                                         <li><a class="dropdown-item border-0" href="listaSuc.php">Lista de sucursales</a></li>
-                                        <li><a class="dropdown-item border-0" href="listaSucElimin.php">Sucursales eliminadas</a></li>
                                     </ul>
                                 </li>
                         </div>
@@ -131,19 +125,19 @@ if ($result == 0) {
         <div class="form_register">
             <h1 class="text-prin">Actualizar usuario</h1>
             <hr>
-            <?php if (!empty($alert)): ?>
+            <?php if (!empty($alert)) : ?>
                 <div class="alert"><?php echo $alert; ?></div>
             <?php endif; ?>
             <form action="editarInv.php" method="post">
                 <input type="hidden" name="idinv" value="<?php echo $idInv; ?>">
                 <label for="idInv">ID :</label>
-                <input type="text" name="idInv" id="idInv" placeholder="ID" value="<?php echo $idinv?>" readonly required>
+                <input type="text" name="idInv" id="idInv" placeholder="ID" value="<?php echo $idinv ?>" readonly required>
                 <label for="sucursal">Sucursal :</label>
-                <input type="text" name="sucursal" id="sucursal" placeholder="Sucursal" value="<?php echo $nomSuc?>" readonly required>
+                <input type="text" name="sucursal" id="sucursal" placeholder="Sucursal" value="<?php echo $nomSuc ?>" readonly required>
                 <label for="modelo">Modelo :</label>
-                <input type="text" name="modelo" id="modelo" placeholder="Modelo" value="<?php echo $modelo?>" readonly required>
+                <input type="text" name="modelo" id="modelo" placeholder="Modelo" value="<?php echo $modelo ?>" readonly required>
                 <label for="existencia">Existencia </label>
-                <input type="text" name="existencia" id="existencia" placeholder="Existencia" value="<?php echo $existencia?>" required>
+                <input type="text" name="existencia" id="existencia" placeholder="Existencia" value="<?php echo $existencia ?>" required>
 
                 <input type="submit" class="btn_save" value="Actualizar inventario">
             </form>

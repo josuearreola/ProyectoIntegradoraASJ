@@ -2,7 +2,7 @@
 ob_start();
 include "../conexionBD.php";
 include("../denegacion.php");
-if(empty($_SESSION['idUsua'])){
+if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
 if (!empty($_POST)) {
@@ -10,7 +10,7 @@ if (!empty($_POST)) {
     if (empty($_POST['nombre']) || empty($_POST['nom_usua']) || empty($_POST['email']) || empty($_POST['rol'])) {
         $alert = '<p class="msj_error">Todos los campos son obligatorios</p>';
     } else {
-        $idUsuario=$_POST['idUsuario'];
+        $idUsuario = $_POST['idUsuario'];
         $nombre = $_POST['nombre'];
         $nombreusua = $_POST['nom_usua'];
         $email = $_POST['email'];
@@ -28,7 +28,7 @@ if (!empty($_POST)) {
                 $sql = mysqli_query($conexion, "update usuario set nom_usua='$nombreusua', tip_usua='$rol', pass_usua='$contraseña' where id_usua='$idUsuario'");
                 $sql1 = mysqli_query($conexion, "update cliente set nom_clie='$nombre', email_clie='$email' where id_clie='$idUsuario'");
             }
-            if ($sql=== true) {
+            if ($sql === true) {
                 if ($sql1) {
                     $alert = '<p class="msj_save">Usuario autorizado correctamente</p>';
                 }
@@ -48,17 +48,17 @@ $sql = mysqli_query($conexion, "SELECT sucursal.id_suc,nom_suc,col_suc,cp_suc,ni
 $result = mysqli_num_rows($sql);
 if ($result == 0) {
     header('Location:listaSuc.php');
-}else{
-    $option='';
-    while($data=mysqli_fetch_array($sql)){
-        $idSuc=$data['id_suc'];
-        $nombre=$data['nom_suc'];
-        $colonia=$data['col_suc'];
-        $cp=$data['cp_suc'];
-        $ni=$data['ni_suc'];
-        $ne=$data['ne_suc'];
-        $calle=$data['call_suc'];
-        $ciudad=$data['nom_ciu'];
+} else {
+    $option = '';
+    while ($data = mysqli_fetch_array($sql)) {
+        $idSuc = $data['id_suc'];
+        $nombre = $data['nom_suc'];
+        $colonia = $data['col_suc'];
+        $cp = $data['cp_suc'];
+        $ni = $data['ni_suc'];
+        $ne = $data['ne_suc'];
+        $calle = $data['call_suc'];
+        $ciudad = $data['nom_ciu'];
     }
 }
 ?>
@@ -79,7 +79,7 @@ if ($result == 0) {
 </head>
 
 <body>
-<header class="header">
+    <header class="header">
         <div>
             <nav class="navbar bg-secondary navbar-expand-lg border-top border-bottom border-3 border-light">
                 <div class="container-fluid">
@@ -105,15 +105,13 @@ if ($result == 0) {
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevo usuario</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de usuarios</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaUsuElimin.php">Usuarios eliminados</a></li>
+
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Facturas</a>
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Facturas eliminadas</a></li>
+                                        <li><a class="dropdown-item border-0" href="listaFacturas.php">Lista de facturas</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -121,7 +119,6 @@ if ($result == 0) {
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regProd.php">Nuevos productos</a></li>
                                         <li><a class="dropdown-item border-0" href="listaProd.php">Lista de productos</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaProdElimin.php">Productos eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -129,7 +126,6 @@ if ($result == 0) {
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regSuc.php">Nueva sucursal</a></li>
                                         <li><a class="dropdown-item border-0" href="listaSuc.php">Lista de sucursales</a></li>
-                                        <li><a class="dropdown-item border-0" href="listaSucElimin.php">Sucursales eliminadas</a></li>
                                     </ul>
                                 </li>
                         </div>
@@ -143,23 +139,23 @@ if ($result == 0) {
         <div class="form_register">
             <h1 class="text-prin">Actualizar usuario</h1>
             <hr>
-            <?php if (!empty($alert)): ?>
+            <?php if (!empty($alert)) : ?>
                 <div class="alert"><?php echo $alert; ?></div>
             <?php endif; ?>
             <form action="editarSuc.php" method="post">
                 <input type="hidden" name="idSuc" value="<?php echo $iduser; ?>">
                 <label for="nombre">Nombre</label>
-                <input type="text" name="nombre" id="nombre" placeholder="Nombre de la sucursal" value="<?php echo $nombre?>" required>
+                <input type="text" name="nombre" id="nombre" placeholder="Nombre de la sucursal" value="<?php echo $nombre ?>" required>
                 <label for="colonia">Colonia</label>
-                <input type="text" name="colonia" id="colonia" placeholder="Colonia" value="<?php echo $colonia?>" required>
+                <input type="text" name="colonia" id="colonia" placeholder="Colonia" value="<?php echo $colonia ?>" required>
                 <label for="calle">Calle</label>
-                <input type="text" name="calle" id="calle" placeholder="Calle" value="<?php echo $calle?>" required>
+                <input type="text" name="calle" id="calle" placeholder="Calle" value="<?php echo $calle ?>" required>
                 <label for="cp">CP</label>
-                <input type="text" name="cp" id="cp" placeholder="CP" value="<?php echo $cp?>" required>
+                <input type="text" name="cp" id="cp" placeholder="CP" value="<?php echo $cp ?>" required>
                 <label for="numi"># Interior</label>
-                <input type="text" name="numi" id="numi" placeholder="# Interior" value="<?php echo $ni?>">
+                <input type="text" name="numi" id="numi" placeholder="# Interior" value="<?php echo $ni ?>">
                 <label for="nume"># Exterior</label>
-                <input type="text" name="nume" id="nume" placeholder="nume" value="<?php echo $ne?>" required>
+                <input type="text" name="nume" id="nume" placeholder="nume" value="<?php echo $ne ?>" required>
 
                 <input type="submit" class="btn_save" value="Actualizar sucursal">
             </form>

@@ -759,3 +759,13 @@ a{
             background-color: #666;
             border: none;
         }
+
+        .status-active {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-inactive {
+            color: red;
+            font-weight: bold;
+        }

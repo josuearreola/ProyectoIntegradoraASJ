@@ -2,7 +2,7 @@
 ob_start();
 include("../denegacion.php");
 include "../conexionBD.php";
-if(empty($_SESSION['idUsua'])){
+if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
 
@@ -50,15 +50,12 @@ if(empty($_SESSION['idUsua'])){
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevo usuario</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de usuarios</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaUsuElimin.php">Usuarios eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Facturas</a>
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva facturas</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Facturas eliminadas</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -66,15 +63,14 @@ if(empty($_SESSION['idUsua'])){
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="regProd.php">Nuevos productos</a></li>
                                         <li><a class="dropdown-item border-0" href="listaProd.php">Lista de productos</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaProdElimin.php">Productos eliminados</a></li>
+                                        
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales</a>
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="regSuc.php">Nueva sucursal</a></li>
                                         <li><a class="dropdown-item border-0" href="listaSuc.php">Lista de sucursales</a></li>
-                                        <li><a class="dropdown-item border-0" href="listaSucElimin.php">Sucursales eliminadas</a></li>
+                                       
                                     </ul>
                                 </li>
                             </ul>
@@ -105,14 +101,15 @@ if(empty($_SESSION['idUsua'])){
                 <table class="table table-sm table-dark">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Colonia</th>
-                            <th>Calle</th>
+                        <th>ID</th>
+                            <th style="width:40px">Nombre</th>
+                            <th style="width:40px">Colonia</th>
+                            <th style="width:60px">Calle</th>
                             <th>CP</th>
                             <th># Interior</th>
                             <th># Exterior</th>
-                            <th>Ciudad</th>
+                            <th style="width:50px">Ciudad</th>
+                            <th>Estatus</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -126,7 +123,7 @@ if(empty($_SESSION['idUsua'])){
                                                         sucursal.ni_suc LIKE '%$busqueda%' OR
                                                         sucursal.ne_suc LIKE '%$busqueda%' OR
                                                         ciudad.nom_ciu LIKE '%$busqueda%')                                  
-                                                AND sucursal.estatus=1");
+                                                ");
                     $result_register = mysqli_fetch_array($sql_register);
                     $total_registro = $result_register['total_registro'];
                     $por_pagina = 5;
@@ -138,7 +135,7 @@ if(empty($_SESSION['idUsua'])){
                     $desde = ($pagina - 1) * $por_pagina;
                     $total_paginas = ceil($total_registro / $por_pagina);
 
-                    $query = mysqli_query($conexion, "SELECT sucursal.id_suc,nom_suc,col_suc,cp_suc,ni_suc,ne_suc,call_suc,nom_ciu FROM sucursal inner join ciudad ON ciudad.id_ciu=sucursal.id_ciu 
+                    $query = mysqli_query($conexion, "SELECT sucursal.id_suc,nom_suc,col_suc,cp_suc,ni_suc,ne_suc,call_suc,nom_ciu,sucursal.estatus FROM sucursal inner join ciudad ON ciudad.id_ciu=sucursal.id_ciu 
                                         WHERE (sucursal.id_suc LIKE '%$busqueda%' OR
                                                 sucursal.nom_suc LIKE '%$busqueda%' OR
                                                 sucursal.col_suc LIKE '%$busqueda%' OR
@@ -146,7 +143,7 @@ if(empty($_SESSION['idUsua'])){
                                                 sucursal.ni_suc LIKE '%$busqueda%' OR
                                                 sucursal.ne_suc LIKE '%$busqueda%' OR
                                                 ciudad.nom_ciu LIKE '%$busqueda%')
-                                        AND sucursal.estatus=1 ORDER by id_suc asc limit $desde,$por_pagina");
+                                         ORDER by id_suc asc limit $desde,$por_pagina");
                     $result = mysqli_num_rows($query);
                     if ($result > 0) {
                         while ($data = mysqli_fetch_array($query)) {
@@ -162,11 +159,24 @@ if(empty($_SESSION['idUsua'])){
                                     <td><?php echo $data["ne_suc"] ?></td>
                                     <td><?php echo $data["nom_ciu"] ?></td>
                                     <td>
-                                        <a class="link_edit" href="InventarioSuc.php?id=<?php print($data["id_suc"]) ?>">Inventario</a>
-                                        |
-                                        <a class="link_edit" href="editarSuc.php?id=<?php print($data["id_suc"]) ?>">Editar</a>
-                                        |
-                                        <a class="link_delete" href="eliminarconfirmSuc.php?id=<?php print($data["id_suc"]) ?>">Eliminar</a>
+                                        <?php
+                                        if ($data["estatus"] == 1) {
+                                            echo '<span class="status-active">Activo</span>';
+                                        } else {
+                                            echo '<span class="status-inactive">Desactivado</span>';
+                                        }
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php if ($data["estatus"] == 1) { ?>
+                                            <a class="link_edit" href="InventarioSuc.php?id=<?php print($data["id_suc"]) ?>">Inventario</a>
+                                            |
+                                            <a class="link_edit" href="editarSuc.php?id=<?php print($data["id_suc"]) ?>">Editar</a>
+                                            |
+                                            <a class="link_delete" href="eliminarconfirmSuc.php?id=<?php print($data["id_suc"]) ?>">Eliminar</a>
+                                        <?php } else { ?>
+                                            <a class="link_edit" href="RecuperarSuc.php?id=<?php print($data["id_suc"]) ?>">Recuperar</a>
+                                        <?php } ?>
                                     </td>
                                 </tr>
                             </tbody>

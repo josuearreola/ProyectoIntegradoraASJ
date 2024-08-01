@@ -2,45 +2,45 @@
 ob_start();
 include("../denegacion.php");
 include "../conexionBD.php";
-if(empty($_SESSION['idUsua'])){
+if (empty($_SESSION['idUsua'])) {
     header('location:../inicioSesion/iniciosesion.php');
 }
-    if(!empty($_POST)){
-        if($_POST['usuario']==1){
-            header('location:listausuarios.php');
-            exit;
-        }
-        $idusuario=$_POST['usuario'];
-        
-        $query_delete1=mysqli_query($conexion,"UPDATE cliente SET estatus = 1 where id_usua=$idusuario ");
-        if($query_delete1){
-            
-            $query_delete2=mysqli_query($conexion,"UPDATE usuario SET estatus = 1 where id_usua=$idusuario ");
-            if($query_delete2){
-                header("location:listausuarios.php");
-            }
-        }else{
-            echo"Error al recuperar";
-        }
-    }
-
-    if (empty($_REQUEST['id']) || $_REQUEST['id'] ==1 ) {
+if (!empty($_POST)) {
+    if ($_POST['usuario'] == 1) {
         header('location:listausuarios.php');
-    }else{
-        
-        $idUsuario = $_REQUEST['id'];
-        $query=mysqli_query($conexion,"select nom_clie,nom_usua,tip_usua from usuario inner join cliente on usuario.id_usua=cliente.id_usua where usuario.id_usua='$idUsuario'");
-        $result=mysqli_num_rows( $query );
-        if($result> 0){
-            while($data=mysqli_fetch_array($query)){
-                $nombre=$data['nom_clie'];
-                $usuario=$data['nom_usua'];
-                $rol=$data['tip_usua'];
-            }
-        }else{
-            header('location:ListaUsuElimin.php');
-        }
+        exit;
     }
+    $idusuario = $_POST['usuario'];
+
+    $query_delete1 = mysqli_query($conexion, "UPDATE cliente SET estatus = 1 where id_usua=$idusuario ");
+    if ($query_delete1) {
+
+        $query_delete2 = mysqli_query($conexion, "UPDATE usuario SET estatus = 1 where id_usua=$idusuario ");
+        if ($query_delete2) {
+            header("location:listausuarios.php");
+        }
+    } else {
+        echo "Error al recuperar";
+    }
+}
+
+if (empty($_REQUEST['id']) || $_REQUEST['id'] == 1) {
+    header('location:listausuarios.php');
+} else {
+
+    $idUsuario = $_REQUEST['id'];
+    $query = mysqli_query($conexion, "select nom_clie,nom_usua,tip_usua from usuario inner join cliente on usuario.id_usua=cliente.id_usua where usuario.id_usua='$idUsuario'");
+    $result = mysqli_num_rows($query);
+    if ($result > 0) {
+        while ($data = mysqli_fetch_array($query)) {
+            $nombre = $data['nom_clie'];
+            $usuario = $data['nom_usua'];
+            $rol = $data['tip_usua'];
+        }
+    } else {
+        header('location:ListaUsu.php');
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -85,33 +85,28 @@ if(empty($_SESSION['idUsua'])){
                                     <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
                                         <li><a class="dropdown-item border-0" href="registrousuario.php">Nuevo usuario</a></li>
                                         <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de usuarios</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaUsuElimin.php">Usuarios eliminados</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Facturas</a>
                                     <ul class="dropdown-menu bg-secondary" aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="registrousuario.php">Nueva facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="listausuarios.php">Lista de facturas</a></li>
-                                        <li><a class="dropdown-item border-0" href="#">Facturas eliminadas</a></li>
+                                        <li><a class="dropdown-item border-0" href="listaFacturas.php"">Lista de facturas</a></li>
                                     </ul>
                                 </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Productos </a>
-                                    <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="regProd.php">Nuevos productos</a></li>
-                                        <li><a class="dropdown-item border-0" href="listaProd.php">Lista de productos</a></li>
-                                        <li><a class="dropdown-item border-0" href="ListaProdElimin.php">Productos eliminados</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales </a>
-                                    <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
-                                        <li><a class="dropdown-item border-0" href="regSuc.php">Nueva sucursal</a></li>
-                                        <li><a class="dropdown-item border-0" href="listaSuc.php">Lista de sucursales</a></li>
-                                        <li><a class="dropdown-item border-0" href="listaSucElimin.php">Sucursales eliminadas</a></li>
-                                    </ul>
-                                </li>
+                                <li class=" nav-item dropdown">
+                                                <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Productos </a>
+                                                <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
+                                                    <li><a class="dropdown-item border-0" href="regProd.php">Nuevos productos</a></li>
+                                                    <li><a class="dropdown-item border-0" href="listaProd.php">Lista de productos</a></li>
+                                                </ul>
+                                        </li>
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle lh-lg" id="menucategoria" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales </a>
+                                            <ul class="dropdown-menu bg-secondary " aria-labelledby="menucategoria">
+                                                <li><a class="dropdown-item border-0" href="regSuc.php">Nueva sucursal</a></li>
+                                                <li><a class="dropdown-item border-0" href="listaSuc.php">Lista de sucursales</a></li>
+                                            </ul>
+                                        </li>
                         </div>
                     </div>
                 </div>
@@ -120,12 +115,12 @@ if(empty($_SESSION['idUsua'])){
         <section></section>
     </header>
     <section id="container">
-        
+
         <div class="data_delete">
             <h2 class="h2preg">¿Esta seguro de recuperar el siguiente registro?</h2>
-            <p class="p-text">Usuario :   <span><?php echo$usuario?></span></p>
-            <p class="p-text">Nombre :   <span><?php echo$nombre?></span></p>
-            <p class="p-text">Tipo de usuario :   <span><?php echo$rol?></span></p>
+            <p class="p-text">Usuario : <span><?php echo $usuario ?></span></p>
+            <p class="p-text">Nombre : <span><?php echo $nombre ?></span></p>
+            <p class="p-text">Tipo de usuario : <span><?php echo $rol ?></span></p>
             <form class="formdelete" action="" method="post">
                 <input type="hidden" name="usuario" value="<?php echo $idUsuario; ?>">
                 <a href="listausuarios.php" class="btn_cancel">Cancelar</a>
