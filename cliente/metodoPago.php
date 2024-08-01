@@ -85,7 +85,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <li class="nav-item">
-                            <a class="nav-link active lh-lg" aria-current="page" href="checkout.php">Inicio</a>
+                            <a class="nav-link active lh-lg" aria-current="page"  href="cliente.php">Inicio</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle active lh-lg" id="menusucursales" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales</a>
@@ -108,17 +108,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                                 <li><a class="dropdown-item border-0" href="categoria3.php">Mas de $18000</a></li>
                             </ul>
                         </li>
-                        <form class="form-inline ml-3" action="productos.php">
-                            <div class="input-group input-group-sm">
-                                <input class="form-control form-control-navbar bg-dark-subtle" type="search" placeholder="Buscar" aria-label="Search" name="busqueda" value="<?php echo $_REQUEST['busqueda'] ?? ''; ?>">
-                                <input type="hidden" name="modulo" value="productos">
-                                <div class="input-group-append">
-                                    <button class="btn btn-navbar" type="submit">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                       
                 </div>
             </div>
         </div>
@@ -177,7 +167,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
         </div>
     </main>
 
-    <footer class="footerpagprinc">
+    <footer class="footerpagprinc footer-fixed">
         <div class="container">
             <div>
                 <label class="footer-p" for="btn-modal1">Terminos y condiciones</label>

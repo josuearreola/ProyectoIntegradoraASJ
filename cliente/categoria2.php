@@ -77,17 +77,7 @@ if(empty($_SESSION['idUsua'])){
                                 <li><a class="dropdown-item border-0" href="categoria3.php">Mas de $18000</a></li>
                             </ul>
                         </li>
-                        <form class="form-inline ml-3" action="productos.php">
-                            <div class="input-group input-group-sm">
-                                <input class="form-control form-control-navbar bg-dark-subtle" type="search" placeholder="Buscar" aria-label="Search" name="busqueda" value="<?php echo $_REQUEST['busqueda'] ?? ''; ?>">
-                                <input type="hidden" name="modulo" value="productos">
-                                <div class="input-group-append">
-                                    <button class="btn btn-navbar" type="submit">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                       
                 </div>
             </div>
         </div>

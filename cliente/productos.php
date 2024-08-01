@@ -148,6 +148,7 @@ $idUsua = $_SESSION['idUsua'];
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $row['nom_mod']; ?></h5>
                                 <p class="card-text">Existencias: <?php echo $row['exist_inv'] ?></p>
+                                <p class="card-text">Precio: <?php echo MONEDA . ' ' . number_format($row['prec_tel'], 2, '.', ',') ?></p>
                                 <p class="card-text">Cantidad: <input style="width: 60px;" type="number" name="cantidad<?php echo $row['id_inv']; ?>" id="cantidad<?php echo $row['id_inv']; ?>" min="1" max="<?php echo $row['exist_inv'] ?>" data-max="<?php echo $row['exist_inv'] ?> value=" 1" step="1" onchange="validateCantidad(this)">
                                 </p>
                                 <div class="d-flex flex-wrap justify-content-between align-items-center">

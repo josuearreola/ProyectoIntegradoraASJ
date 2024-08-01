@@ -9,12 +9,12 @@ $idClie = $_SESSION['Id_clie'];
 $idCl = $_GET['idUsua'];
 $cliente = mysqli_query($conexion, "SELECT id_clie from cliente where id_clie=$idCl");
 $result = mysqli_num_rows($cliente);
-if ($result == 0 || $idCl== null) {
+if ($result == 0 || $idCl == null) {
     header('location:cliente.php');
 }
 
 
-$sqlQuery = $conexion->prepare("SELECT venta.id_vta,fec_vta,tip_pago,cant_pago from venta inner join pago on venta.id_vta=pago.id_vta where id_clie =? ORDER by date(fec_vta) desc;");
+$sqlQuery = $conexion->prepare("SELECT venta.id_vta,fec_vta,tip_pago,cant_pago from venta inner join pago on venta.id_vta=pago.id_vta where id_clie =? ORDER by date(fec_vta) asc;");
 $sqlQuery->bind_param("i", $idClie);
 $sqlQuery->execute();
 $result = $sqlQuery->get_result();
@@ -69,7 +69,7 @@ $result = $sqlQuery->get_result();
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <li class="nav-item">
-                            <a class="nav-link active lh-lg" aria-current="page" href="checkout.php">Inicio</a>
+                            <a class="nav-link active lh-lg" aria-current="page" href="cliente.php">Inicio</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle active lh-lg" id="menusucursales" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales</a>
@@ -92,43 +92,35 @@ $result = $sqlQuery->get_result();
                                 <li><a class="dropdown-item border-0" href="categoria3.php">Mas de $18000</a></li>
                             </ul>
                         </li>
-                        <form class="form-inline ml-3" action="productos.php">
-                            <div class="input-group input-group-sm">
-                                <input class="form-control form-control-navbar bg-dark-subtle" type="search" placeholder="Buscar" aria-label="Search" name="busqueda" value="<?php echo $_REQUEST['busqueda'] ?? ''; ?>">
-                                <input type="hidden" name="modulo" value="productos">
-                                <div class="input-group-append">
-                                    <button class="btn btn-navbar" type="submit">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+
                 </div>
             </div>
         </div>
     </nav>
 
     <main>
+
         <div class="container">
-            <h4 style="color:#ffffff">Mis compras "<?php echo $idUsua?>"</h4>
+            <h4 style="color:#ffffff">Mis compras "<?php echo $idUsua ?>"</h4>
             <hr style="color:#ffffff">
 
             <?php
             while ($row = $result->fetch_assoc()) { ?>
                 <div class="card mb-3 bg-light border-secondary">
                     <div class="card-header">
-                        <?php echo $row['fec_vta']	?>
+                        <?php echo $row['fec_vta']    ?>
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">Folio: <?php echo $row['id_vta']?></h5>
-                        <p class="card-text">Total: <?php echo $row['cant_pago']?> </p>
-                        <a href="detalle_compra.php?orden=<?php echo $row['id_vta'];?>" class="btn btn-primary">Ver compra</a>
+                        <h5 class="card-title">Folio: <?php echo $row['id_vta'] ?></h5>
+                        <p class="card-text">Total: <?php echo $row['cant_pago'] ?> </p>
+                        <a href="detalle_compra.php?orden=<?php echo $row['id_vta']; ?>" class="btn btn-primary">Ver compra</a>
                     </div>
                 </div>
-                
+
             <?php } ?>
+
         </div>
-        
+
     </main>
 
 

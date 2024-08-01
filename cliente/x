@@ -46,3 +46,10 @@
             <label for="btn-modal2" class="cerrar-modal"></label>
         </div>
     </footer>
+
+
+
+    // Insert into factura
+$fechaFact= date('Y-m-d');
+$insertFact=mysqli_query($conexion,"INSERT INTO factura(fec_fact,id_vta) values ('$fechaFact','$idVta')");
+$idFact = mysqli_insert_id($conexion); 

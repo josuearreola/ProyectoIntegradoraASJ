@@ -40,7 +40,6 @@ if (!empty($_SESSION['pago_completado'])) {
     }
 }
 
-$sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
 
 ?>
 
@@ -111,17 +110,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                                 <li><a class="dropdown-item border-0" href="categoria3.php">Mas de $18000</a></li>
                             </ul>
                         </li>
-                        <form class="form-inline ml-3" action="productos.php">
-                            <div class="input-group input-group-sm">
-                                <input class="form-control form-control-navbar bg-dark-subtle" type="search" placeholder="Buscar" aria-label="Search" name="busqueda" value="<?php echo $_REQUEST['busqueda'] ?? ''; ?>">
-                                <input type="hidden" name="modulo" value="productos">
-                                <div class="input-group-append">
-                                    <button class="btn btn-navbar" type="submit">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                       
                 </div>
             </div>
         </div>
@@ -198,7 +187,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
             </div>
         </div>
     </div>
-    <footer class="footerpagprinc">
+    <footer class="footerpagprinc footer-fixed">
         <div class="container">
             <div>
                 <label class="footer-p" for="btn-modal1">Terminos y condiciones</label>
@@ -331,6 +320,11 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
         localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
         document.addEventListener("DOMContentLoaded", function() {
 
+            function formatearMoneda(valor) {
+                return '<?php echo MONEDA; ?>' + new Intl.NumberFormat('es-ES', {
+                    minimumFractionDigits: 2
+                }).format(valor);
+            }
             const idUsua = "<?php echo $idUsua; ?>";
             const listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
             const tbody = document.querySelector("table tbody");
@@ -350,31 +344,11 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                     tr.appendChild(nombresucTd);
 
                     const precioTd = document.createElement("td");
-                    precioTd.textContent = producto.prec_tel;
+                    precioTd.textContent = formatearMoneda(producto.prec_tel);
                     tr.appendChild(precioTd);
 
                     const cantidadTd = document.createElement("td");
-                    const cantidadInput = document.createElement("input");
-                    cantidadInput.type = "number";
-                    cantidadInput.min = "1";
-                    cantidadInput.max = producto.exist_inv;
-                    cantidadInput.step = "1";
-                    cantidadInput.value = producto.cantidad;
-                    cantidadInput.size = "5";
-                    cantidadInput.id = `cantidad_${producto.id_tel}`;
-                    cantidadInput.onchange = function() {
-                        let value = parseFloat(this.value);
-                        value = Math.round(value);
-                        if (this.value == "" || isNaN(this.value) || parseInt(this.value) < parseInt(this.min) || parseInt(this.value) % 1 !== 0) {
-                            this.value = producto.cantidad;
-                        } else if (parseInt(this.value) > parseInt(this.max)) {
-                            this.value = this.max;
-                        } else {
-                            this.value = value;
-                            actualizaCantidad(this.value, producto.id_tel);
-                        }
-                    };
-                    cantidadTd.appendChild(cantidadInput);
+                    cantidadTd.textContent = producto.cantidad
                     tr.appendChild(cantidadTd);
 
                     const subtotalTd = document.createElement("td");
@@ -382,9 +356,8 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                     total += subtotal;
                     subtotalTd.id = `subtotal_${producto.id_tel}`;
                     subtotalTd.name = "subtotal[]";
-                    subtotalTd.textContent = `${subtotal.toFixed(2)}`;
+                    subtotalTd.textContent = formatearMoneda(subtotal);
                     tr.appendChild(subtotalTd);
-
 
 
                     const eliminarTd = document.createElement("td");
@@ -432,20 +405,23 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
 
             localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
             actualizarSesion(id, cantidad);
-            let total = listaCarrito.reduce((acc, producto) => acc + (producto.cantidad * producto.prec_tel), 0);
+
+            // Actualizar el total
+            let total = 0;
+            const subtotales = document.getElementsByName('subtotal[]');
+            for (let i = 0; i < subtotales.length; i++) {
+                total += parseFloat(subtotales[i].textContent.replace(/[$,]/g, ''));
+            }
+            total = new Intl.NumberFormat('es-ES', {
+                minimumFractionDigits: 2
+            }).format(total);
+            document.getElementById('total').innerHTML = '<?php echo MONEDA; ?>' + total;
 
             const {
                 totalConDescuento,
                 descuento
             } = calcularDescuento(total);
-
-            const totalElement = document.getElementById("total");
-            totalElement.innerHTML = `
-            ${descuento > 0 ? `<del style="color: #666; font-size: 14px; text-decoration: line-through;">$${total.toFixed(2)}</del> ` : ''}
-            <span style="color: #000; font-size: 18px;">$${totalConDescuento.toFixed(2)}</span>
-            ${descuento > 0 ? `<small style="color: #666;"> (Descuento: $${descuento.toFixed(2)})</small>` : ''}
-            `;
-            
+            enviarTotalConDescuento(totalConDescuento);
         }
 
         function calcularDescuento(total) {
