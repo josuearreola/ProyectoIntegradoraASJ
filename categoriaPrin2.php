@@ -66,17 +66,7 @@ require "configPPrin.php";
                                 <li><a class="dropdown-item border-0" href="categoriaPrin3.php">Mas de $18000</a></li>
                             </ul>
                         </li>
-                        <form class="form-inline ml-3" action="productosPrin.php">
-                            <div class="input-group input-group-sm">
-                                <input class="form-control form-control-navbar bg-dark-subtle" type="search" placeholder="Buscar" aria-label="Search" name="busqueda" value="<?php echo $_REQUEST['busqueda'] ?? ''; ?>">
-                                <input type="hidden" name="modulo" value="productos">
-                                <div class="input-group-append">
-                                    <button class="btn btn-navbar" type="submit">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                       
                 </div>
             </div>
         </div>
@@ -87,8 +77,9 @@ require "configPPrin.php";
 
 
     <p class="text-center fs-1" style="color:#fff;">NUESTROS PRODUCTOS</p>
+    
     <main>
-        <div class="container">
+    <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4  row-cols-lg-4 g-5">
                 <?php
                 $where = " where 1=1 and estatus=1 and prec_tel>12000 and prec_tel<=18000";
@@ -126,39 +117,39 @@ require "configPPrin.php";
                             </div>
                         </div>
                     </div>
+                <?php } ?>
             </div>
-        <?php } ?>
-        </div>
-        <?php if ($totalPaginas > 0) { ?>
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <?php if ($paginaSel != 1) { ?>
-                        <li class="page-item">
-                            <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo ($paginaSel - 1); ?>" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                        </li>
-                    <?php } ?>
+            <?php if ($totalPaginas > 0) { ?>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <?php if ($paginaSel != 1) { ?>
+                            <li class="page-item">
+                                <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo ($paginaSel - 1); ?>" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                        <?php } ?>
 
-                    <?php for ($i = 1; $i <= $totalPaginas; $i++) { ?>
-                        <li class="page-item <?php echo ($paginaSel == $i) ? " active " : " "; ?>">
-                            <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
-                        </li>
-                    <?php } ?>
+                        <?php for ($i = 1; $i <= $totalPaginas; $i++) { ?>
+                            <li class="page-item <?php echo ($paginaSel == $i) ? " active " : " "; ?>">
+                                <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+                            </li>
+                        <?php } ?>
 
-                    <?php if ($paginaSel != $totalPaginas) { ?>
-                        <li class="page-item">
-                            <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo ($paginaSel + 1); ?>" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </li>
-                    <?php } ?>
-                </ul>
-            </nav>
-        <?php } ?>
+                        <?php if ($paginaSel != $totalPaginas) { ?>
+                            <li class="page-item">
+                                <a class="page-link" href="productosPrin.php?modulo=productos&pagina=<?php echo ($paginaSel + 1); ?>" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                </nav>
+            <?php } ?>
         </div>
+        
     </main>
     <footer class="footerpagprinc">
         <div class="boton-modal1">

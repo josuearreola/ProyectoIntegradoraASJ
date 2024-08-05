@@ -87,7 +87,7 @@ if (empty($_SESSION['idUsua'])) {
     <section id="container">
         <h1 class="text_prin">Lista de productos</h1>
         <a href="regProd.php" class="btn_new">Registrar producto</a>
-        <a href="reporteProd.php" class="btn_new">Generar reporte</a>
+        <a href="reportesProductos.php" class="btn_new">Generar reporte</a>
         <div class="container">
             <div class="table-responsive">
                 <table class="table table-sm table-dark table-hover table-striped tamañoLetra">
@@ -158,11 +158,11 @@ if (empty($_SESSION['idUsua'])) {
                                     </td>
                                     <td class="nowrap">
                                         <?php if ($data["estatus"] == 1) { ?>
-                                            <a class="link_edit" href="editar_producto.php?id=<?php print($data["id_tel"]) ?>">Editar</a>
+                                            <a class="link_edit" href="editar_producto.php?id=<?php print($data["id_tel"]) ?>"><i class="fas fa-edit"></i>Editar</a>
                                             |
-                                            <a class="link_delete" href="eliminarconfirm_producto.php?id=<?php print($data["id_tel"]) ?>">Eliminar</a>
+                                            <a class="link_delete" href="eliminarconfirm_producto.php?id=<?php print($data["id_tel"]) ?>"><i class="fas fa-trash"></i>Eliminar</a>
                                         <?php } else { ?>
-                                            <a class="link_edit" href="RecuperarProd.php?id=<?php print($data["id_tel"]) ?>">Recuperar</a>
+                                            <a class="link_edit" href="RecuperarProd.php?id=<?php print($data["id_tel"]) ?>"><i class="fas fa-undo-alt"></i>Recuperar</a>
                                         <?php } ?>
                                     </td>
                                 </tr>

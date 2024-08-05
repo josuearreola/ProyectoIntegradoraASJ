@@ -85,7 +85,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <li class="nav-item">
-                            <a class="nav-link active lh-lg" aria-current="page"  href="cliente.php">Inicio</a>
+                            <a class="nav-link active lh-lg" aria-current="page" href="cliente.php">Inicio</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle active lh-lg" id="menusucursales" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Sucursales</a>
@@ -108,7 +108,7 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                                 <li><a class="dropdown-item border-0" href="categoria3.php">Mas de $18000</a></li>
                             </ul>
                         </li>
-                       
+
                 </div>
             </div>
         </div>
@@ -117,13 +117,13 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
     <main>
 
         <div class="container">
-            <div class="row">
-                <div class="col-6">
+        <div class="row">
+        <div class="col-md-6 col-sm-12">
                     <h4 style="color:#ffffff">Detalles de pago</h4>
                     <div id="paypal-button-container"></div>
                 </div>
-                <div class="col-6">
-
+                
+                <div class="col-md-6 col-sm-12">
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
@@ -154,8 +154,11 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
 
                             <tr>
 
-                                <td colspan="3">
-                                    <p class="h5 text-end" id="total"><?php echo MONEDA . number_format($total, 2, '.', ','); ?></p>
+                                <td colspan="1" style="font-weight: bold">Envío: $120</td>
+
+                                <td colspan="2">
+
+                                    <p class="h5" id="total"><?php echo MONEDA . number_format($total, 2, '.', ','); ?></p>
                                 </td>
 
                             </tr>
@@ -164,6 +167,9 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
                     </div>
                 </div>
             </div>
+            </div>
+        </div>
+        
         </div>
     </main>
 
@@ -222,82 +228,91 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
 
 
 
-  <script>
-    // Función para calcular el descuento
-    function calcularDescuento(total) {
-        let descuento = 0;
-        let totalConDescuento = total;
+    <script>
+        // Función para calcular el descuento
+        function calcularDescuento(total) {
+            let descuento = 0;
+            let envio = 120;
+            let totalConDescuento = total;
 
-        if (total > 40000) {
-            descuento = 800;
-            totalConDescuento -= descuento;
-        } else if (total > 30000) {
-            descuento = total * 0.15;
-            totalConDescuento -= descuento;
-        } else if (total > 20000) {
-            descuento = 500;
-            totalConDescuento -= descuento;
+            if (total > 40000) {
+                descuento = 800;
+
+                totalConDescuento -= descuento;
+                totalConDescuento += envio
+            } else if (total > 30000) {
+                descuento = total * 0.15;
+                totalConDescuento -= descuento;
+                totalConDescuento += envio
+            } else if (total > 20000) {
+                descuento = 500;
+                totalConDescuento -= descuento;
+                totalConDescuento += envio
+            } else if (total <= 20000) {
+                totalConDescuento += envio
+            }
+
+            return {
+                totalConDescuento,
+                descuento
+            };
         }
 
-        return {
-            totalConDescuento,
-            descuento
-        };
-    }
+        document.addEventListener("DOMContentLoaded", function() {
+            const idUsua = "<?php echo $idUsua; ?>";
+            const listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
+            let total = listaCarrito.reduce((acc, producto) => acc + (producto.cantidad * producto.prec_tel), 0);
+            const {
+                totalConDescuento
+            } = calcularDescuento(total);
 
-    document.addEventListener("DOMContentLoaded", function() {
-        const idUsua = "<?php echo $idUsua; ?>";
-        const listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
-        let total = listaCarrito.reduce((acc, producto) => acc + (producto.cantidad * producto.prec_tel), 0);
-        const { totalConDescuento } = calcularDescuento(total);
-
-        // Renderizar el botón de PayPal
-        paypal.Buttons({
-            style: {
-                color: 'blue',
-                shape: 'pill',
-                label: 'pay'
-            },
-            createOrder: function(data, actions) {
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: totalConDescuento.toFixed(2) // Usar el total con descuento
-                        }
-                    }]
-                });
-            },
-            onApprove: function(data, actions) {
-                localStorage.clear();
-                let url = 'captura.php';
-                actions.order.capture().then(function(detalles) {
-                    console.log(detalles);
-                    return fetch(url, {
-                        method: 'post',
-                        headers: {
-                            'content-type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            detalles: detalles
-                        })
+            // Renderizar el botón de PayPal
+            paypal.Buttons({
+                style: {
+                    color: 'blue',
+                    shape: 'pill',
+                    label: 'pay'
+                },
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: totalConDescuento.toFixed(2) // Usar el total con descuento
+                            }
+                        }]
                     });
-                }).then(() => {
-                    localStorage.removeItem('carrito_<?php echo $idUsua?>');
-                    window.location.href = 'checkout.php';
-                }).catch(error => {
-                    console.error('Error al capturar el pago:', error);
-                });
-            },
-            onCancel: function(data) {
-                alert("Pago cancelado");
-                console.log(data);
-            },
-            fundingSource: paypal.FUNDING.PAYPAL,
-            disableFunding: [paypal.FUNDING.CARD]
+                },
+                onApprove: function(data, actions) {
+                    localStorage.clear();
+                    let url = 'captura.php';
+                    actions.order.capture().then(function(detalles) {
+                        console.log(detalles);
+                        return fetch(url, {
+                            method: 'post',
+                            headers: {
+                                'content-type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                detalles: detalles
+                            })
+                        });
+                    }).then(() => {
+                        localStorage.removeItem('carrito_<?php echo $idUsua ?>');
+                        window.location.href = 'checkout.php';
+                    }).catch(error => {
+                        console.error('Error al capturar el pago:', error);
+                    });
+                },
+                onCancel: function(data) {
+                    alert("Pago cancelado");
+                    console.log(data);
+                },
+                fundingSource: paypal.FUNDING.PAYPAL,
+                disableFunding: [paypal.FUNDING.CARD]
 
-        }).render('#paypal-button-container');
-    });
-</script>
+            }).render('#paypal-button-container');
+        });
+    </script>
 
 
 
@@ -379,8 +394,8 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
     <?php $lista_carrito_json = json_encode($lista_carrito); ?>
 
     <script>
-       const idUsua = "<?php echo $idUsua; ?>";
-       const listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
+        const idUsua = "<?php echo $idUsua; ?>";
+        const listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
         localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -451,17 +466,23 @@ $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc FROM sucursal");
 
         function calcularDescuento(total) {
             let descuento = 0;
+            let envio = 120;
             let totalConDescuento = total;
 
             if (total > 40000) {
                 descuento = 800;
                 totalConDescuento -= descuento;
+                totalConDescuento += envio
             } else if (total > 30000) {
                 descuento = total * 0.15;
                 totalConDescuento -= descuento;
+                totalConDescuento += envio
             } else if (total > 20000) {
                 descuento = 500;
                 totalConDescuento -= descuento;
+                totalConDescuento += envio
+            } else if (total <= 20000) {
+                totalConDescuento += envio
             }
 
             return {

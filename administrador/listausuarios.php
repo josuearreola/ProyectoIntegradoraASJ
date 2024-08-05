@@ -138,13 +138,12 @@ if (empty($_SESSION['idUsua'])) {
                                     </td>
                                     <td>
                                         <?php if ($data["estatus"] == 1) { ?>
-                                            <a class="link_edit" href="editar_usuario.php?id=<?php print($data["id_usua"]) ?>">Editar</a>
+                                            <a class="link_edit" href="editar_usuario.php?id=<?php print($data["id_usua"]) ?>"><i class="fas fa-edit"></i> Editar</a>
                                             <?php if ($data["id_usua"] != 1300) { ?>
                                                 |
-                                                <a class="link_delete" href="eliminarconfirm_usuario.php?id=<?php print($data["id_usua"]) ?>">Eliminar</a>
-                                            <?php } ?>
+                                                <a class="link_delete" href="eliminarconfirm_usuario.php?id=<?php print($data["id_usua"])?>"><i class="fas fa-trash"></i> Eliminar</a>                                            <?php } ?>
                                         <?php } else { ?>
-                                            <a class="link_edit" href="RecuperarUsu.php?id=<?php print($data["id_usua"]) ?>">Recuperar</a>
+                                            <a class="link_edit" href="RecuperarUsu.php?id=<?php print($data["id_usua"]) ?>"><i class="fas fa-undo-alt"></i> Recuperar</a>
                                         <?php } ?>
                                     </td>
                                 </tr>

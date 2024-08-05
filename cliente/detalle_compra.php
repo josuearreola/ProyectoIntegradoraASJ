@@ -144,11 +144,14 @@ $total = 0;
 
                                     if ($total > 40000) {
                                         $totalDesc = $total - 800; // Aplica el descuento mayor primero
+                                        $totalDesc = $totalDesc+120;
                                     } elseif ($total > 30000) {
                                         $totalD = $total * 0.15; // Calcula el 15% de descuento
                                         $totalDesc = $total - $totalD;
+                                        $totalDesc = $totalDesc+120;
                                     } elseif ($total > 20000) {
                                         $totalDesc = $total - 500; // Aplica el descuento menor si los anteriores no se aplicaron
+                                        $totalDesc = $totalDesc+120;
                                     }
                                     $_SESSION['total'] = $total;
                                     $_SESSION['totalDesc'] = $totalDesc;
@@ -164,7 +167,8 @@ $total = 0;
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                <td colspan="1" class=""><strong>Envio:$120</strong></td>
+                                    <td colspan="2" class="text-end"><strong>Total:</strong></td>
                                     <td>
                                         <?php if ($totalDesc < $total) : ?>
                                             <span style="text-decoration: line-through;"><?php echo MONEDA . ' ' . number_format($_SESSION['total'], 2, '.', ','); ?></span>

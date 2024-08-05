@@ -385,15 +385,7 @@ hr{
     margin: 10px 0;
     display: block;
 }
-form{
-    margin: auto;
-    padding: 10px 50px;
-    border: 1px solid #ffffff;
-    border-radius: 10px;
-    user-select: none;
-    transition: 0.3s;
-    box-shadow: 0 0 10px #47bcfb;
-}
+
 label{ 
     display: block;
     margin: 15px auto 5px auto;
@@ -732,7 +724,7 @@ a{
             background-color: #171717;
         }
 
-        #agregarProductoModal .modal-content label {
+#agregarProductoModal .modal-content label {
             color: #fff;
         }
 
@@ -769,9 +761,4 @@ a{
             color: red;
             font-weight: bold;
         }
-        .no-border {
-            border: none !important;
-        }
-        .reporte-form form {
-            border: none;
-        }
+    

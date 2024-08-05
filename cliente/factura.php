@@ -132,6 +132,8 @@ $pdf->SetFont('Arial', 'B', 10);
 $pdf->SetXY(130, $posY + 2); // Ajusta la posición Y
 $pdf->Cell(36, 10, 'Total: ', 1);
 $pdf->Cell(35, 10, MONEDA . ' ' . number_format($totalSession, 2, '.', ','), 1, 0, 'R');
+$pdf->SetXY(90, $posY + 2); // Ajusta la posición Y
+$pdf->Cell(36, 10, 'Envio: $120 ', 1);
 
 if ($totalSession != $totalDescSession) {
     $pdf->SetXY(130, $posY + 12); // Ajusta la posición Y

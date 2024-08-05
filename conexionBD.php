@@ -1,3 +1,4 @@
+
 <?php
     $server="localhost";
     $user="root";
@@ -7,4 +8,5 @@
     if ($conexion->connect_error) {
         die("Conexion fallida". $conexion->connect_error);
     }
+    return $conexion;
 ?>

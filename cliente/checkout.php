@@ -110,7 +110,7 @@ if (!empty($_SESSION['pago_completado'])) {
                                 <li><a class="dropdown-item border-0" href="categoria3.php">Mas de $18000</a></li>
                             </ul>
                         </li>
-                       
+
                 </div>
             </div>
         </div>
@@ -150,9 +150,10 @@ if (!empty($_SESSION['pago_completado'])) {
                     </tbody>
 
                     <tr>
-                        <td colspan="4"></td>
-                        <td colspan="4">
-
+                        <td colspan="3" style="font-weight: bold">Envío: $120</td>
+                        <td colspan="2"></td>
+                        <td colspan="1">
+                            
                             <p class="h5" id="total"><?php echo MONEDA . number_format($total, 2, '.', ','); ?></p>
                         </td>
 
@@ -248,43 +249,7 @@ if (!empty($_SESSION['pago_completado'])) {
             buttonElimina.value = id
         })
 
-        function actualizaCantidad(cantidad, id) {
-            let url = 'actualizarCarrito.php';
-            let formData = new FormData();
-            formData.append('action', 'agregar');
-            formData.append('id', id);
-            formData.append('cantidad', cantidad);
-
-            fetch(url, {
-                    method: 'POST',
-                    body: formData,
-                    mode: 'cors'
-                }).then(response => response.json())
-                .then(data => {
-                    if (data.ok) {
-                        let divsubtotal = document.getElementById('subtotal_' + id);
-                        divsubtotal.innerHTML = data.sub;
-                        let total = 0.00;
-                        let list = document.getElementsByName('subtotal[]');
-                        for (let i = 0; i < list.length; i++) {
-                            total += parseFloat(list[i].innerHTML.replace(/[$,]/g, ''));
-                        }
-                        total = new Intl.NumberFormat('es-ES', {
-                            minimumFractionDigits: 2
-                        }).format(total);
-                        document.getElementById('total').innerHTML = '<?php echo MONEDA; ?>' + total;
-
-                        let listaCarrito = JSON.parse(localStorage.getItem(`carrito_${idUsua}`));
-                        for (let i = 0; i < listaCarrito.length; i++) {
-                            if (listaCarrito[i].id_tel == id) {
-                                listaCarrito[i].cantidad = cantidad;
-                                break;
-                            }
-                        }
-                        localStorage.setItem(`carrito_${idUsua}`, JSON.stringify(listaCarrito));
-                    }
-                });
-        }
+        
 
         function eliminar() {
             let botonElimina = document.getElementById('btn-elimina');
@@ -382,6 +347,7 @@ if (!empty($_SESSION['pago_completado'])) {
                 } = calcularDescuento(total);
                 const totalElement = document.getElementById("total");
                 totalElement.innerHTML = `
+                
                 ${descuento > 0 ? `<del style="color: #666; font-size: 14px; text-decoration: line-through;">$${total.toFixed(2)}</del> ` : ''}
                 <span style="color: #000; font-size: 18px;">$${totalConDescuento.toFixed(2)}</span>
                 ${descuento > 0 ? `<small style="color: #666;"> (Descuento: $${descuento.toFixed(2)})</small>` : ''}
@@ -426,17 +392,23 @@ if (!empty($_SESSION['pago_completado'])) {
 
         function calcularDescuento(total) {
             let descuento = 0;
+            let envio = 120;
             let totalConDescuento = total;
 
             if (total > 40000) {
                 descuento = 800;
                 totalConDescuento -= descuento;
+                totalConDescuento += envio
             } else if (total > 30000) {
                 descuento = total * 0.15;
                 totalConDescuento -= descuento;
+                totalConDescuento += envio
             } else if (total > 20000) {
                 descuento = 500;
                 totalConDescuento -= descuento;
+                totalConDescuento += envio
+            }else if(total <=20000){
+                totalConDescuento += envio
             }
 
             return {
@@ -452,8 +424,6 @@ if (!empty($_SESSION['pago_completado'])) {
             totalConDescuento,
             descuento
         } = calcularDescuento(total);
-
-
 
         enviarTotalConDescuento(totalConDescuento);
 
@@ -481,28 +451,7 @@ if (!empty($_SESSION['pago_completado'])) {
         }
 
 
-        function actualizarSesion(productoId, cantidad) {
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'actualizar_sesion.php');
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    // Procesar la respuesta del servidor
-                    let response = JSON.parse(xhr.responseText);
-                    if (response.success) {
-                        // La sesión se actualizó correctamente
-                        console.log('ok');
-                    } else {
-                        // Ocurrió un error al actualizar la sesión
-                        console.error('Error al actualizar la sesión: ' + response.message);
-                    }
-                } else {
-                    // Ocurrió un error en la solicitud AJAX
-                    console.error('Error en la solicitud AJAX: ' + xhr.statusText);
-                }
-            };
-            xhr.send('productoId=' + productoId + '&cantidad=' + cantidad);
-        }
+       
     </script>
 </body>
 

@@ -24,6 +24,7 @@ if (!empty($_POST)) {
             $updateExist = mysqli_query($conexion, "UPDATE inventario set exist_inv='$existencia' where id_inv=$idInve");
             if ($updateExist === true) {
                 $alert = '<p class="msj_save">Inventario autorizado correctamente</p>';
+                header("location:inventarioSuc.php?id=$idInv");
             } else {
                 $alert = '<p class="msj_error">Error al  el inventario</p>';
                 exit;

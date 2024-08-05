@@ -153,11 +153,11 @@ if (empty($_REQUEST['id'])) {
                                     </td>
                                     <td>
                                         <?php if ($data["estatus"] == 1) { ?>
-                                            <a class="link_edit" href="editarInv.php?id=<?php echo ($data["id_inv"]); ?>">Editar</a>
+                                            <a class="link_edit" href="editarInv.php?id=<?php echo ($data["id_inv"]); ?>"><i class="fas fa-edit"></i> Editar</a>
                                             |
-                                            <a class="link_delete" href="eliminarconfirmInv.php?idSuc=<?php echo $idSuc ?>&id=<?php echo ($data["id_inv"]); ?>">Eliminar</a>
+                                            <a class="link_delete" href="eliminarconfirmInv.php?idSuc=<?php echo $idSuc ?>&id=<?php echo ($data["id_inv"]); ?>"><i class="fas fa-trash"></i>  Eliminar</a>
                                         <?php } else { ?>
-                                            <a class="link_edit" href="RecuperarInv.php?idSuc=<?php echo $idSuc ?>&id=<?php echo ($data["id_inv"]); ?>">Recuperar</a>
+                                            <a class="link_edit" href="RecuperarInv.php?idSuc=<?php echo $idSuc ?>&id=<?php echo ($data["id_inv"]); ?>"><i class="fas fa-undo-alt"></i> Recuperar</a>
                                         <?php } ?>
                                     </td>
                                 </tr>

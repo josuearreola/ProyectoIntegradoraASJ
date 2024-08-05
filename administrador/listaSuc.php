@@ -199,13 +199,13 @@ if (empty($_SESSION['idUsua'])) {
                                     </td>
                                     <td>
                                         <?php if ($data["estatus"] == 1) { ?>
-                                            <a class="link_edit" href="InventarioSuc.php?id=<?php print($data["id_suc"]) ?>">Inventario</a>
+                                            <a class="link_edit" href="InventarioSuc.php?id=<?php print($data["id_suc"]) ?>"><i class="fas fa-list-alt"></i>Inventario</a>
                                             |
-                                            <a class="link_edit" href="editarSuc.php?id=<?php print($data["id_suc"]) ?>">Editar</a>
+                                            <a class="link_edit" href="editarSuc.php?id=<?php print($data["id_suc"]) ?>"><i class="fas fa-edit"></i>Editar</a>
                                             |
-                                            <a class="link_delete" href="eliminarconfirmSuc.php?id=<?php print($data["id_suc"]) ?>">Eliminar</a>
+                                            <a class="link_delete" href="eliminarconfirmSuc.php?id=<?php print($data["id_suc"]) ?>"><i class="fas fa-trash"></i>Eliminar</a>
                                         <?php } else { ?>
-                                            <a class="link_edit" href="RecuperarSuc.php?id=<?php print($data["id_suc"]) ?>">Recuperar</a>
+                                            <a class="link_edit" href="RecuperarSuc.php?id=<?php print($data["id_suc"]) ?>"><i class="fas fa-undo-alt"></i>Recuperar</a>
                                         <?php } ?>
                                     </td>
                                 </tr>

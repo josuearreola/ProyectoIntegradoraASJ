@@ -112,14 +112,17 @@ while ($row = $sqlDetalle2->fetch_assoc()) {
     $subtotal = $precio * $cantidad;
     $total += $subtotal;
     $totalDesc = $total; // Asigna el valor total original a totalDesc
-
+    $envio = 120;
     if ($total > 40000) {
-        $totalDesc = $total - 800; // Aplica el descuento mayor primero
+        $totalDesc = $total - 800;
+        $totalDesc = $totalDesc + $envio; // Aplica el descuento mayor primero
     } elseif ($total > 30000) {
         $totalD = $total * 0.15; // Calcula el 15% de descuento
         $totalDesc = $total - $totalD;
+        $totalDesc = $totalDesc + $envio; 
     } elseif ($total > 20000) {
         $totalDesc = $total - 500; // Aplica el descuento menor si los anteriores no se aplicaron
+        $totalDesc = $totalDesc + $envio; 
     }
 
     $pdf->Cell(40, 10, $row['nom_mod'], 1);
@@ -143,6 +146,8 @@ $pdf->SetFont('Arial', 'B', 10);
 $pdf->SetXY(130, $posY + 2); // Ajusta la posición Y
 $pdf->Cell(36, 10, 'Total: ', 1);
 $pdf->Cell(35, 10, MONEDA . ' ' . number_format($total, 2, '.', ','), 1, 0, 'R');
+$pdf->SetXY(90, $posY + 2); // Ajusta la posición Y
+$pdf->Cell(36, 10, 'Envio: $120 ', 1);
 
 if ($total != $totalDesc) {
     $pdf->SetXY(130, $posY + 12); // Ajusta la posición Y

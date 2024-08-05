@@ -125,10 +125,7 @@ if (empty($_SESSION['idUsua'])) {
                                     </ul>
                                 </li>
                             </ul>
-                            <form action="buscarSuc.php" method="get" class="form_search ms-auto">
-                                <input class="busqueda" type="text" name="busqueda" id="busqueda" placeholder="Buscar">
-                                <input type="submit" value="Buscar" class="btn_search">
-                            </form>
+                           
                         </div>
                     </div>
                 </div>
@@ -180,7 +177,7 @@ if (empty($_SESSION['idUsua'])) {
                                     <td><?php echo $data["id_vta"] ?></td>
                                     <td><?php echo $data["cant_pago"] ?></td>
                                     <td>
-                                        <a class="link_edit" href="reporteFact.php?idFact=<?php print($data["id_vta"]) ?>" target="_blank">Generar factura</a>
+                                        <a class="link_edit" href="reporteFact.php?idFact=<?php print($data["id_vta"]) ?>" target="_blank"><i class="fas fa-file-invoice"></i> Generar factura</a>
 
                                     </td>
                                 </tr>
@@ -224,52 +221,7 @@ if (empty($_SESSION['idUsua'])) {
         <?php } ?>
     </section>
 
-    <div class="modal fade" id="agregarProductoModal" tabindex="-1" aria-labelledby="agregarProductoModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="agregarProductoModalLabel" style="color:#ffffff">Agregar Producto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Contenido del formulario para agregar producto -->
-                    <form method="post" action="listaSuc.php">
-                        <div class="mb-3">
-                            <label for="telefono" class="form-label">Telefono</label>
-                            <select name="telefono" id="telefono">
-                                <?php
-                                $telefono = mysqli_query($conexion, "SELECT id_tel, nom_mod from modelo inner join telefono on modelo.id_mod=telefono.id_mod where telefono.estatus=1");
-                                while ($tel = mysqli_fetch_array($telefono)) {
-                                    echo "<option value='" . $tel['id_tel'] . "'>" . $tel['nom_mod'] . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="sucursal" class="form-label">Sucursal</label>
-                            <select name="sucursal" id="sucursal">
-                                <option value="all">Todas las sucursales</option>
-                                <?php
-                                $sucursales = mysqli_query($conexion, "SELECT id_suc, nom_suc from sucursal");
-                                while ($suc = mysqli_fetch_array($sucursales)) {
-                                    echo "<option value='" . $suc['id_suc'] . "'>" . $suc['nom_suc'] . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="existencia" class="form-label">Existencia</label>
-                            <input type="number" name="existencia" id="existencia" min="1" placeholder="Existencia" value="1" required>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary">Guardar Producto</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
